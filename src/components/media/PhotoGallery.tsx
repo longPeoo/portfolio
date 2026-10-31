@@ -57,13 +57,17 @@ export function PhotoGallery({ photos, variant = "grid" }: PhotoGalleryProps) {
       </ul>
 
       <Dialog open={open} onOpenChange={(o) => !o && setIndex(null)}>
-        <DialogContent className="max-h-[92vh] w-auto gap-3 p-3 sm:max-w-[min(92vw,1400px)]">
+        {/* Rộng theo tỉ lệ ảnh: lấp màn hình điện thoại nhưng ảnh không cao quá 76vh */}
+        <DialogContent
+          className="max-h-[92vh] grid-cols-[minmax(0,1fr)] gap-3 p-3 sm:max-w-[min(92vw,1400px)]"
+          style={current ? { width: `min(100vw - 2rem, 1400px, 76vh * ${current.width / current.height} + 1.5rem)` } : undefined}
+        >
           {current && (
             <>
               <img
                 src={current.full}
                 alt={current.alt}
-                className="max-h-[76vh] w-auto rounded-md object-contain"
+                className="h-auto max-h-[76vh] w-full rounded-md object-contain"
                 width={current.width}
                 height={current.height}
               />

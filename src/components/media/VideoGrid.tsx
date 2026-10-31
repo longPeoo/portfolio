@@ -1,9 +1,9 @@
 import { useState } from "react"
-import { ExternalLinkIcon, PlayIcon } from "lucide-react"
+import { ExternalLinkIcon, PlayIcon, XIcon } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export interface GridVideo {
@@ -73,7 +73,9 @@ export function VideoGrid({ videos, categories }: VideoGridProps) {
       </ul>
 
       <Dialog open={!!playing} onOpenChange={(o) => !o && setPlaying(null)}>
-        <DialogContent className="w-full gap-3 p-3 sm:max-w-[min(92vw,1200px)]">
+        {/* grid-cols-[minmax(0,1fr)]: không để tiêu đề dài (truncate) đẩy khung video rộng quá màn hình */}
+        {/* Nút đóng mặc định nằm đè lên góc video → bỏ, đặt nút đóng ở hàng dưới */}
+        <DialogContent showCloseButton={false} className="w-full grid-cols-[minmax(0,1fr)] gap-3 p-3 sm:max-w-[min(92vw,1200px)]">
           {playing && (
             <>
               <div className="video-player">
@@ -84,16 +86,23 @@ export function VideoGrid({ videos, categories }: VideoGridProps) {
                   allowFullScreen
                 />
               </div>
-              <div className="flex items-center gap-3">
-                <div className="flex min-w-0 flex-1 flex-col">
+              <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+                <div className="flex w-full min-w-0 flex-1 flex-col">
                   <DialogTitle className="truncate">{playing.title}</DialogTitle>
                   <DialogDescription className="mono">{dateFmt.format(new Date(playing.published))}</DialogDescription>
                 </div>
-                <Button variant="outline" asChild>
-                  <a href={playing.url} target="_blank" rel="noopener noreferrer">
-                    Mở trên YouTube <ExternalLinkIcon data-icon="inline-end" />
-                  </a>
-                </Button>
+                <div className="flex gap-2">
+                  <Button variant="outline" asChild>
+                    <a href={playing.url} target="_blank" rel="noopener noreferrer">
+                      Mở trên YouTube <ExternalLinkIcon data-icon="inline-end" />
+                    </a>
+                  </Button>
+                  <DialogClose asChild>
+                    <Button variant="ghost" size="icon" aria-label="Đóng video">
+                      <XIcon />
+                    </Button>
+                  </DialogClose>
+                </div>
               </div>
             </>
           )}

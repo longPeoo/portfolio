@@ -100,7 +100,8 @@ const article = {
 <style>
   .trip__head { padding-top: calc(var(--header-h) + var(--space-8)); }
   .trip__back { margin-bottom: var(--space-8); margin-left: -0.5rem; }
-  .trip__title { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-8); }
+  /* overflow-x: clip — con dấu phóng to 2.2× lúc "đóng cộp" không được làm trang cuộn ngang trên điện thoại */
+  .trip__title { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-8); overflow-x: clip; overflow-clip-margin: var(--gutter); }
   h1 { font-size: var(--fs-h2); margin-block: var(--space-3) var(--space-6); max-width: 18ch; }
   .trip__lead { font-size: var(--fs-lg); color: var(--fg-muted); max-width: 52ch; }
   .trip__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: var(--space-6); }
@@ -118,7 +119,8 @@ const article = {
     color: var(--primary);
     text-align: center;
     rotate: -12deg;
-    animation: stamp-in 700ms 250ms var(--ease-spring) both;
+    /* backwards (không giữ khung cuối) để Chrome không tính vùng tràn của khung 2.2× sau khi đóng dấu xong */
+    animation: stamp-in 700ms 250ms var(--ease-spring) backwards;
   }
   .trip__stamp strong { font-family: var(--font-display); font-size: 1.35rem; font-stretch: 112%; line-height: 1.05; padding-inline: 14px; }
   .trip__stamp .mono { font-size: 0.625rem; }

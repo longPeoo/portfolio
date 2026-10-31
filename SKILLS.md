@@ -230,7 +230,9 @@ public/admin/        ← Sveltia CMS
 
 ## 7. Chất lượng tối thiểu (mọi thay đổi)
 
-- **Responsive**: kiểm tra ở 390px và 1440px, không có thanh cuộn ngang.
+- **Responsive**: kiểm tra ở 320, 390, 768 và 1440px, không có thanh cuộn ngang (kể cả khi đang mở Dialog / phát video).
+  - `DialogContent` chứa ảnh/video phải có `grid-cols-[minmax(0,1fr)]`, nếu không tiêu đề `truncate` sẽ đẩy khung rộng quá màn hình.
+  - Animation phóng to (`scale` > 1) gần mép màn hình: dùng `animation-fill-mode: backwards` (không `both`/`forwards`) và đặt `overflow-x: clip` ở khối cha (xem con dấu ở `journeys/[slug].astro`).
 - **Hai chế độ sáng/tối** đều đọc được.
 - **Bàn phím**: mọi thứ bấm được đều focus được (viền đứt nét màu cam).
 - **Ảnh**: dùng `<Image>`/`<Picture>` của Astro, luôn có `alt` (ảnh trang trí: `alt=""`, SVG trang trí: `aria-hidden`).
