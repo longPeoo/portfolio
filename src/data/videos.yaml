@@ -6,12 +6,12 @@
 # ==================================================================
 
 # Link kênh, ví dụ: "https://www.youtube.com/@longpeoo"
-channelUrl: ""
+channelUrl: "https://www.youtube.com/@longpeoo"
 # (Tuỳ chọn) Channel ID dạng "UCxxxxxxxxxxxxxxxxxxxxxx" — điền nếu tự dò từ link không được
-channelId: ""
+channelId: "UCdwXxvE8B-nPkfMYicR2yvg"
 
 # Video lớn ở trang chủ: dán link video. Để trống = tự lấy video mới nhất
-featured: ""
+featured: "https://www.youtube.com/watch?v=3q0T0lwIcPg"
 
 # Ghim lên đầu danh sách (dán link video, mỗi dòng một video)
 pinned: []
