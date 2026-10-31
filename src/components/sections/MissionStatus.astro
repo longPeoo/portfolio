@@ -3,10 +3,11 @@ import { Badge } from '@/components/ui/badge';
 /** Bảng tiến độ xây website — gỡ section này khỏi trang chủ khi launch chính thức. */
 const phases = [
   { code: 'P1', name: 'Nền móng & deploy', state: 'done' },
-  { code: 'P2', name: 'Trang & nội dung', state: 'active' },
-  { code: 'P3', name: 'Animation & mascot', state: 'queued' },
-  { code: 'P4', name: 'YouTube, ảnh, bản đồ', state: 'queued' },
-  { code: 'P5', name: 'SEO & tối ưu — launch', state: 'queued' },
+  { code: 'P2', name: 'Trang, nội dung & CMS', state: 'done' },
+  { code: 'P3', name: 'Animation & mascot', state: 'done' },
+  { code: 'P4', name: 'YouTube, ảnh, bản đồ', state: 'done' },
+  { code: 'P5', name: 'SEO & tối ưu — launch', state: 'done' },
+  { code: 'P6', name: 'Nội dung thật & song ngữ', state: 'active' },
 ] as const;
 
 const label = { done: 'Nominal', active: 'In progress', queued: 'Queued' };

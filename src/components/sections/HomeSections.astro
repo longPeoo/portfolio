@@ -1,0 +1,85 @@
+---
+/**
+ * Các khối nội dung ở trang chủ. Khối nào chưa có dữ liệu sẽ tự ẩn.
+ * Thứ tự: video mới nhất → dự án nổi bật → địa cầu các chuyến đi → cuộn phim ảnh.
+ */
+import { ArrowUpRightIcon } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
+import { VideoPlayer } from '@/components/media/VideoPlayer';
+import { MissionsGlobe } from '@/components/media/MissionsGlobe';
+import { PhotoGallery } from '@/components/media/PhotoGallery';
+import ProjectCard from './ProjectCard.astro';
+import SectionHead from './SectionHead.astro';
+import { cn } from '@/lib/utils';
+import { getProjects, getJourneys, getPhotos } from '@/lib/content';
+import { getFeaturedVideo } from '@/lib/youtube';
+import { toGalleryPhotos } from '@/lib/photos';
+
+const video = await getFeaturedVideo();
+const isNew = video?.published ? Date.now() - video.published.valueOf() < 14 * 864e5 : false;
+const dateFmt = new Intl.DateTimeFormat('vi-VN', { day: '2-digit', month: 'long', year: 'numeric' });
+
+const allProjects = await getProjects();
+const featured = (allProjects.filter((p) => p.data.featured).length ? allProjects.filter((p) => p.data.featured) : allProjects).slice(0, 2);
+
+const journeys = await getJourneys();
+const points = journeys.map((j) => ({ id: j.id, title: j.data.title, place: j.data.place, lat: j.data.lat, lng: j.data.lng, date: j.data.date.toISOString() }));
+
+const photos = await toGalleryPhotos(
+  (await getPhotos()).slice(0, 6).map((p) => ({ src: p.src, alt: p.alt, caption: p.caption, href: `/journeys/${p.journey.id}` })),
+);
+---
+
+{video && (
+  <section class="home-sec container transmission" aria-labelledby="tx-title">
+    <div class="transmission__text" data-reveal>
+      <p class="mono muted">MSN-04 · Latest transmission</p>
+      <h2 id="tx-title">Video mới nhất</h2>
+      {isNew && <Badge variant="signal"><i class="tx-dot" aria-hidden="true"></i>New transmission</Badge>}
+      <p class="transmission__title">{video.title}</p>
+      {video.published && <p class="mono muted">{dateFmt.format(video.published)}</p>}
+      <a href="/videos" class={cn(buttonVariants({ variant: 'launch-outline', size: 'pill' }))}>
+        Tất cả video <ArrowUpRightIcon data-icon="inline-end" />
+      </a>
+    </div>
+    <VideoPlayer client:visible id={video.id} title={video.title} crt />
+  </section>
+)}
+
+{featured.length > 0 && (
+  <section class="home-sec container" aria-label="Dự án kỹ thuật">
+    <SectionHead code="MSN-02 · Payloads" title="Dự án kỹ thuật" href="/engineering" />
+    <div class="payloads">
+      {featured.map((p, i) => <ProjectCard project={p} index={i} />)}
+    </div>
+  </section>
+)}
+
+{points.length > 0 && (
+  <section class="home-sec container" aria-label="Hành trình">
+    <SectionHead code="MSN-03 · Missions" title="Những nơi tôi đã đến" href="/journeys" />
+    <MissionsGlobe client:visible points={points} compact />
+  </section>
+)}
+
+{photos.length > 0 && (
+  <section class="home-sec container" aria-label="Ảnh">
+    <SectionHead code="MSN-05 · Film roll" title="Cuộn phim gần đây" href="/gallery" linkLabel="Xem tất cả ảnh" />
+    <PhotoGallery client:visible photos={photos} variant="polaroid" />
+  </section>
+)}
+
+<style>
+  .home-sec { margin-top: var(--section-y); }
+  .transmission { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: var(--space-12); align-items: center; }
+  .transmission__text { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4); }
+  .transmission h2 { font-size: var(--fs-h2); }
+  .transmission__title { font-size: var(--fs-lg); font-weight: 600; max-width: 32ch; }
+  .tx-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: tx-blink 1.2s steps(2) infinite; }
+  @keyframes tx-blink { 50% { opacity: 0.2; } }
+  .payloads { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: var(--space-8); }
+  @media (max-width: 860px) {
+    .transmission { grid-template-columns: 1fr; }
+  }
+</style>

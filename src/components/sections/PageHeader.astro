@@ -1,0 +1,22 @@
+---
+/** Đầu trang chuẩn: nhãn telemetry MSN-xx, tiêu đề h1, đoạn mở đầu. */
+interface Props {
+  code: string;
+  title: string;
+  intro?: string;
+}
+const { code, title, intro } = Astro.props;
+---
+
+<header class="phead container">
+  <p class="mono muted">{code}</p>
+  <h1>{title}</h1>
+  {intro && <p class="phead__intro">{intro}</p>}
+  <slot />
+</header>
+
+<style>
+  .phead { padding-top: calc(var(--header-h) + var(--space-16)); padding-bottom: var(--space-12); }
+  h1 { font-size: var(--fs-h2); margin-block: var(--space-3) var(--space-6); max-width: 18ch; }
+  .phead__intro { max-width: 52ch; font-size: var(--fs-lg); color: var(--fg-muted); }
+</style>

@@ -1,13 +1,38 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ComingSoon from '@/components/sections/ComingSoon.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import JourneyCard from '@/components/sections/JourneyCard.astro';
+import { MissionsGlobe } from '@/components/media/MissionsGlobe';
+import { getJourneys } from '@/lib/content';
+
+const journeys = await getJourneys();
+const title = 'Hành trình';
+const intro = 'Mỗi chuyến đi là một mission: điểm đến, lộ trình, những người gặp trên đường và video kể lại.';
+const points = journeys.map((j) => ({ id: j.id, title: j.data.title, place: j.data.place, lat: j.data.lat, lng: j.data.lng, date: j.data.date.toISOString() }));
+const countries = new Set(journeys.map((j) => j.data.country)).size;
 ---
 
-<BaseLayout title="Hành trình">
-  <ComingSoon
-    code="MSN-03 · Missions"
-    title="Hành trình"
-    intro="Mỗi chuyến đi là một mission: điểm đến, lộ trình, những con người gặp trên đường và video kể lại."
-    phase="Giai đoạn P2"
-  />
+<BaseLayout title={title} description={intro}>
+  {journeys.length === 0 ? (
+    <ComingSoon code="MSN-03 · Missions" title={title} intro={intro} phase="Đang cập nhật" />
+  ) : (
+    <>
+      <PageHeader code="MSN-03 · Missions" title={title} intro={intro}>
+        <p class="mono stats">{journeys.length} missions · {countries} quốc gia</p>
+      </PageHeader>
+      <section class="container globe-wrap">
+        <MissionsGlobe client:visible points={points} />
+      </section>
+      <section class="container grid">
+        {journeys.map((j) => <JourneyCard journey={j} />)}
+      </section>
+    </>
+  )}
 </BaseLayout>
+
+<style>
+  .stats { margin-top: var(--space-6); color: var(--primary); }
+  .globe-wrap { margin-bottom: var(--section-y); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: var(--space-12) var(--space-8); }
+</style>

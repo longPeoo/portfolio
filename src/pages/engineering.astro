@@ -1,13 +1,28 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ComingSoon from '@/components/sections/ComingSoon.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import ProjectCard from '@/components/sections/ProjectCard.astro';
+import { getProjects } from '@/lib/content';
+
+const projects = await getProjects();
+const title = 'Kỹ thuật';
+const intro = 'Các dự án, nghiên cứu và hệ thống tôi từng tham gia trong lĩnh vực công nghệ vũ trụ.';
 ---
 
-<BaseLayout title="Kỹ thuật">
-  <ComingSoon
-    code="MSN-02 · Payloads"
-    title="Kỹ thuật"
-    intro="Các dự án, nghiên cứu và hệ thống tôi từng tham gia trong lĩnh vực công nghệ vũ trụ."
-    phase="Giai đoạn P2"
-  />
+<BaseLayout title={title} description={intro}>
+  {projects.length === 0 ? (
+    <ComingSoon code="MSN-02 · Payloads" title={title} intro={intro} phase="Đang cập nhật" />
+  ) : (
+    <>
+      <PageHeader code="MSN-02 · Payloads" title={title} intro={intro} />
+      <section class="container grid">
+        {projects.map((p, i) => <ProjectCard project={p} index={i} />)}
+      </section>
+    </>
+  )}
 </BaseLayout>
+
+<style>
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: var(--space-8); }
+</style>

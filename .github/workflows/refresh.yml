@@ -1,0 +1,57 @@
+# ==================================================================
+#  Tự build & deploy lại mỗi 6 giờ để video YouTube mới tự xuất hiện.
+#  (Push code thì Cloudflare đã tự deploy — workflow này chỉ chạy theo lịch.)
+#  Cần 3 secret trong GitHub: Settings → Secrets and variables → Actions
+#    CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, YOUTUBE_API_KEY
+#  Chạy tay: tab Actions → "Làm mới video YouTube" → Run workflow.
+# ==================================================================
+name: Làm mới video YouTube
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: refresh
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kiểm tra secret
+        id: check
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "Chưa cấu hình CLOUDFLARE_API_TOKEN — bỏ qua."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v7
+        if: steps.check.outputs.skip != 'true'
+
+      - uses: actions/setup-node@v7
+        if: steps.check.outputs.skip != 'true'
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - name: Cài đặt
+        if: steps.check.outputs.skip != 'true'
+        run: npm ci
+
+      - name: Build
+        if: steps.check.outputs.skip != 'true'
+        run: npm run build
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+
+      - name: Deploy lên Cloudflare
+        if: steps.check.outputs.skip != 'true'
+        run: npx --yes wrangler@4.156.0 deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

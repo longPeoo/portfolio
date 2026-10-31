@@ -1,0 +1,80 @@
+---
+/**
+ * Thẻ chuyến đi ("mission"): ảnh bìa + con dấu hộ chiếu.
+ * Rê chuột: con dấu đóng "cộp" xuống (xoay thẳng, phóng to rồi nảy về).
+ */
+import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import { formatRange } from '@/lib/content';
+
+interface Props {
+  journey: CollectionEntry<'journeys'>;
+  size?: 'default' | 'compact';
+}
+
+const { journey, size = 'default' } = Astro.props;
+const { title, summary, place, country, date, endDate, cover, coverAlt } = journey.data;
+const stampId = `stamp-${journey.id}`;
+---
+
+<a href={`/journeys/${journey.id}`} class:list={['jcard', `jcard--${size}`]} data-reveal>
+  <div class="jcard__cover">
+    <Image src={cover} alt={coverAlt} widths={[480, 800, 1200]} sizes="(min-width: 900px) 33vw, 100vw" transition:name={`journey-${journey.id}`} />
+    <svg class="jcard__stamp" viewBox="0 0 120 120" aria-hidden="true">
+      <defs><path id={stampId} d="M 60,60 m -42,0 a 42,42 0 1,1 84,0 a 42,42 0 1,1 -84,0" /></defs>
+      <circle cx="60" cy="60" r="56" class="s-ring" />
+      <circle cx="60" cy="60" r="31" class="s-ring s-ring--inner" />
+      <text class="s-arc"><textPath href={`#${stampId}`}>{place.toUpperCase()} ★ {country.toUpperCase()} ★</textPath></text>
+      <text x="60" y="58" class="s-year" text-anchor="middle">{date.getFullYear()}</text>
+      <text x="60" y="74" class="s-month" text-anchor="middle">T{date.getMonth() + 1}</text>
+    </svg>
+  </div>
+  <div class="jcard__body">
+    <p class="mono muted">{place}, {country} · {formatRange(date, endDate)}</p>
+    <h3>{title}</h3>
+    {size === 'default' && <p class="jcard__sum">{summary}</p>}
+  </div>
+</a>
+
+<style>
+  .jcard { display: flex; flex-direction: column; gap: var(--space-4); text-decoration: none; }
+  .jcard__cover {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--r);
+    overflow: hidden;
+    background: var(--bg-sunken);
+  }
+  .jcard__cover :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur-slow) var(--ease-out); }
+  .jcard:hover .jcard__cover :global(img) { transform: scale(1.04); }
+
+  .jcard__stamp {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    width: 96px;
+    color: var(--c-signal);
+    transform: rotate(-14deg);
+    filter: drop-shadow(0 1px 0 rgb(0 0 0 / 0.15));
+    transition: transform 420ms var(--ease-spring);
+  }
+  .jcard:hover .jcard__stamp { animation: stamp 520ms var(--ease-spring) both; }
+  .s-ring { fill: rgb(244 238 225 / 0.86); stroke: currentColor; stroke-width: 2.5; stroke-dasharray: 4 3; }
+  .s-ring--inner { fill: none; stroke-dasharray: none; stroke-width: 1.5; }
+  .s-arc { fill: currentColor; font: 700 9.5px var(--font-mono); letter-spacing: 1.5px; }
+  .s-year { fill: currentColor; font: 800 17px var(--font-display); }
+  .s-month { fill: currentColor; font: 600 10px var(--font-mono); }
+
+  @keyframes stamp {
+    0% { transform: rotate(-14deg) scale(1); }
+    40% { transform: rotate(-4deg) scale(1.35); }
+    70% { transform: rotate(0deg) scale(0.92); }
+    100% { transform: rotate(-2deg) scale(1); }
+  }
+
+  .jcard__body { display: flex; flex-direction: column; gap: var(--space-2); }
+  h3 { font-size: var(--fs-h3); transition: color var(--dur-fast); }
+  .jcard--compact h3 { font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem); }
+  .jcard:hover h3 { color: var(--primary); }
+  .jcard__sum { color: var(--fg-muted); max-width: 48ch; }
+</style>

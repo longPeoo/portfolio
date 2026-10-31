@@ -1,13 +1,34 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ComingSoon from '@/components/sections/ComingSoon.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import { PhotoGallery } from '@/components/media/PhotoGallery';
+import { getPhotos } from '@/lib/content';
+import { toGalleryPhotos } from '@/lib/photos';
+
+const items = await getPhotos();
+const photos = await toGalleryPhotos(
+  items.map((p) => ({ src: p.src, alt: p.alt, caption: p.caption, href: `/journeys/${p.journey.id}` })),
+);
+const title = 'Ảnh';
+const intro = 'Những khung hình tôi thích nhất, từ phòng thí nghiệm đến những cung đường xa.';
 ---
 
-<BaseLayout title="Ảnh">
-  <ComingSoon
-    code="MSN-05 · Film roll"
-    title="Ảnh"
-    intro="Những khung hình tôi thích nhất, từ phòng sạch lắp ráp vệ tinh đến những cung đường xa."
-    phase="Giai đoạn P4"
-  />
+<BaseLayout title={title} description={intro}>
+  {photos.length === 0 ? (
+    <ComingSoon code="MSN-05 · Film roll" title={title} intro={intro} phase="Đang cập nhật" />
+  ) : (
+    <>
+      <PageHeader code="MSN-05 · Film roll" title={title} intro={intro}>
+        <p class="mono count">{photos.length} khung hình</p>
+      </PageHeader>
+      <section class="container">
+        <PhotoGallery client:visible photos={photos} variant="polaroid" />
+      </section>
+    </>
+  )}
 </BaseLayout>
+
+<style>
+  .count { margin-top: var(--space-6); color: var(--primary); }
+</style>

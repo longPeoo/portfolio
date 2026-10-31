@@ -1,0 +1,145 @@
+---
+import { render } from 'astro:content';
+import { Image, getImage } from 'astro:assets';
+import { ArrowLeftIcon } from 'lucide-react';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { VideoPlayer } from '@/components/media/VideoPlayer';
+import { PhotoGallery } from '@/components/media/PhotoGallery';
+import JourneyCard from '@/components/sections/JourneyCard.astro';
+import { cn } from '@/lib/utils';
+import { getJourneys, formatMonth, formatRange } from '@/lib/content';
+import { toGalleryPhotos } from '@/lib/photos';
+import { youtubeId } from '@/lib/youtube';
+
+export async function getStaticPaths() {
+  const journeys = await getJourneys();
+  return journeys.map((journey, i) => ({
+    params: { slug: journey.id },
+    props: { journey, number: journeys.length - i, next: journeys[i + 1] ?? journeys[0] },
+  }));
+}
+
+const { journey, number, next } = Astro.props;
+const { title, summary, place, country, lat, lng, date, endDate, cover, coverAlt, gallery, youtube, tags } = journey.data;
+const { Content } = await render(journey);
+const videoId = youtubeId(youtube);
+const photos = await toGalleryPhotos(gallery);
+const og = (await getImage({ src: cover, width: 1200, format: 'jpg' })).src;
+const coord = `${Math.abs(lat).toFixed(2)}°${lat >= 0 ? 'N' : 'S'} · ${Math.abs(lng).toFixed(2)}°${lng >= 0 ? 'E' : 'W'}`;
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description: summary,
+  datePublished: date.toISOString(),
+  image: new URL(og, Astro.site).href,
+  contentLocation: { '@type': 'Place', name: `${place}, ${country}`, geo: { '@type': 'GeoCoordinates', latitude: lat, longitude: lng } },
+  url: new URL(`/journeys/${journey.id}`, Astro.site).href,
+};
+---
+
+<BaseLayout title={title} description={summary} image={og} schema={article}>
+  <article class="trip">
+    <header class="container trip__head">
+      <a href="/journeys" class={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'trip__back')}>
+        <ArrowLeftIcon data-icon="inline-start" /> Tất cả hành trình
+      </a>
+      <div class="trip__title">
+        <div>
+          <p class="mono muted">M-{String(number).padStart(2, '0')} · Mission log · {coord} · {formatRange(date, endDate)}</p>
+          <h1>{title}</h1>
+          <p class="trip__lead">{summary}</p>
+        </div>
+        <!-- Con dấu hộ chiếu đóng "cộp" một lần khi mở trang -->
+        <div class="trip__stamp" aria-hidden="true">
+          <span class="mono">{country}</span>
+          <strong>{place}</strong>
+          <span class="mono">{formatMonth(date)}</span>
+        </div>
+      </div>
+      {tags.length > 0 && <div class="trip__tags">{tags.map((t) => <Badge variant="telemetry">{t}</Badge>)}</div>}
+    </header>
+
+    <div class="container">
+      <Image src={cover} alt={coverAlt} widths={[800, 1200, 1800, 2400]} sizes="(min-width: 1320px) 1240px, 100vw" class="trip__cover" transition:name={`journey-${journey.id}`} loading="eager" />
+    </div>
+
+    <div class="container trip__body">
+      {videoId && (
+        <section class="trip__video" aria-label="Video chuyến đi">
+          <p class="mono muted">Transmission · Video chuyến đi</p>
+          <VideoPlayer client:visible id={videoId} title={title} />
+        </section>
+      )}
+      <div class="prose prose-lg">
+        <Content />
+      </div>
+    </div>
+
+    {photos.length > 0 && (
+      <section class="container trip__gallery" aria-labelledby="gallery-title">
+        <p class="mono muted">Film roll · {photos.length} ảnh</p>
+        <h2 id="gallery-title">Album</h2>
+        <PhotoGallery client:visible photos={photos} variant="grid" />
+      </section>
+    )}
+
+    {next && next.id !== journey.id && (
+      <section class="container trip__next">
+        <Separator className="mb-12" />
+        <p class="mono muted">Mission tiếp theo</p>
+        <div class="trip__next-card"><JourneyCard journey={next} size="compact" /></div>
+      </section>
+    )}
+  </article>
+</BaseLayout>
+
+<style>
+  .trip__head { padding-top: calc(var(--header-h) + var(--space-8)); }
+  .trip__back { margin-bottom: var(--space-8); margin-left: -0.5rem; }
+  .trip__title { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-8); }
+  h1 { font-size: var(--fs-h2); margin-block: var(--space-3) var(--space-6); max-width: 18ch; }
+  .trip__lead { font-size: var(--fs-lg); color: var(--fg-muted); max-width: 52ch; }
+  .trip__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: var(--space-6); }
+
+  .trip__stamp {
+    flex: none;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 2px;
+    width: 168px;
+    aspect-ratio: 1;
+    border: 3px double var(--primary);
+    border-radius: 50%;
+    color: var(--primary);
+    text-align: center;
+    rotate: -12deg;
+    animation: stamp-in 700ms 250ms var(--ease-spring) both;
+  }
+  .trip__stamp strong { font-family: var(--font-display); font-size: 1.35rem; font-stretch: 112%; line-height: 1.05; padding-inline: 14px; }
+  .trip__stamp .mono { font-size: 0.625rem; }
+  @keyframes stamp-in {
+    0% { opacity: 0; scale: 2.2; rotate: 8deg; }
+    55% { opacity: 1; scale: 0.9; rotate: -14deg; }
+    100% { opacity: 1; scale: 1; rotate: -12deg; }
+  }
+
+  .trip__cover { width: 100%; height: auto; border-radius: var(--r-lg); margin-block: var(--space-12); }
+  .trip__body { display: flex; flex-direction: column; gap: var(--space-12); }
+  .trip__body .prose { max-width: 68ch; }
+  .trip__video { display: flex; flex-direction: column; gap: var(--space-3); max-width: 960px; }
+  .trip__gallery { margin-top: var(--section-y); }
+  .trip__gallery h2 { font-size: var(--fs-h3); margin-block: var(--space-2) var(--space-6); }
+  .trip__next { margin-top: var(--section-y); }
+  .trip__next-card { max-width: 520px; margin-top: var(--space-4); }
+
+  @media (max-width: 700px) {
+    .trip__title { flex-direction: column-reverse; }
+    .trip__stamp { width: 124px; align-self: flex-end; }
+    .trip__stamp strong { font-size: 1rem; }
+  }
+</style>

@@ -1,13 +1,45 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ComingSoon from '@/components/sections/ComingSoon.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import { VideoGrid } from '@/components/media/VideoGrid';
+import { getVideos, videoCategories, channelUrl } from '@/lib/youtube';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { brandIconSvg } from '@/lib/site';
+
+const videos = await getVideos();
+const grid = videos.map((v) => ({
+  id: v.id,
+  title: v.title,
+  published: v.published.toISOString(),
+  views: v.views,
+  url: v.url,
+  categories: v.categories,
+}));
+const title = 'Video';
+const intro = 'Các video mới nhất từ kênh YouTube, tự cập nhật khi có video mới.';
 ---
 
-<BaseLayout title="Video">
-  <ComingSoon
-    code="MSN-04 · Transmissions"
-    title="Video"
-    intro="Toàn bộ video mới nhất từ kênh YouTube, tự cập nhật mỗi khi có video mới."
-    phase="Giai đoạn P4"
-  />
+<BaseLayout title={title} description={intro}>
+  {grid.length === 0 ? (
+    <ComingSoon code="MSN-04 · Transmissions" title={title} intro={intro} phase="Đang cập nhật" />
+  ) : (
+    <>
+      <PageHeader code="MSN-04 · Transmissions" title={title} intro={intro}>
+        {channelUrl && (
+          <a href={channelUrl} target="_blank" rel="noopener noreferrer" class={cn(buttonVariants({ variant: 'launch', size: 'pill' }), 'subscribe')}>
+            Theo dõi kênh <span data-icon="inline-end" class="contents" set:html={brandIconSvg('youtube-fill')} />
+          </a>
+        )}
+      </PageHeader>
+      <section class="container">
+        <VideoGrid client:visible videos={grid} categories={videoCategories} />
+      </section>
+    </>
+  )}
 </BaseLayout>
+
+<style>
+  .subscribe { margin-top: var(--space-8); }
+</style>

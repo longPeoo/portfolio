@@ -2,20 +2,16 @@ import { MoonIcon, SunIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 
-/** Đổi giao diện sáng/tối. Trạng thái ban đầu do script trong <head> đặt (class `dark`). */
+/**
+ * Nút đổi giao diện sáng/tối — render tĩnh (không hydrate React để trang nhẹ hơn ~65KB).
+ * Sự kiện click gắn bằng script thuần trong MissionBar.astro qua thuộc tính data-theme-toggle.
+ */
 export function ThemeToggle() {
-  function toggle() {
-    const isDark = document.documentElement.classList.toggle("dark")
-    try {
-      localStorage.setItem("theme", isDark ? "dark" : "light")
-    } catch {}
-  }
-
   return (
     <Button
       variant="ghost"
       size="icon-lg"
-      onClick={toggle}
+      data-theme-toggle
       aria-label="Đổi giao diện sáng/tối"
       className="rounded-full duration-300 ease-[var(--ease-spring)] hover:-rotate-[15deg]"
     >

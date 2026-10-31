@@ -1,0 +1,91 @@
+---
+import { render } from 'astro:content';
+import { Image, getImage } from 'astro:assets';
+import { ArrowLeftIcon, ArrowUpRightIcon } from 'lucide-react';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
+import { getProjects, formatMonth } from '@/lib/content';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project, index) => ({ params: { slug: project.id }, props: { project, index } }));
+}
+
+const { project, index } = Astro.props;
+const { title, summary, role, date, tags, cover, coverAlt, links, status } = project.data;
+const { Content } = await render(project);
+const og = cover ? (await getImage({ src: cover, width: 1200, format: 'jpg' })).src : undefined;
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: title,
+  description: summary,
+  dateCreated: date.toISOString(),
+  url: new URL(`/engineering/${project.id}`, Astro.site).href,
+};
+---
+
+<BaseLayout title={title} description={summary} image={og} schema={article}>
+  <article class="case container">
+    <a href="/engineering" class={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'case__back')}>
+      <ArrowLeftIcon data-icon="inline-start" /> Tất cả dự án
+    </a>
+
+    <p class="mono muted">PL-{String(index + 1).padStart(2, '0')} · Payload · {status}</p>
+    <h1>{title}</h1>
+    <p class="case__lead">{summary}</p>
+
+    <dl class="case__meta">
+      <div><dt class="mono muted">Vai trò</dt><dd>{role}</dd></div>
+      <div><dt class="mono muted">Thời gian</dt><dd>{formatMonth(date)}</dd></div>
+      {tags.length > 0 && (
+        <div><dt class="mono muted">Hệ thống</dt><dd class="case__tags">{tags.map((t) => <Badge variant="telemetry">{t}</Badge>)}</dd></div>
+      )}
+    </dl>
+
+    {cover && (
+      <Image src={cover} alt={coverAlt} widths={[800, 1200, 1800]} sizes="(min-width: 1320px) 1240px, 100vw" class="case__cover" transition:name={`project-${project.id}`} loading="eager" />
+    )}
+
+    <div class="prose prose-lg case__body">
+      <Content />
+    </div>
+
+    {links.length > 0 && (
+      <>
+        <Separator className="my-12" />
+        <div class="case__links">
+          {links.map((l) => (
+            <a href={l.url} target="_blank" rel="noopener noreferrer" class={cn(buttonVariants({ variant: 'launch-outline', size: 'pill' }))}>
+              {l.label} <ArrowUpRightIcon data-icon="inline-end" />
+            </a>
+          ))}
+        </div>
+      </>
+    )}
+  </article>
+</BaseLayout>
+
+<style>
+  .case { padding-top: calc(var(--header-h) + var(--space-8)); }
+  .case__back { margin-bottom: var(--space-8); margin-left: -0.5rem; }
+  h1 { font-size: var(--fs-h2); margin-block: var(--space-3) var(--space-6); max-width: 20ch; }
+  .case__lead { font-size: var(--fs-lg); color: var(--fg-muted); max-width: 52ch; }
+  .case__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8) var(--space-12);
+    margin-block: var(--space-8);
+    padding-block: var(--space-6);
+    border-block: 1px dashed var(--line);
+  }
+  .case__meta dt { margin-bottom: var(--space-2); }
+  .case__meta dd { font-weight: 500; }
+  .case__tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .case__cover { width: 100%; height: auto; border-radius: var(--r-lg); margin-bottom: var(--space-12); }
+  .case__body { max-width: 68ch; }
+  .case__links { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+</style>

@@ -1,0 +1,31 @@
+---
+/** Tiêu đề một section ở trang chủ: nhãn telemetry + h2 + link "xem tất cả". */
+import { ArrowUpRightIcon } from 'lucide-react';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
+interface Props {
+  code: string;
+  title: string;
+  href?: string;
+  linkLabel?: string;
+}
+const { code, title, href, linkLabel = 'Xem tất cả' } = Astro.props;
+---
+
+<div class="shead">
+  <div>
+    <p class="mono muted">{code}</p>
+    <h2>{title}</h2>
+  </div>
+  {href && (
+    <a href={href} class={cn(buttonVariants({ variant: 'launch-outline', size: 'pill' }))}>
+      {linkLabel} <ArrowUpRightIcon data-icon="inline-end" />
+    </a>
+  )}
+</div>
+
+<style>
+  .shead { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-6); margin-bottom: var(--space-12); }
+  h2 { font-size: var(--fs-h2); margin-top: var(--space-3); max-width: 16ch; }
+</style>

@@ -1,13 +1,141 @@
 ---
+import { render } from 'astro:content';
+import { DownloadIcon } from 'lucide-react';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ComingSoon from '@/components/sections/ComingSoon.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { getPage } from '@/lib/content';
+
+const page = await getPage('about');
+const fallbackIntro =
+  'Câu chuyện từ một đứa trẻ hay ngước nhìn trời đêm đến kỹ sư công nghệ vũ trụ, và vì sao tôi vẫn luôn xách ba lô lên đường.';
+const Content = page ? (await render(page)).Content : undefined;
 ---
 
-<BaseLayout title="Về tôi">
-  <ComingSoon
-    code="MSN-01 · About"
-    title="Về tôi"
-    intro="Câu chuyện từ một đứa trẻ hay ngước nhìn trời đêm đến kỹ sư công nghệ vũ trụ, và vì sao tôi vẫn luôn xách ba lô lên đường."
-    phase="Giai đoạn P2"
-  />
+<BaseLayout title="Về tôi" description={page?.data.intro ?? fallbackIntro}>
+  {!page || !Content ? (
+    <ComingSoon code="MSN-01 · About" title="Về tôi" intro={fallbackIntro} phase="Đang cập nhật" />
+  ) : (
+    <>
+      <PageHeader code="MSN-01 · About" title={page.data.title} intro={page.data.intro}>
+        {page.data.cv && (
+          <a href={page.data.cv} class={cn(buttonVariants({ variant: 'launch', size: 'pill' }), 'about__cv')} download>
+            Tải CV <DownloadIcon data-icon="inline-end" />
+          </a>
+        )}
+      </PageHeader>
+
+      <section class="container about__story prose prose-lg">
+        <Content />
+      </section>
+
+      {page.data.timeline.length > 0 && (
+        <section class="container about__section" aria-labelledby="trajectory-title">
+          <p class="mono muted">Trajectory · Quỹ đạo phóng</p>
+          <h2 id="trajectory-title">Từng tầng một</h2>
+          <!-- Đường quỹ đạo tự vẽ khi cuộn; mỗi mốc là một lần "tách tầng" -->
+          <div class="trajectory" data-trajectory>
+            <span class="trajectory__line" aria-hidden="true"><span data-trajectory-line></span></span>
+            <ol>
+              {page.data.timeline.map((m, i) => (
+                <li class="stage" data-stage>
+                  <span class="stage__dot" aria-hidden="true"></span>
+                  <p class="mono stage__year">T+{String(i).padStart(2, '0')} · {m.year}</p>
+                  <h3>{m.title}</h3>
+                  <p class="muted">{m.text}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      )}
+
+      {page.data.subsystems.length > 0 && (
+        <section class="container about__section" aria-labelledby="subsystems-title">
+          <p class="mono muted">Subsystems · Kỹ năng</p>
+          <h2 id="subsystems-title">Các phân hệ</h2>
+          <div class="subsystems">
+            {page.data.subsystems.map((s) => (
+              <div class="subsystem" data-reveal>
+                <div class="subsystem__head">
+                  <span class="mono subsystem__code">{s.code}</span>
+                  <span class="mono subsystem__status"><i aria-hidden="true"></i>Nominal</span>
+                </div>
+                <h3>{s.name}</h3>
+                <div class="gauge" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={s.level} aria-label={`${s.name}: ${s.level}%`}>
+                  <span data-gauge style={`--level:${s.level}%`}></span>
+                </div>
+                <p class="mono muted gauge__value">{s.level}%</p>
+                <ul>{s.items.map((it) => <li>{it}</li>)}</ul>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+    </>
+  )}
 </BaseLayout>
+
+<style>
+  .about__cv { margin-top: var(--space-8); }
+  .about__story { max-width: 68ch; }
+  .about__section { margin-top: var(--section-y); }
+  .about__section h2 { font-size: var(--fs-h2); margin-block: var(--space-3) var(--space-12); }
+
+  .trajectory { position: relative; max-width: 720px; padding-left: var(--space-12); }
+  .trajectory ol { list-style: none; padding: 0; display: grid; gap: var(--space-12); }
+  .trajectory__line {
+    position: absolute;
+    left: 11px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: repeating-linear-gradient(var(--line) 0 6px, transparent 6px 12px);
+  }
+  .trajectory__line span { position: absolute; inset: 0; background: var(--primary); transform-origin: top; transform: scaleY(var(--progress, 1)); }
+  .stage { position: relative; }
+  .stage__dot {
+    position: absolute;
+    left: calc(var(--space-12) * -1 + 4px);
+    top: 4px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 3px solid var(--primary);
+    box-shadow: 0 0 0 5px var(--bg);
+  }
+  .stage__year { color: var(--primary); }
+  .stage h3 { font-size: var(--fs-h3); margin-block: var(--space-2); }
+
+  .subsystems { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: var(--space-6); }
+  .subsystem {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: var(--bg-elev);
+  }
+  .subsystem__head { display: flex; justify-content: space-between; align-items: center; }
+  .subsystem__code { color: var(--primary); }
+  .subsystem__status { display: inline-flex; align-items: center; gap: 6px; color: var(--ok); font-size: 0.625rem; }
+  .subsystem__status i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: led 2.4s ease-in-out infinite; }
+  .subsystem h3 { font-size: 1.5rem; }
+  .gauge { height: 10px; border-radius: var(--r-pill); background: var(--bg-sunken); overflow: hidden; }
+  .gauge span {
+    display: block;
+    height: 100%;
+    width: var(--level);
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--c-sun), var(--primary));
+    transform-origin: left;
+  }
+  .gauge__value { text-align: right; }
+  .subsystem ul { padding-left: 1.1em; color: var(--fg-muted); }
+  .subsystem li::marker { color: var(--primary); }
+  @keyframes led { 50% { opacity: 0.35; } }
+</style>

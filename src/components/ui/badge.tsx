@@ -25,10 +25,10 @@ const badgeVariants = cva(
           "h-7 bg-foreground px-3 font-mono text-[0.6875rem] tracking-[0.08em] text-background uppercase",
         // Chip "Đang lắp ráp" — viền đứt màu cam
         signal:
-          "h-7 gap-2 border-dashed border-primary px-3 font-mono text-[0.6875rem] tracking-[0.08em] text-primary uppercase",
+          "h-7 gap-2 border-dashed border-primary px-3 font-mono text-[0.6875rem] tracking-[0.08em] text-signal-ink uppercase",
         // Trạng thái trong bảng Mission status
         nominal: "h-auto gap-2 px-0 font-mono text-[0.6875rem] tracking-[0.08em] text-ok uppercase",
-        active: "h-auto gap-2 px-0 font-mono text-[0.6875rem] tracking-[0.08em] text-primary uppercase",
+        active: "h-auto gap-2 px-0 font-mono text-[0.6875rem] tracking-[0.08em] text-signal-ink uppercase",
         queued: "h-auto gap-2 px-0 font-mono text-[0.6875rem] tracking-[0.08em] text-muted-foreground uppercase",
       },
     },

@@ -20,6 +20,7 @@ Dễ thương, năng động nhưng vẫn nghiêm túc.
 
 **Các yếu tố nhận diện phải giữ:**
 - Nhãn telemetry chữ mono in hoa: `MSN-00 · Launch pad`, `MSN-99 · Send a signal`, toạ độ `21.03°N · 105.85°E`.
+- Logo góc trái: Orbi + chữ **Longpeoo** (`public/brand/longpeoo-wordmark.webp`, dùng làm CSS mask nên tự đổi màu theo sáng/tối; rê chuột chuyển cam).
 - Thanh menu "Mission Control": số thứ tự `01–05`, chấm "quỹ đạo" dưới mục đang mở, đồng hồ UTC và giờ Hà Nội, chấm trạng thái nhấp nháy.
 - Hero: "Xin chào, tôi là", tên cực lớn kèm dấu chấm cam nảy, chip nghề nghiệp, **Orbi bay theo quỹ đạo elip quanh hành tinh lưới**, vệt cam chạy theo, sao lấp lánh.
 - Bảng **Mission status** (P1–P5) với trạng thái Nominal / In progress / Queued.
@@ -83,12 +84,25 @@ Thang cỡ chữ: `--fs-mono`, `--fs-sm`, `--fs-base`, `--fs-lg`, `--fs-h3`, `--
 | Liên hệ | sóng tín hiệu lan ra quanh Orbi khi rê chuột vào email |
 | Footer | tên lửa phụt lửa khi rê chuột, phóng vút lên khi bấm |
 | Trang chờ | vòng tròn đứt nét quay chậm, chip "Đang lắp ráp" nhấp nháy |
+| **Màn đếm ngược** (P3) | T-3 → 1, Orbi cưỡi tên lửa cất cánh; chỉ lần đầu mỗi phiên, bấm/gõ phím để bỏ qua, tự ẩn sau 3 giây nếu script lỗi |
+| **Bảng lật chữ** (P3) | hero: các nghề trong `site.yaml > roles` lật kiểu bảng giờ bay (ẩn dưới 900px) |
+| **Đồng hồ độ cao** (P3) | thanh bên phải: cuộn trang = ALT 0 → 408 km (ẩn dưới 1180px) |
+| **Cuộn mượt** (P3) | Lenis (chỉ chuột/touchpad; tắt khi đang mở menu/lightbox) |
+| **Hiện dần khi cuộn** (P3) | phần tử có `data-reveal` (chỉ áp cho khối dưới màn hình đầu) |
+| **Quỹ đạo phóng** (P3) | trang Về tôi: `data-trajectory` tự vẽ theo cuộn, `data-stage` bật ra; `data-gauge` thanh kỹ năng đầy dần |
+| Thẻ dự án | rê chuột: lưới bản vẽ kỹ thuật, 4 góc ngắm, đèn trạng thái sáng |
+| Thẻ chuyến đi | rê chuột: con dấu hộ chiếu đóng "cộp"; trang chi tiết: con dấu đóng một lần khi mở |
+| Ảnh polaroid | dán băng keo, xoay nhẹ; rê chuột thì thẳng lại và nhấc lên |
+| Video | khung CRT có vạch quét, nhấp nháy khi rê chuột; nút play nảy |
+| Địa cầu Missions | tự xoay chậm, kéo để xoay, rê vào tên chuyến đi → xoay tới đó; đường bay nối các chuyến theo thời gian |
+| Trứng phục sinh | gõ `launch` ở bất kỳ đâu → mưa sao băng |
 
 Quy tắc kỹ thuật:
 - Đường cong chuẩn: `--ease-spring` (nảy) và `--ease-out` (mượt). Thời lượng: `--dur-fast`, `--dur`, `--dur-slow`.
 - Luôn tôn trọng `prefers-reduced-motion`: đã có reset toàn cục. Animation SMIL phải dừng thủ công bằng `pauseAnimations()` (xem `Hero.astro`).
 - Script chạy theo sự kiện `astro:page-load` (vì có View Transitions). Listener gắn vào `window`/`document` phải gỡ khi chuyển trang (dùng `AbortController`, xem `MissionBar.astro`).
-- Giai đoạn P3 (GSAP, Lenis) **bổ sung** chuyển động mới, không thay thế những chuyển động trên.
+- Logic chuyển động toàn trang nằm ở `src/scripts/motion.ts`. **GSAP chỉ được tải động** khi trang có `[data-reveal]`, `[data-trajectory]` hoặc `[data-gauge]`. Không import GSAP tĩnh ở nơi khác.
+- Thêm hiệu ứng cuộn mới: gắn thuộc tính `data-*` vào phần tử rồi xử lý trong `motion.ts`, không viết script riêng trong từng component.
 
 ---
 
@@ -131,9 +145,10 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 | Trạng thái trống, lỗi 404 | `Empty` |
 | Thông báo, chú thích | `Alert` |
 | Đường kẻ phân cách | `Separator` |
-| Xem ảnh phóng to (P4) | `Dialog` |
-| Lọc video theo nhóm (P4) | `Tabs` hoặc `ToggleGroup` |
-| Form liên hệ (P2) | `FieldGroup` + `Field` + `Input`/`Textarea` |
+| Thẻ dự án | `Card` (`ProjectCard.astro`) |
+| Xem ảnh phóng to, phát video | `Dialog` (`PhotoGallery.tsx`, `VideoGrid.tsx`) |
+| Lọc video theo nhóm | `Tabs` (`VideoGrid.tsx`) |
+| Form liên hệ (sau này) | `FieldGroup` + `Field` + `Input`/`Textarea` |
 
 ### Luật bắt buộc (từ skill shadcn)
 
@@ -146,7 +161,16 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 ### Astro và React
 
 - Component React **không có** `client:*` sẽ render thành HTML tĩnh, không tốn JS. Đây là mặc định.
-- Chỉ thêm `client:*` khi cần tương tác: `ThemeToggle` (`client:load`), `MobileNav` (`client:media`).
+- Chỉ thêm `client:*` khi cần tương tác, và chọn chỉ thị nhẹ nhất:
+
+  | Island | Chỉ thị | Lý do |
+  |---|---|---|
+  | `MobileNav` | `client:media="(max-width: 860px)"` | desktop không tải React |
+  | `MissionsGlobe`, `PhotoGallery`, `VideoGrid`, `VideoPlayer` | `client:visible` | chỉ tải khi cuộn tới |
+  | `ThemeToggle` | **không hydrate** | render tĩnh, click gắn bằng script thuần trong `MissionBar.astro` |
+
+  **Không dùng `client:load`** cho component chỉ cần một sự kiện click: render tĩnh rồi gắn sự kiện bằng `<script>`.
+- **Ngân sách JS:** JS tải ngay ở trang chủ (desktop) ≤ 30 KB gzip (hiện khoảng 13 KB). Kiểm tra sau mỗi lần thêm thư viện.
 - `asChild` của Radix **không nhận** phần tử viết trong file `.astro`. Muốn `asChild` với `<a>`, viết component bằng `.tsx`.
 - Icon React (lucide) đặt trong file `.astro`: muốn style bằng `<style>` scoped thì phải dùng `:global(.ten-class)`.
 - Icon thương hiệu (YouTube, Instagram…) render thành chuỗi SVG lúc build bằng `brandIconSvg()` trong `src/lib/site.ts`, để không đẩy cả bộ icon xuống trình duyệt.
@@ -160,15 +184,22 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 - Nút nói rõ việc sẽ xảy ra: "Xem hành trình", "Kênh YouTube".
 - **Không bịa thông tin cá nhân** (trường, công ty, số liệu). Chưa có dữ liệu thật thì giữ `ComingSoon`.
 
-**Nơi sửa nội dung:**
+**Nơi sửa nội dung** (cũng sửa được qua giao diện **`/admin`**, tức Sveltia CMS, cấu hình ở `public/admin/config.yml`):
 
 | Nội dung | File |
 |---|---|
 | Tên, nghề nghiệp, câu giới thiệu, vị trí, menu, mạng xã hội, email | `src/data/site.yaml` (kiểm tra bằng zod trong `src/lib/site.ts`) |
-| Dự án, chuyến đi, video ghim (từ P2) | `src/content/**` (content collections) |
+| Dự án kỹ thuật | `src/content/projects/<ten-khong-dau>/index.md` + ảnh cùng thư mục |
+| Chuyến đi (kèm toạ độ cho địa cầu, album, video) | `src/content/journeys/<ten-khong-dau>/index.md` + ảnh cùng thư mục |
+| Trang Về tôi (timeline, kỹ năng, CV) | `src/content/pages/about.md` |
+| Kênh YouTube, video nổi bật, ghim, ẩn, nhóm | `src/data/videos.yaml` |
 | Màu, font, khoảng cách | `src/styles/global.css` |
 
-Thêm trường mới vào `site.yaml` thì cập nhật schema trong `src/lib/site.ts` cùng lúc.
+- Schema của nội dung nằm ở `src/content.config.ts`. Thêm trường thì cập nhật cả schema lẫn `public/admin/config.yml`.
+- `draft: true` = chỉ hiện khi `npm run dev`. Các bài mẫu "Ví dụ: …" đều là draft, xoá khi có nội dung thật.
+- Trang chưa có nội dung tự hiện `ComingSoon`; khối trang chủ chưa có dữ liệu thì tự ẩn.
+- Ảnh luôn đi qua `astro:assets` (`<Image>` hoặc `toGalleryPhotos()` trong `src/lib/photos.ts`) để tự nén WebP và tạo nhiều kích thước.
+- Video lấy bằng **YouTube Data API v3** lúc build (`src/lib/youtube.ts`, biến môi trường `YOUTUBE_API_KEY`). Không đọc trang YouTube trái phép.
 
 ---
 
@@ -179,13 +210,20 @@ src/
 ├── components/
 │   ├── ui/          ← shadcn (CLI quản lý; chỉ sửa bằng cách thêm variant)
 │   ├── brand/       ← Orbi (linh vật, SVG thuần)
-│   ├── layout/      ← MissionBar, Footer, ThemeToggle (island), MobileNav (island)
-│   └── sections/    ← Hero, MissionStatus, ComingSoon, SocialList…
-├── data/site.yaml
-├── layouts/BaseLayout.astro  ← SEO, theme, header/footer
-├── lib/             ← site.ts (đọc + kiểm tra yaml), utils.ts (cn)
-├── pages/           ← mỗi file = một URL
+│   ├── layout/      ← MissionBar, Footer, ThemeToggle, MobileNav (island)
+│   ├── media/       ← island React: MissionsGlobe, PhotoGallery, VideoGrid, VideoPlayer
+│   └── sections/    ← Hero, HomeSections, PageHeader, SectionHead, ProjectCard, JourneyCard,
+│                       MissionStatus, ComingSoon, SocialList
+├── content/         ← projects/, journeys/, pages/ (Markdown + ảnh)
+├── content.config.ts← schema nội dung
+├── data/            ← site.yaml, videos.yaml
+├── layouts/BaseLayout.astro  ← SEO, JSON-LD, theme, preloader, altimeter, header/footer
+├── lib/             ← site.ts, content.ts, photos.ts, youtube.ts, utils.ts (cn, cleanPath)
+├── pages/           ← mỗi file = một URL ([slug].astro = trang chi tiết)
+├── scripts/motion.ts← chuyển động toàn trang
 └── styles/global.css
+public/admin/        ← Sveltia CMS
+.github/workflows/refresh.yml ← build lại mỗi 6 giờ (video mới)
 ```
 
 ---
@@ -196,8 +234,10 @@ src/
 - **Hai chế độ sáng/tối** đều đọc được.
 - **Bàn phím**: mọi thứ bấm được đều focus được (viền đứt nét màu cam).
 - **Ảnh**: dùng `<Image>`/`<Picture>` của Astro, luôn có `alt` (ảnh trang trí: `alt=""`, SVG trang trí: `aria-hidden`).
-- **Hiệu năng**: trang chủ dưới 150KB JS.
-- **SEO**: mỗi trang truyền `title` và `description` riêng cho `BaseLayout`.
+- **Tương phản**: chữ nhỏ màu cam dùng token `--signal-ink` / `text-signal-ink` (đậm hơn `--primary`) để đạt 4.5:1 trên nền giấy.
+- **Hiệu năng**: xem ngân sách JS ở mục 4. Đo bằng PageSpeed Insights trên web thật sau mỗi đợt thay đổi lớn.
+- **SEO**: mỗi trang truyền `title` và `description` riêng cho `BaseLayout`. Trang chi tiết truyền thêm `image` (ảnh bìa) và `schema` (JSON-LD `Article` / `CreativeWork`).
+- **Đường dẫn**: URL không có `/` cuối (`trailingSlash: 'never'`, `build.format: 'file'`). So sánh đường dẫn trang hiện tại thì dùng `cleanPath()`.
 - **Tiếng Việt**: kiểm tra dấu hiển thị đúng ở cả 3 font.
 
 **Trước khi commit:**
@@ -221,6 +261,8 @@ Rồi chụp màn hình (sáng/tối, desktop/mobile), so với thiết kế ở
 
 ## 9. Deploy
 
-- Push lên nhánh `main` → Cloudflare Workers tự build (`npm run build`) và phát thư mục `dist/` (`wrangler.jsonc`, tên worker `portfolio`).
+- Push lên nhánh `main` (kể cả commit do CMS tạo) → Cloudflare Workers tự build (`npm run build`) và phát thư mục `dist/` (`wrangler.jsonc`, tên worker `portfolio`).
+- Biến môi trường `YOUTUBE_API_KEY` phải có ở: Cloudflare (Worker → Settings → Build → Variables), GitHub Secrets (cho `refresh.yml`) và file `.env` trên máy.
+- `refresh.yml` build và deploy lại mỗi 6 giờ (cần secret `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`). Thiếu secret thì workflow tự bỏ qua.
 - Node 24 (file `.node-version`). Trên máy dùng `fnm use`.
 - Tên miền `longpeoo.io.vn` (DNS ở Cloudflare). `www` chuyển hướng 301 về tên miền chính.

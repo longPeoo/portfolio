@@ -6,20 +6,21 @@
 import { ArrowUpRightIcon } from 'lucide-react';
 import { site } from '@/lib/site';
 import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn, cleanPath } from '@/lib/utils';
 import Orbi from '@/components/brand/Orbi.astro';
 import { ThemeToggle } from './ThemeToggle';
 import { MobileNav } from './MobileNav';
 
-const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const path = cleanPath(Astro.url.pathname);
 const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
 const pad = (n: number) => String(n + 1).padStart(2, '0');
 ---
 
 <header class="mbar" data-mbar>
-  <a href="/" class="mbar__brand" aria-label={`${site.name} — trang chủ`}>
+  <a href="/" class="mbar__brand" aria-label="Longpeoo — trang chủ">
     <Orbi size={34} />
-    <span class="mbar__name">{site.name}<span class="mbar__dot">.</span></span>
+    <!-- Logo chữ Longpeoo: ảnh PNG dùng làm mask nên tự đổi màu theo giao diện sáng/tối -->
+    <span class="mbar__wordmark" aria-hidden="true"></span>
   </a>
 
   <nav class="mbar__nav" aria-label="Menu chính">
@@ -42,7 +43,7 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
   </div>
 
   <div class="mbar__actions">
-    <ThemeToggle client:load />
+    <ThemeToggle />
     <a href="/contact" class={cn(buttonVariants({ variant: 'ink', size: 'lg' }), 'mbar__cta')}>
       Liên hệ <ArrowUpRightIcon data-icon="inline-end" />
     </a>
@@ -85,14 +86,16 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
   }
   .mbar__brand :global(.orbi) { transition: transform var(--dur) var(--ease-spring); }
   .mbar__brand:hover :global(.orbi) { transform: rotate(-12deg) scale(1.08); }
-  .mbar__name {
-    font-family: var(--font-display);
-    font-size: 1.35rem;
-    font-weight: 800;
-    font-stretch: 118%;
-    letter-spacing: -0.02em;
+  .mbar__wordmark {
+    display: block;
+    height: 24px;
+    aspect-ratio: 740 / 160;
+    background-color: var(--fg);
+    -webkit-mask: url('/brand/longpeoo-wordmark.webp') center / contain no-repeat;
+    mask: url('/brand/longpeoo-wordmark.webp') center / contain no-repeat;
+    transition: background-color var(--dur);
   }
-  .mbar__dot { color: var(--primary); }
+  .mbar__brand:hover .mbar__wordmark { background-color: var(--primary); }
 
   .mbar__nav { margin-inline: auto; }
   .mbar__nav ul { display: flex; gap: clamp(8px, 1.6vw, 26px); list-style: none; padding: 0; }
@@ -198,10 +201,20 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
     window.addEventListener('scroll', update, { passive: true, signal: pageListeners?.signal });
   }
 
+  function initThemeToggle() {
+    document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      try {
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      } catch {}
+    });
+  }
+
   document.addEventListener('astro:page-load', () => {
     pageListeners?.abort();
     pageListeners = new AbortController();
     initClock();
     initScrollState();
+    initThemeToggle();
   });
 </script>

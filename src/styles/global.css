@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@plugin "@tailwindcss/typography";
 @import "@fontsource-variable/archivo/standard.css";
 @import "@fontsource/be-vietnam-pro/400.css";
 @import "@fontsource/be-vietnam-pro/400-italic.css";
@@ -24,6 +25,7 @@
   --font-mono: "JetBrains Mono Variable", ui-monospace, "Cascadia Code", monospace;
 
   --color-ok: var(--ok);
+  --color-signal-ink: var(--signal-ink);
   --color-sun: var(--c-sun);
   --color-aurora: var(--c-aurora);
 
@@ -77,7 +79,7 @@
   --c-ink: #1b1b2f;        /* chữ */
   --c-signal: #ff6a3d;     /* cam an toàn tên lửa — CTA */
   --c-aurora: #3ccfb4;     /* trạng thái NOMINAL */
-  --c-aurora-deep: #12806f;
+  --c-aurora-deep: #0f7364;
   --c-sun: #ffc94d;        /* điểm nhấn cute */
 
   /* Token shadcn */
@@ -100,6 +102,8 @@
   --input: rgb(27 27 47 / 0.22);
   --ring: var(--c-signal);
   --ok: var(--c-aurora-deep);
+  /* Cam đậm hơn cho chữ nhỏ trên nền giấy (đạt tương phản 4.5:1) */
+  --signal-ink: #a8360a;
   --chart-1: var(--c-signal);
   --chart-2: var(--c-aurora-deep);
   --chart-3: var(--c-sun);
@@ -184,6 +188,7 @@
   --border: rgb(244 238 225 / 0.14);
   --input: rgb(244 238 225 / 0.2);
   --ok: var(--c-aurora);
+  --signal-ink: var(--c-signal);
   --sidebar: var(--c-space-2);
   --sidebar-foreground: var(--c-paper);
   --sidebar-accent: var(--c-space-2);
@@ -293,4 +298,261 @@ body::before {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ---------- Bài viết Markdown (plugin typography) — màu lấy theo token, tự đổi sáng/tối ---------- */
+@layer components {
+  .prose {
+    --tw-prose-body: var(--foreground);
+    --tw-prose-headings: var(--foreground);
+    --tw-prose-lead: var(--muted-foreground);
+    --tw-prose-links: var(--primary);
+    --tw-prose-bold: var(--foreground);
+    --tw-prose-counters: var(--muted-foreground);
+    --tw-prose-bullets: var(--primary);
+    --tw-prose-hr: var(--border);
+    --tw-prose-quotes: var(--foreground);
+    --tw-prose-quote-borders: var(--primary);
+    --tw-prose-captions: var(--muted-foreground);
+    --tw-prose-code: var(--foreground);
+    --tw-prose-pre-code: var(--c-paper);
+    --tw-prose-pre-bg: var(--c-space);
+    --tw-prose-th-borders: var(--border);
+    --tw-prose-td-borders: var(--border);
+  }
+  .prose :where(h2, h3) { font-family: var(--font-display); font-stretch: 112%; letter-spacing: -0.02em; }
+  .prose :where(img) { border-radius: var(--r); }
+}
+
+/* ---------- Media: trình phát video & ảnh (component React nên đặt style toàn cục) ---------- */
+@layer components {
+  .video-player { position: relative; aspect-ratio: 16 / 9; border-radius: var(--r); overflow: hidden; background: var(--c-space); }
+  .video-player > button, .video-player img, .video-player iframe { display: block; width: 100%; height: 100%; border: 0; object-fit: cover; }
+  .video-player > button { position: relative; cursor: pointer; }
+  .video-player img { transition: transform var(--dur-slow) var(--ease-out), filter var(--dur); }
+  .video-player > button:hover img { transform: scale(1.03); filter: saturate(1.1); }
+  .video-player__play {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    display: grid;
+    place-items: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--c-signal);
+    color: #fff;
+    box-shadow: 0 3px 0 var(--c-ink);
+    translate: -50% -50%;
+    transition: scale var(--dur) var(--ease-spring), box-shadow var(--dur);
+  }
+  .video-player__play svg { width: 28px; height: 28px; margin-left: 4px; fill: currentColor; }
+  .video-player > button:hover .video-player__play { scale: 1.12; box-shadow: 0 6px 0 var(--c-ink); }
+
+  /* Khung màn hình CRT ở mission control */
+  .video-player--crt { padding: 14px; border-radius: var(--r-lg); background: var(--c-space-2); box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.06); }
+  .video-player--crt > button, .video-player--crt iframe { border-radius: calc(var(--r-lg) - 10px); overflow: hidden; }
+  .video-player--crt > button::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      repeating-linear-gradient(0deg, rgb(0 0 0 / 0.16) 0 1px, transparent 1px 3px),
+      radial-gradient(ellipse at center, transparent 55%, rgb(0 0 0 / 0.45));
+    mix-blend-mode: multiply;
+  }
+  .video-player--crt > button:hover::after { animation: crt-flicker 140ms steps(2) 3; }
+  @keyframes crt-flicker { 50% { opacity: 0.55; } }
+
+  /* Lưới ảnh */
+  .photo-gallery { list-style: none; padding: 0; margin: 0; }
+  .photo-gallery button { display: block; width: 100%; cursor: zoom-in; }
+  .photo-gallery--grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: var(--space-4); }
+  .photo-gallery--grid img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--r-sm); transition: transform var(--dur-slow) var(--ease-out); }
+  .photo-gallery--grid button { overflow: hidden; border-radius: var(--r-sm); }
+  .photo-gallery--grid button:hover img { transform: scale(1.05); }
+
+  /* Ảnh polaroid dán băng keo, xoay nhẹ như được thả lên bàn */
+  .photo-gallery--polaroid { columns: 3 240px; column-gap: var(--space-8); }
+  .photo-gallery--polaroid li { break-inside: avoid; margin-bottom: var(--space-8); }
+  .photo-gallery--polaroid button {
+    position: relative;
+    padding: 10px 10px 14px;
+    background: #fffdf8;
+    color: var(--c-ink);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.08), 0 10px 24px -12px rgb(27 27 47 / 0.35);
+    transition: transform 420ms var(--ease-spring), box-shadow var(--dur);
+  }
+  .photo-gallery--polaroid li:nth-child(3n + 1) button { transform: rotate(-2deg); }
+  .photo-gallery--polaroid li:nth-child(3n + 2) button { transform: rotate(1.6deg); }
+  .photo-gallery--polaroid li:nth-child(3n) button { transform: rotate(-0.6deg); }
+  .photo-gallery--polaroid button:hover { transform: rotate(0) scale(1.03) translateY(-4px); box-shadow: 0 2px 4px rgb(0 0 0 / 0.1), 0 24px 40px -16px rgb(27 27 47 / 0.45); z-index: 1; }
+  .photo-gallery--polaroid button::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    width: 84px;
+    height: 22px;
+    translate: -50% 0;
+    rotate: -3deg;
+    background: color-mix(in srgb, var(--c-sun) 55%, transparent);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+  }
+  .photo-gallery--polaroid img { width: 100%; height: auto; }
+  .photo-gallery__caption { display: block; padding-top: 10px; font-size: var(--fs-sm); font-style: italic; text-align: center; }
+}
+
+/* ---------- Quả địa cầu Missions ---------- */
+@layer components {
+  .missions-globe { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: var(--space-12); align-items: center; }
+  .missions-globe__stage { position: relative; aspect-ratio: 1; max-width: 600px; width: 100%; justify-self: center; }
+  .missions-globe__canvas {
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+    touch-action: pan-y;
+    opacity: 0;
+    transition: opacity 1s var(--ease-out);
+  }
+  .missions-globe__canvas:active { cursor: grabbing; }
+  .missions-globe__canvas.is-ready { opacity: 1; }
+  .missions-globe__list { list-style: none; padding: 0; border-top: 1px solid var(--line); }
+  .missions-globe__list a {
+    display: grid;
+    grid-template-columns: 3.5rem 1fr;
+    gap: 2px var(--space-4);
+    padding: var(--space-4) var(--space-2);
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    transition: background-color var(--dur-fast), padding var(--dur) var(--ease-spring);
+  }
+  .missions-globe__list a:hover,
+  .missions-globe__list a[data-active] { background: var(--bg-sunken); padding-left: var(--space-4); }
+  .missions-globe__list .mono { grid-row: span 2; align-self: center; color: var(--primary); }
+  .missions-globe__place { font-family: var(--font-display); font-weight: 750; font-stretch: 112%; font-size: 1.25rem; }
+  .missions-globe__title { color: var(--fg-muted); font-size: var(--fs-sm); }
+  @media (max-width: 860px) {
+    .missions-globe { grid-template-columns: 1fr; gap: var(--space-8); }
+    .missions-globe__stage { max-width: 420px; }
+  }
+}
+
+/* ---------- Lưới video ---------- */
+@layer components {
+  .video-grid { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: var(--space-12) var(--space-8); }
+  .video-card { display: flex; flex-direction: column; gap: var(--space-3); width: 100%; text-align: left; cursor: pointer; }
+  .video-card__thumb { position: relative; display: block; aspect-ratio: 16 / 9; border-radius: var(--r); overflow: hidden; background: var(--c-space); }
+  .video-card__thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur-slow) var(--ease-out); }
+  .video-card:hover .video-card__thumb img { transform: scale(1.04); }
+  .video-card .video-player__play { width: 56px; height: 56px; opacity: 0; scale: 0.8; transition: opacity var(--dur), scale var(--dur) var(--ease-spring); }
+  .video-card:hover .video-player__play, .video-card:focus-visible .video-player__play { opacity: 1; scale: 1; }
+  .video-card__new { position: absolute; top: 10px; left: 10px; padding: 4px 10px; border-radius: var(--r-pill); background: rgb(11 16 38 / 0.78); }
+  .video-card__new i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: led 1.2s steps(2) infinite; }
+  .video-card__title { font-family: var(--font-display); font-weight: 750; font-stretch: 108%; font-size: 1.2rem; line-height: 1.25; transition: color var(--dur-fast); }
+  .video-card:hover .video-card__title { color: var(--primary); }
+  @keyframes led { 50% { opacity: 0.25; } }
+}
+
+/* ==================================================================
+   P3 — CHUYỂN ĐỘNG TOÀN TRANG (logic: src/scripts/motion.ts)
+   ================================================================== */
+
+/* Màn đếm ngược T-3 … 1 */
+.preloader { display: none; }
+html[data-boot="pending"] .preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  background: var(--c-space);
+  color: var(--c-paper);
+  cursor: pointer;
+  /* An toàn: nếu script lỗi, màn này tự ẩn sau 3 giây */
+  animation: boot-failsafe 0s 3s forwards;
+}
+html[data-boot="pending"] body { overflow: hidden; }
+.preloader__pad { display: grid; justify-items: center; gap: var(--space-3); }
+.preloader__count { font-family: var(--font-display); font-size: clamp(5rem, 3rem + 10vw, 10rem); font-weight: 800; font-stretch: 125%; line-height: 1; color: var(--c-signal); font-variant-numeric: tabular-nums; }
+.preloader__rocket { display: grid; justify-items: center; margin-top: var(--space-6); }
+.preloader__rocket .orbi { margin-bottom: -8px; }
+.preloader__flame { transform-origin: 12px 22px; animation: flicker 0.12s infinite alternate; }
+.preloader__skip { opacity: 0.5; margin-top: var(--space-6); }
+.preloader.is-launch .preloader__rocket { transform: translateY(-120vh); transition: transform 650ms cubic-bezier(0.55, 0, 0.9, 0.35); }
+.preloader.is-launch { opacity: 0; transition: opacity 300ms 380ms ease-out; }
+@keyframes boot-failsafe { to { visibility: hidden; opacity: 0; } }
+@keyframes flicker { to { transform: scaleY(0.65); } }
+
+/* Bảng lật chữ */
+.flap { display: inline-flex; gap: 2px; }
+.flap__cell {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 1.05em;
+  height: 1.55em;
+  border-radius: 3px;
+  background: var(--c-space);
+  color: var(--c-paper);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+.dark .flap__cell { background: var(--c-space-2); }
+.flap__cell::after { content: ""; position: absolute; inset: 50% 0 auto; height: 1px; background: rgb(0 0 0 / 0.55); }
+.flap__cell.is-flipping { animation: flap 45ms linear; }
+@keyframes flap { 50% { transform: scaleY(0.25); } }
+
+/* Đồng hồ độ cao */
+.altimeter {
+  position: fixed;
+  right: 18px;
+  top: 50%;
+  z-index: 30;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--fg-muted);
+  font-size: 0.625rem;
+  translate: 0 -50%;
+  transition: opacity var(--dur);
+  pointer-events: none;
+}
+.altimeter[data-hidden] { opacity: 0; }
+@media (min-width: 1180px) { .altimeter { display: flex; } }
+.altimeter__track {
+  position: relative;
+  width: 2px;
+  height: 34vh;
+  background: repeating-linear-gradient(to top, var(--line) 0 2px, transparent 2px 10px);
+}
+.altimeter__fill { position: absolute; inset: auto 0 0; height: calc(var(--alt, 0) * 100%); background: var(--primary); }
+.altimeter__rocket {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--alt, 0) * 100%);
+  width: 10px;
+  height: 14px;
+  translate: -50% 50%;
+  background: var(--primary);
+  clip-path: polygon(50% 0, 100% 70%, 75% 100%, 25% 100%, 0 70%);
+}
+
+/* Sao băng (trứng phục sinh "launch") */
+.shooting-star {
+  position: fixed;
+  z-index: 150;
+  width: 160px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--c-sun), transparent);
+  rotate: -22deg;
+  pointer-events: none;
+  animation: shoot 900ms ease-in forwards;
+}
+@keyframes shoot {
+  from { translate: 0 0; opacity: 1; }
+  to { translate: -60vw 40vh; opacity: 0; }
 }

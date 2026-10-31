@@ -1,0 +1,190 @@
+# ==================================================================
+#  SVELTIA CMS — trang quản trị nội dung tại https://longpeoo.io.vn/admin
+#  Đăng nhập: "Sign in with GitHub" hoặc "Sign in with Token" (GitHub personal access token).
+#  Mỗi lần bấm Lưu = một commit lên GitHub → Cloudflare tự build & deploy (~1 phút).
+# ==================================================================
+
+backend:
+  name: github
+  repo: longPeoo/portfolio
+  branch: main
+  commit_messages:
+    create: "Thêm {{collection}}: {{slug}}"
+    update: "Cập nhật {{collection}}: {{slug}}"
+    delete: "Xoá {{collection}}: {{slug}}"
+    uploadMedia: "Tải lên {{path}}"
+    deleteMedia: "Xoá {{path}}"
+
+site_url: https://longpeoo.io.vn
+display_url: https://longpeoo.io.vn
+
+# Ảnh dùng chung (ít dùng) — ảnh của từng dự án/chuyến đi nằm cùng thư mục bài viết
+media_folder: public/uploads
+public_folder: /uploads
+
+# Tạo đường dẫn không dấu từ tiêu đề tiếng Việt: "Hà Giang" → "ha-giang"
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  # ---------------------------------------------------------------
+  - name: journeys
+    label: Hành trình
+    label_singular: Chuyến đi
+    description: Mỗi chuyến đi là một thư mục gồm index.md và ảnh.
+    folder: src/content/journeys
+    path: "{{slug}}/index"
+    media_folder: ""
+    public_folder: ""
+    create: true
+    sortable_fields: [date, title]
+    summary: "{{title}} — {{place}} ({{date}})"
+    fields:
+      - { name: title, label: Tiêu đề, widget: string }
+      - { name: summary, label: Tóm tắt (1–2 câu), widget: text }
+      - { name: date, label: Ngày bắt đầu, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
+      - { name: endDate, label: Ngày kết thúc, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false, required: false }
+      - { name: place, label: Địa điểm, widget: string, hint: "Ví dụ: Hà Giang" }
+      - { name: country, label: Quốc gia, widget: string, default: "Việt Nam" }
+      - { name: lat, label: Vĩ độ, widget: number, value_type: float, hint: "Google Maps → chuột phải vào điểm → số đầu tiên" }
+      - { name: lng, label: Kinh độ, widget: number, value_type: float, hint: "Số thứ hai" }
+      - { name: cover, label: Ảnh bìa, widget: image }
+      - { name: coverAlt, label: Mô tả ảnh bìa, widget: string, hint: "Mô tả ngắn cho người khiếm thị và Google" }
+      - name: gallery
+        label: Album ảnh
+        widget: list
+        required: false
+        fields:
+          - { name: src, label: Ảnh, widget: image }
+          - { name: alt, label: Mô tả ảnh, widget: string }
+          - { name: caption, label: Chú thích, widget: string, required: false }
+      - { name: youtube, label: Link video YouTube, widget: string, required: false }
+      - { name: tags, label: Thẻ, widget: list, required: false }
+      - { name: draft, label: Bản nháp (chưa đăng), widget: boolean, default: false }
+      - { name: body, label: Nội dung, widget: markdown }
+
+  # ---------------------------------------------------------------
+  - name: projects
+    label: Kỹ thuật
+    label_singular: Dự án
+    folder: src/content/projects
+    path: "{{slug}}/index"
+    media_folder: ""
+    public_folder: ""
+    create: true
+    sortable_fields: [date, title]
+    summary: "{{title}} ({{date}})"
+    fields:
+      - { name: title, label: Tên dự án, widget: string }
+      - { name: summary, label: Tóm tắt (1–2 câu), widget: text }
+      - { name: date, label: Thời gian, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
+      - { name: role, label: Vai trò của tôi, widget: string }
+      - name: status
+        label: Trạng thái
+        widget: select
+        default: Complete
+        options:
+          - { label: "Nominal — đang chạy", value: Nominal }
+          - { label: "Complete — đã xong", value: Complete }
+          - { label: "Research — nghiên cứu", value: Research }
+      - { name: tags, label: Hệ thống / công nghệ, widget: list, required: false }
+      - { name: cover, label: Ảnh bìa, widget: image, required: false }
+      - { name: coverAlt, label: Mô tả ảnh bìa, widget: string, required: false }
+      - name: links
+        label: Liên kết
+        widget: list
+        required: false
+        fields:
+          - { name: label, label: Tên, widget: string }
+          - { name: url, label: URL, widget: string }
+      - { name: featured, label: Hiện ở trang chủ, widget: boolean, default: false }
+      - { name: draft, label: Bản nháp (chưa đăng), widget: boolean, default: false }
+      - { name: body, label: Nội dung, widget: markdown }
+
+  # ---------------------------------------------------------------
+  - name: pages
+    label: Trang
+    files:
+      - name: about
+        label: Về tôi
+        file: src/content/pages/about.md
+        fields:
+          - { name: title, label: Tiêu đề, widget: string }
+          - { name: intro, label: Đoạn mở đầu, widget: text }
+          - name: timeline
+            label: Các mốc (quỹ đạo phóng)
+            widget: list
+            fields:
+              - { name: year, label: Năm, widget: string }
+              - { name: title, label: Tiêu đề, widget: string }
+              - { name: text, label: Mô tả, widget: text }
+          - name: subsystems
+            label: Kỹ năng (phân hệ)
+            widget: list
+            fields:
+              - { name: code, label: Mã (3 chữ), widget: string, hint: "Ví dụ: PWR, COM, NAV" }
+              - { name: name, label: Tên, widget: string }
+              - { name: level, label: Mức độ (0–100), widget: number, value_type: int, min: 0, max: 100 }
+              - { name: items, label: Chi tiết, widget: list }
+          - { name: cv, label: File CV, widget: file, required: false }
+          - { name: draft, label: Bản nháp (chưa đăng), widget: boolean, default: true }
+          - { name: body, label: Câu chuyện, widget: markdown }
+
+  # ---------------------------------------------------------------
+  - name: settings
+    label: Cài đặt
+    files:
+      - name: site
+        label: Thông tin chung
+        file: src/data/site.yaml
+        fields:
+          - { name: name, label: Tên hiển thị, widget: string }
+          - { name: handle, label: Tên kênh, widget: string }
+          - { name: roles, label: Nghề nghiệp (chip ở trang chủ), widget: list }
+          - { name: tagline, label: Câu giới thiệu trang chủ, widget: text }
+          - { name: description, label: Mô tả cho Google (≤ 160 ký tự), widget: text }
+          - name: location
+            label: Vị trí
+            widget: object
+            fields:
+              - { name: city, label: Thành phố, widget: string }
+              - { name: code, label: Mã sân bay (3 chữ), widget: string }
+              - { name: timezone, label: Múi giờ, widget: string }
+              - { name: lat, label: Vĩ độ hiển thị, widget: string }
+              - { name: lon, label: Kinh độ hiển thị, widget: string }
+          - { name: email, label: Email, widget: string }
+          - name: nav
+            label: Menu
+            widget: list
+            fields:
+              - { name: label, label: Tên, widget: string }
+              - { name: href, label: Đường dẫn, widget: string }
+          - name: socials
+            label: Mạng xã hội
+            widget: list
+            fields:
+              - name: id
+                label: Nền tảng
+                widget: select
+                options: [youtube, instagram, tiktok, facebook, linkedin, github]
+              - { name: label, label: Tên hiển thị, widget: string }
+              - { name: url, label: Link (để trống = ẩn), widget: string, required: false }
+      - name: videos
+        label: Video YouTube
+        file: src/data/videos.yaml
+        fields:
+          - { name: channelUrl, label: Link kênh, widget: string, required: false, hint: "Ví dụ: https://www.youtube.com/@longpeoo" }
+          - { name: channelId, label: Channel ID (tuỳ chọn), widget: string, required: false }
+          - { name: featured, label: Video nổi bật ở trang chủ, widget: string, required: false, hint: "Dán link video. Để trống = video mới nhất" }
+          - { name: pinned, label: Video ghim lên đầu, widget: list, required: false }
+          - { name: hidden, label: Video ẩn khỏi web, widget: list, required: false }
+          - { name: includeShorts, label: Hiện YouTube Shorts, widget: boolean, default: false }
+          - name: categories
+            label: Nhóm video
+            widget: list
+            required: false
+            fields:
+              - { name: name, label: Tên nhóm, widget: string }
+              - { name: videos, label: Link các video, widget: list }
