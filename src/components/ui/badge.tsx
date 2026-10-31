@@ -18,6 +18,18 @@ const badgeVariants = cva(
         ghost:
           "hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50",
         link: "text-primary underline-offset-4 hover:underline",
+        // Nhãn kiểu telemetry (chip nghề nghiệp ở hero)
+        telemetry:
+          "h-7 border-border bg-card px-3 font-mono text-[0.6875rem] tracking-[0.08em] text-foreground uppercase",
+        "telemetry-solid":
+          "h-7 bg-foreground px-3 font-mono text-[0.6875rem] tracking-[0.08em] text-background uppercase",
+        // Chip "Đang lắp ráp" — viền đứt màu cam
+        signal:
+          "h-7 gap-2 border-dashed border-primary px-3 font-mono text-[0.6875rem] tracking-[0.08em] text-primary uppercase",
+        // Trạng thái trong bảng Mission status
+        nominal: "h-auto gap-2 px-0 font-mono text-[0.6875rem] tracking-[0.08em] text-ok uppercase",
+        active: "h-auto gap-2 px-0 font-mono text-[0.6875rem] tracking-[0.08em] text-primary uppercase",
+        queued: "h-auto gap-2 px-0 font-mono text-[0.6875rem] tracking-[0.08em] text-muted-foreground uppercase",
       },
     },
     defaultVariants: {

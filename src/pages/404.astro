@@ -1,27 +1,40 @@
 ---
+import { ArrowUpRightIcon } from 'lucide-react';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import Orbi from '@/components/brand/Orbi.astro';
 ---
 
-<BaseLayout title="Không tìm thấy trang" noindex>
-  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24 lg:px-8">
-    <Empty className="py-16">
+<BaseLayout title="Lạc vào vũ trụ" noindex>
+  <section class="lost container">
+    <Empty>
       <EmptyHeader>
         <EmptyMedia>
-          <Orbi size={140} mood="lost" decorative />
+          <Orbi size={170} mood="lost" />
         </EmptyMedia>
+        <p class="mono muted">Error 404 · Signal lost</p>
         <EmptyTitle>
-          <h1 class="type-h2">Không tìm thấy trang này</h1>
+          <h1>Houston, chúng ta có vấn đề.</h1>
         </EmptyTitle>
-        <EmptyDescription>
-          Đường dẫn có thể đã bị đổi hoặc gõ nhầm. Hãy quay về trang chủ hoặc chọn một mục trong menu.
-        </EmptyDescription>
+        <EmptyDescription>Trang bạn tìm đã trôi ra khỏi quỹ đạo, hoặc chưa từng được phóng lên.</EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
-        <a href="/" class={buttonVariants({ size: 'lg' })}>Về trang chủ</a>
+        <a href="/" class={cn(buttonVariants({ variant: 'launch', size: 'pill' }))}>
+          Quay về trạm phóng <ArrowUpRightIcon data-icon="inline-end" />
+        </a>
       </EmptyContent>
     </Empty>
   </section>
 </BaseLayout>
+
+<style>
+  .lost {
+    min-height: 88svh;
+    display: flex;
+    align-items: center;
+    padding-top: var(--header-h);
+  }
+  h1 { font-size: var(--fs-h2); max-width: 14ch; margin-inline: auto; }
+</style>

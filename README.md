@@ -15,8 +15,8 @@ npm run dev      # mở http://localhost:4321
 
 | Muốn đổi | Sửa file |
 |---|---|
-| Tên, câu giới thiệu, chữ trên huy hiệu, menu, mạng xã hội, email | `src/data/site.yaml` |
-| Màu sắc, font, thang chữ | `src/styles/global.css` |
+| Tên, nghề nghiệp, câu giới thiệu, vị trí, menu, mạng xã hội, email | `src/data/site.yaml` |
+| Màu sắc, font, khoảng cách | `src/styles/global.css` |
 | Thứ tự các section trang chủ | `src/pages/index.astro` |
 
 Mạng xã hội để trống link (`url: ""`) sẽ tự ẩn.

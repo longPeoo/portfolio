@@ -7,22 +7,25 @@
 @import "@fontsource/be-vietnam-pro/500.css";
 @import "@fontsource/be-vietnam-pro/600.css";
 @import "@fontsource/be-vietnam-pro/700.css";
+@import "@fontsource-variable/jetbrains-mono";
 
 @custom-variant dark (&:is(.dark *));
 
 /* ==================================================================
-   DESIGN TOKENS — xem quy tắc đầy đủ trong SKILLS.md
-   Màu dùng qua token ngữ nghĩa của shadcn (bg-primary, text-muted-foreground…)
+   DESIGN TOKENS — "Mission Log". Quy tắc đầy đủ: SKILLS.md
+   • Bảng màu thương hiệu: --c-*
+   • Token ngữ nghĩa của shadcn (--background, --primary…) trỏ vào bảng màu đó
+   • Tên rút gọn (--bg, --fg, --line…) dùng trong style của các component tự vẽ
    ================================================================== */
 
 @theme inline {
   --font-sans: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-heading: "Archivo Variable", "Be Vietnam Pro", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "Cascadia Code", monospace;
 
-  --color-highlight: var(--highlight);
-  --color-highlight-foreground: var(--highlight-foreground);
-  --color-travel: var(--travel);
-  --color-travel-foreground: var(--travel-foreground);
+  --color-ok: var(--ok);
+  --color-sun: var(--c-sun);
+  --color-aurora: var(--c-aurora);
 
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -64,165 +67,230 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Chế độ sáng — "Day" */
+/* --- Chế độ sáng "Day Travel" --- */
 :root {
-  /* Bảng màu thương hiệu (hình minh hoạ: mission patch, Orbi) */
-  --brand-ultramarine: #1f2e7a;
-  --brand-deep-space: #16225e;
-  --brand-marigold: #f2a900;
-  --brand-rice: #2f7d5b;
-  --brand-sky: #8db8f2;
-  --brand-flag: #d93a2b;
-  --brand-cloud: #f4f6fa;
+  /* Bảng màu thương hiệu */
+  --c-space: #0b1026;      /* nền đêm, phần kỹ thuật */
+  --c-space-2: #151c3d;
+  --c-paper: #f4eee1;      /* giấy sổ tay du lịch */
+  --c-paper-2: #ebe2cf;
+  --c-ink: #1b1b2f;        /* chữ */
+  --c-signal: #ff6a3d;     /* cam an toàn tên lửa — CTA */
+  --c-aurora: #3ccfb4;     /* trạng thái NOMINAL */
+  --c-aurora-deep: #12806f;
+  --c-sun: #ffc94d;        /* điểm nhấn cute */
 
-  --background: var(--brand-cloud);
-  --foreground: #17204f;
-  --card: #ffffff;
-  --card-foreground: #17204f;
-  --popover: #ffffff;
-  --popover-foreground: #17204f;
-  --primary: var(--brand-ultramarine);
+  /* Token shadcn */
+  --background: var(--c-paper);
+  --foreground: var(--c-ink);
+  --card: #fbf7ef;
+  --card-foreground: var(--c-ink);
+  --popover: #fbf7ef;
+  --popover-foreground: var(--c-ink);
+  --primary: var(--c-signal);
   --primary-foreground: #ffffff;
-  --secondary: #e4e9f5;
-  --secondary-foreground: var(--brand-ultramarine);
-  --muted: #e9edf6;
-  --muted-foreground: #556084;
-  --accent: #e4e9f5;
-  --accent-foreground: #17204f;
+  --secondary: var(--c-paper-2);
+  --secondary-foreground: var(--c-ink);
+  --muted: var(--c-paper-2);
+  --muted-foreground: #5c5a6e;
+  --accent: var(--c-paper-2);
+  --accent-foreground: var(--c-ink);
   --destructive: #c2352a;
-  --border: #d8deec;
-  --input: #d8deec;
-  --ring: var(--brand-marigold);
-  --highlight: var(--brand-marigold);
-  --highlight-foreground: #17204f;
-  --travel: var(--brand-rice);
-  --travel-foreground: #ffffff;
-  --chart-1: var(--brand-ultramarine);
-  --chart-2: var(--brand-marigold);
-  --chart-3: var(--brand-rice);
-  --chart-4: var(--brand-sky);
-  --chart-5: var(--brand-flag);
-  --radius: 0.625rem;
-  --sidebar: #ffffff;
-  --sidebar-foreground: #17204f;
-  --sidebar-primary: var(--brand-ultramarine);
+  --border: rgb(27 27 47 / 0.14);
+  --input: rgb(27 27 47 / 0.22);
+  --ring: var(--c-signal);
+  --ok: var(--c-aurora-deep);
+  --chart-1: var(--c-signal);
+  --chart-2: var(--c-aurora-deep);
+  --chart-3: var(--c-sun);
+  --chart-4: var(--c-space-2);
+  --chart-5: #5c5a6e;
+  --radius: 0.75rem;
+  --sidebar: #fbf7ef;
+  --sidebar-foreground: var(--c-ink);
+  --sidebar-primary: var(--c-signal);
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #e4e9f5;
-  --sidebar-accent-foreground: #17204f;
-  --sidebar-border: #d8deec;
-  --sidebar-ring: var(--brand-marigold);
+  --sidebar-accent: var(--c-paper-2);
+  --sidebar-accent-foreground: var(--c-ink);
+  --sidebar-border: rgb(27 27 47 / 0.14);
+  --sidebar-ring: var(--c-signal);
+
+  /* Tên rút gọn cho style tự vẽ (trỏ về token shadcn) */
+  --bg: var(--background);
+  --bg-elev: var(--card);
+  --bg-sunken: var(--c-paper-2);
+  --fg: var(--foreground);
+  --fg-muted: var(--muted-foreground);
+  --line: var(--border);
+  --grain-opacity: 0.07;
+
+  /* Typography */
+  --font-display: "Archivo Variable", "Be Vietnam Pro", system-ui, sans-serif;
+  --font-body: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --fs-mono: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --fs-lg: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
+  --fs-h3: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+  --fs-h2: clamp(2.25rem, 1.6rem + 3vw, 4.5rem);
+  --fs-h1: clamp(3.5rem, 1.5rem + 10vw, 11rem);
+
+  /* Khoảng cách & bố cục */
+  --gutter: clamp(16px, 4vw, 48px);
+  --max-w: 1320px;
+  --header-h: 68px;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+  --section-y: clamp(4rem, 3rem + 6vw, 9rem);
+  --r-sm: 6px;
+  --r: 14px;
+  --r-lg: 28px;
+  --r-pill: 999px;
+
+  /* Chuyển động */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 160ms;
+  --dur: 320ms;
+  --dur-slow: 700ms;
+
+  color-scheme: light;
 }
 
-/* Chế độ tối — "Night" (xanh đêm, không phải đen) */
+/* --- Chế độ tối "Night Sky" --- */
 .dark {
-  --background: #0e1433;
-  --foreground: #e8ecf7;
-  --card: #151c42;
-  --card-foreground: #e8ecf7;
-  --popover: #151c42;
-  --popover-foreground: #e8ecf7;
-  --primary: var(--brand-marigold);
-  --primary-foreground: #0e1433;
-  --secondary: #1e2756;
-  --secondary-foreground: #e8ecf7;
-  --muted: #1b2350;
-  --muted-foreground: #a3abcb;
-  --accent: #1e2756;
-  --accent-foreground: #e8ecf7;
+  --background: var(--c-space);
+  --foreground: var(--c-paper);
+  --card: var(--c-space-2);
+  --card-foreground: var(--c-paper);
+  --popover: var(--c-space-2);
+  --popover-foreground: var(--c-paper);
+  --primary: var(--c-signal);
+  --primary-foreground: #ffffff;
+  --secondary: var(--c-space-2);
+  --secondary-foreground: var(--c-paper);
+  --muted: var(--c-space-2);
+  --muted-foreground: #a5a8c2;
+  --accent: var(--c-space-2);
+  --accent-foreground: var(--c-paper);
   --destructive: #f0786c;
-  --border: rgb(232 236 247 / 12%);
-  --input: rgb(232 236 247 / 16%);
-  --ring: var(--brand-marigold);
-  --highlight: var(--brand-marigold);
-  --highlight-foreground: #0e1433;
-  --travel: #5dbb8f;
-  --travel-foreground: #0e1433;
-  --sidebar: #151c42;
-  --sidebar-foreground: #e8ecf7;
-  --sidebar-primary: var(--brand-marigold);
-  --sidebar-primary-foreground: #0e1433;
-  --sidebar-accent: #1e2756;
-  --sidebar-accent-foreground: #e8ecf7;
-  --sidebar-border: rgb(232 236 247 / 12%);
-  --sidebar-ring: var(--brand-marigold);
+  --border: rgb(244 238 225 / 0.14);
+  --input: rgb(244 238 225 / 0.2);
+  --ok: var(--c-aurora);
+  --sidebar: var(--c-space-2);
+  --sidebar-foreground: var(--c-paper);
+  --sidebar-accent: var(--c-space-2);
+  --sidebar-accent-foreground: var(--c-paper);
+  --sidebar-border: rgb(244 238 225 / 0.14);
+
+  --bg-sunken: #070a1a;
+  --grain-opacity: 0.05;
+  color-scheme: dark;
 }
 
-/* ==================================================================
-   THANG CHỮ — perfect fourth (×1.333), gốc 17px.
-   Tiêu đề: Archivo kéo rộng (chữ sơn thân tên lửa). Nội dung: Be Vietnam Pro.
-   ================================================================== */
-
-@utility type-display {
-  font-family: var(--font-heading);
-  font-size: clamp(2.5rem, 1.5rem + 3.8vw, 4.5rem);
-  font-weight: 800;
-  font-stretch: 125%;
-  line-height: 1;
-  letter-spacing: -0.025em;
-  text-wrap: balance;
-}
-@utility type-h2 {
-  font-family: var(--font-heading);
-  font-size: clamp(1.875rem, 1.3rem + 2.2vw, 3rem);
-  font-weight: 750;
-  font-stretch: 118%;
-  line-height: 1.08;
-  letter-spacing: -0.02em;
-  text-wrap: balance;
-}
-@utility type-h3 {
-  font-family: var(--font-heading);
-  font-size: clamp(1.375rem, 1.2rem + 0.7vw, 1.75rem);
-  font-weight: 700;
-  font-stretch: 110%;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-}
-@utility type-lead {
-  font-size: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
-  line-height: 1.6;
-  text-wrap: pretty;
-}
-@utility type-body {
-  font-size: 1.0625rem;
-  line-height: 1.7;
-  text-wrap: pretty;
-}
-
+/* ---------- Nền tảng (đặt trong layer base để class Tailwind vẫn thắng) ---------- */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   html {
-    @apply font-sans;
     -webkit-text-size-adjust: 100%;
-    scroll-padding-top: 5rem;
+    text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--header-h) + 1rem);
   }
   body {
-    @apply bg-background text-foreground antialiased;
-    font-size: 1.0625rem;
-    line-height: 1.7;
+    min-height: 100dvh;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-body);
+    font-size: var(--fs-base);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+    transition: background-color var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
   }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
-  ::selection {
-    background: var(--highlight);
-    color: var(--highlight-foreground);
+  a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 750;
+    font-stretch: 112%;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
   }
+  p { text-wrap: pretty; }
+  ::selection { background: var(--c-sun); color: var(--c-ink); }
   :focus-visible {
-    outline: 2px solid var(--ring);
-    outline-offset: 2px;
+    outline: 2px dashed var(--ring);
+    outline-offset: 3px;
+    border-radius: 4px;
   }
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
-    }
+}
+
+/* ---------- Lớp grain giấy/phim ---------- */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- Tiện ích dùng chung ---------- */
+@layer components {
+  .container {
+    width: 100%;
+    max-width: var(--max-w);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+  /* Nhãn kiểu telemetry: MSN-01 · ABOUT */
+  .mono {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .muted { color: var(--fg-muted); }
+}
+
+/* ---------- Menu mobile (shadcn Sheet) mở dạng vòng tròn từ nút menu ---------- */
+[data-slot="sheet-content"].menu-sheet[data-state="open"] {
+  animation: menu-reveal 600ms var(--ease-out) both;
+}
+[data-slot="sheet-content"].menu-sheet[data-state="closed"] {
+  /* Tên keyframes khác nhau — trình duyệt không chạy lại animation nếu chỉ đổi chiều */
+  animation: menu-conceal 380ms var(--ease-out) both;
+}
+@keyframes menu-reveal {
+  from { clip-path: circle(0% at calc(100% - var(--gutter) - 20px) calc(var(--header-h) / 2)); }
+  to { clip-path: circle(150% at calc(100% - var(--gutter) - 20px) calc(var(--header-h) / 2)); }
+}
+@keyframes menu-conceal {
+  from { clip-path: circle(150% at calc(100% - var(--gutter) - 20px) calc(var(--header-h) / 2)); }
+  to { clip-path: circle(0% at calc(100% - var(--gutter) - 20px) calc(var(--header-h) / 2)); }
+}
+
+/* ---------- Tôn trọng người dùng tắt chuyển động ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

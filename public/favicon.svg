@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect x="2" y="24" width="10" height="16" rx="2" fill="#8db8f2" stroke="#121a45" stroke-width="2.5"/>
-  <rect x="52" y="24" width="10" height="16" rx="2" fill="#8db8f2" stroke="#121a45" stroke-width="2.5"/>
-  <circle cx="32" cy="34" r="20" fill="#fffaf0" stroke="#121a45" stroke-width="3"/>
-  <rect x="18" y="24" width="28" height="18" rx="9" fill="#16225e"/>
+  <rect x="2" y="24" width="10" height="16" rx="2" fill="#3ccfb4" stroke="#1b1b2f" stroke-width="2.5"/>
+  <rect x="52" y="24" width="10" height="16" rx="2" fill="#3ccfb4" stroke="#1b1b2f" stroke-width="2.5"/>
+  <circle cx="32" cy="34" r="20" fill="#fffaf0" stroke="#1b1b2f" stroke-width="3"/>
+  <rect x="18" y="24" width="28" height="18" rx="9" fill="#0b1026"/>
   <ellipse cx="27" cy="32" rx="2.4" ry="3.2" fill="#fff"/>
   <ellipse cx="37" cy="32" rx="2.4" ry="3.2" fill="#fff"/>
-  <line x1="32" y1="14" x2="32" y2="6" stroke="#121a45" stroke-width="3" stroke-linecap="round"/>
-  <circle cx="32" cy="5" r="4" fill="#d93a2b" stroke="#121a45" stroke-width="2"/>
+  <line x1="32" y1="14" x2="32" y2="6" stroke="#1b1b2f" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="32" cy="5" r="4" fill="#ff6a3d" stroke="#1b1b2f" stroke-width="2"/>
 </svg>

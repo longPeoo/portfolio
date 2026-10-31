@@ -1,4 +1,4 @@
-import { ExternalLinkIcon } from "lucide-react"
+import { ArrowUpRightIcon } from "lucide-react"
 
 import {
   Item,
@@ -16,7 +16,7 @@ export function SocialList({ socials }: { socials: Social[] }) {
   return (
     <ItemGroup className="grid gap-2 sm:grid-cols-2">
       {socials.map((s) => (
-        <Item key={s.id} variant="outline" asChild>
+        <Item key={s.id} variant="outline" size="sm" asChild>
           <a href={s.url} target="_blank" rel="noopener noreferrer">
             <ItemMedia variant="icon">
               <span dangerouslySetInnerHTML={{ __html: s.iconSvg }} />
@@ -26,7 +26,8 @@ export function SocialList({ socials }: { socials: Social[] }) {
               <ItemDescription>{new URL(s.url).host.replace(/^www\./, "")}</ItemDescription>
             </ItemContent>
             <ItemActions>
-              <ExternalLinkIcon className="text-muted-foreground" />
+              {/* Mũi tên nhích chéo khi rê chuột, giống nút launch */}
+              <ArrowUpRightIcon className="transition-transform duration-300 ease-[var(--ease-spring)] group-hover/item:translate-x-0.5 group-hover/item:-translate-y-0.5" />
             </ItemActions>
           </a>
         </Item>

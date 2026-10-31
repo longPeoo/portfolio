@@ -1,9 +1,9 @@
-import { MenuIcon } from "lucide-react"
+import { MenuIcon, XIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetHeader,
@@ -20,6 +20,7 @@ interface MobileNavProps {
   currentPath: string
 }
 
+/** Menu toàn màn hình trên mobile: mở dạng vòng tròn từ nút menu (CSS `.menu-sheet`), các mục bay vào lần lượt. */
 export function MobileNav({ items, socials, email, currentPath }: MobileNavProps) {
   const links = [...items, { label: "Liên hệ", href: "/contact" }]
   const isActive = (href: string) => currentPath === href || currentPath.startsWith(`${href}/`)
@@ -27,46 +28,63 @@ export function MobileNav({ items, socials, email, currentPath }: MobileNavProps
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Mở menu">
+        <Button variant="ghost" size="icon-lg" className="rounded-full" aria-label="Mở menu">
           <MenuIcon />
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-full sm:max-w-sm">
-        <SheetHeader>
+      <SheetContent
+        side="right"
+        showCloseButton={false}
+        className="menu-sheet gap-0 bg-background data-[side=right]:border-l-0 px-[var(--gutter)] pt-[calc(var(--header-h)+24px)] pb-8 data-[side=right]:w-full data-[side=right]:sm:max-w-none"
+      >
+        {/* Nút đóng nằm đúng chỗ nút menu → trông như nút menu biến thành dấu X */}
+        <SheetClose asChild>
+          <Button
+            variant="secondary"
+            size="icon-lg"
+            className="absolute top-[calc((var(--header-h)-2.25rem)/2)] right-[var(--gutter)] rounded-full"
+            aria-label="Đóng menu"
+          >
+            <XIcon />
+          </Button>
+        </SheetClose>
+
+        <SheetHeader className="sr-only">
           <SheetTitle>Menu</SheetTitle>
-          <SheetDescription className="sr-only">Các trang của website</SheetDescription>
+          <SheetDescription>Các trang của website</SheetDescription>
         </SheetHeader>
-        <nav aria-label="Menu di động" className="flex flex-col px-4">
-          {links.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              aria-current={isActive(item.href) ? "page" : undefined}
-              className={cn(
-                "border-b py-3 font-heading text-2xl font-bold [font-stretch:115%]",
-                isActive(item.href) ? "text-primary" : "text-foreground"
-              )}
-            >
-              {item.label}
+
+        <nav aria-label="Menu di động">
+          <ol>
+            {links.map((item, i) => (
+              <li
+                key={item.href}
+                className="animate-in border-b duration-500 ease-[var(--ease-spring)] fade-in-0 slide-in-from-bottom-6"
+                style={{ animationDelay: `${120 + i * 55}ms`, animationFillMode: "both" }}
+              >
+                <a
+                  href={item.href}
+                  aria-current={isActive(item.href) ? "page" : undefined}
+                  className={cn(
+                    "flex items-baseline gap-3.5 py-3.5 font-heading text-[clamp(2rem,9vw,3rem)] leading-[1.1] font-bold font-stretch-112%",
+                    isActive(item.href) && "text-primary"
+                  )}
+                >
+                  <span className="mono text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+
+        <div className="mono mt-auto flex flex-wrap items-center gap-4 text-muted-foreground">
+          {socials.map((s) => (
+            <a key={s.id} href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.label} className="text-[1.4em]">
+              <span dangerouslySetInnerHTML={{ __html: s.iconSvg }} />
             </a>
           ))}
-        </nav>
-        <div className="mt-auto flex flex-col gap-4 p-4">
-          <Separator />
-          <a href={`mailto:${email}`} className="text-sm font-medium underline-offset-4 hover:underline">
-            {email}
-          </a>
-          {socials.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {socials.map((s) => (
-                <Button key={s.id} variant="outline" size="icon" asChild>
-                  <a href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.label}>
-                    <span dangerouslySetInnerHTML={{ __html: s.iconSvg }} />
-                  </a>
-                </Button>
-              ))}
-            </div>
-          )}
+          <a href={`mailto:${email}`}>{email}</a>
         </div>
       </SheetContent>
     </Sheet>

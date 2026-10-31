@@ -4,23 +4,28 @@ Tài liệu này là **luật** cho mọi thay đổi trên website, dù do ngư
 Đọc hết trước khi thêm trang, section hay component mới. Khi một quy tắc cần đổi, sửa file này trước rồi mới sửa code.
 
 Skill tham khảo đã cài trong `.claude/skills/`:
-- `frontend-design` (Anthropic): cách ra quyết định thiết kế không rập khuôn.
-- `shadcn` (shadcn/ui): quy tắc dùng component, styling, CLI.
+- `shadcn` (shadcn/ui): quy tắc dùng component, styling, CLI. **Áp dụng đầy đủ.**
+- `frontend-design` (Anthropic): nguyên tắc chung về typography, câu chữ, chất lượng tối thiểu.
+  Danh sách "dấu hiệu AI" trong skill này **không áp dụng** cho các yếu tố đã chốt ở mục 1
+  (chính skill ghi: yêu cầu của chủ dự án luôn thắng).
 
 ---
 
-## 1. Ý tưởng thiết kế: "Mission patch"
+## 1. Thiết kế đã chốt: "Mission Log"
 
-**Chủ thể:** Long, kỹ sư công nghệ vũ trụ kiêm travel vlogger.
-**Người xem:** nhà tuyển dụng hoặc đối tác kỹ thuật, nhãn hàng muốn tài trợ, khán giả YouTube.
-**Nhiệm vụ chính của trang:** cho biết Long là ai trong 5 giây, rồi dẫn người xem tới dự án, hành trình hoặc video.
+Chủ dự án đã chọn và yêu cầu **giữ nguyên** thiết kế này. Không tự ý thiết kế lại. Muốn đổi hướng thì phải hỏi trước.
 
-**Điểm nhấn duy nhất:** *huy hiệu sứ mệnh thêu tròn* (mission patch), truyền thống có thật của các chương trình không gian.
-Mỗi thứ quan trọng (bản thân Long, mỗi dự án, mỗi chuyến đi) đều có thể có một patch riêng.
-Patch vừa **dễ thương** (hình minh hoạ, Orbi) vừa **nghiêm túc** (đúng chất liệu của ngành).
-Mọi thứ xung quanh patch phải **yên tĩnh, kỷ luật**: chữ rõ, khoảng trắng rộng, ít trang trí.
+**Ý tưởng:** nhật ký sứ mệnh, kết hợp bảng điều khiển phóng tàu (kỹ sư vũ trụ) với sổ tay du lịch (travel vlogger).
+Dễ thương, năng động nhưng vẫn nghiêm túc.
 
-**Linh vật Orbi** chỉ xuất hiện ở: trong patch, logo header, footer (đang ngủ), trang 404 (bối rối). Không rải thêm chỗ khác.
+**Các yếu tố nhận diện phải giữ:**
+- Nhãn telemetry chữ mono in hoa: `MSN-00 · Launch pad`, `MSN-99 · Send a signal`, toạ độ `21.03°N · 105.85°E`.
+- Thanh menu "Mission Control": số thứ tự `01–05`, chấm "quỹ đạo" dưới mục đang mở, đồng hồ UTC và giờ Hà Nội, chấm trạng thái nhấp nháy.
+- Hero: "Xin chào, tôi là", tên cực lớn kèm dấu chấm cam nảy, chip nghề nghiệp, **Orbi bay theo quỹ đạo elip quanh hành tinh lưới**, vệt cam chạy theo, sao lấp lánh.
+- Bảng **Mission status** (P1–P5) với trạng thái Nominal / In progress / Queued.
+- Linh vật **Orbi** (vệ tinh tròn đeo máy ảnh): vui (header, hero), ngủ trên mặt trăng (footer), bối rối và trôi lơ lửng (404).
+- Footer: email lớn, Orbi ngủ trên mặt trăng, nút **tên lửa** lên đầu trang.
+- Lớp hạt nhiễu (grain) nhẹ trên toàn trang.
 
 ---
 
@@ -30,77 +35,64 @@ Tất cả token nằm trong `src/styles/global.css`. **Không** viết mã màu
 
 ### Màu
 
-| Tên | Hex | Vai trò |
+| Biến | Hex | Vai trò |
 |---|---|---|
-| Ultramarine | `#1F2E7A` | `primary` (sáng), nền panel kỹ thuật, dải chữ patch |
-| Deep space | `#16225E` | nền trong patch, kính mũ Orbi |
-| Marigold | `#F2A900` | viền patch, `ring` (focus), `highlight`, `primary` ở chế độ tối |
-| Rice green | `#2F7D5B` | `travel`: mọi thứ thuộc về du lịch |
-| Sky | `#8DB8F2` | khí quyển, tấm pin Orbi |
-| Flag red | `#D93A2B` | chi tiết rất nhỏ (đèn Orbi, cờ). **Không** dùng làm màu nút |
-| Cloud | `#F4F6FA` | nền trang chế độ sáng |
+| `--c-paper` | `#F4EEE1` | nền chế độ sáng ("Day Travel") |
+| `--c-paper-2` | `#EBE2CF` | nền phụ, footer |
+| `--c-ink` | `#1B1B2F` | chữ, bóng đổ nút |
+| `--c-signal` | `#FF6A3D` | **`primary`**: nút chính, dấu chấm, vệt quỹ đạo, focus |
+| `--c-aurora` / `--c-aurora-deep` | `#3CCFB4` / `#12806F` | trạng thái "Nominal" (`ok`), tấm pin Orbi |
+| `--c-sun` | `#FFC94D` | điểm nhấn nhỏ (lửa tên lửa, ống kính, màu bôi đen chữ) |
+| `--c-space` / `--c-space-2` | `#0B1026` / `#151C3D` | nền chế độ tối ("Night Sky") |
 
-- Chế độ tối là **xanh đêm `#0E1433`**, không phải đen.
-- Trong component chỉ dùng token ngữ nghĩa: `bg-primary`, `text-muted-foreground`, `bg-travel`, `decoration-highlight`…
-- Màu `--brand-*` chỉ dùng trong hình minh hoạ SVG (patch, Orbi).
-- Marigold **không** dùng làm màu chữ trên nền sáng vì không đủ tương phản. Chỉ dùng làm nền, viền, gạch chân.
+Ba tầng biến:
+1. **Bảng màu** `--c-*`: chỉ sửa ở đây khi muốn đổi màu thương hiệu.
+2. **Token shadcn** (`--background`, `--primary`, `--muted-foreground`, `--border`…): trỏ vào bảng màu, component shadcn dùng tầng này.
+3. **Tên rút gọn** (`--bg`, `--fg`, `--fg-muted`, `--line`, `--bg-elev`, `--bg-sunken`): trỏ về token shadcn, dùng trong `<style>` của các component tự vẽ.
+
+Chế độ tối bật bằng class `.dark` trên `<html>` (chuẩn shadcn). Không dùng `data-theme`.
 
 ### Chữ
 
 | Vai trò | Font | Ghi chú |
 |---|---|---|
-| Tiêu đề | **Archivo Variable**, kéo rộng `font-stretch` 110–125% | Gợi chữ sơn trên thân tên lửa. Chỉ dùng cho tiêu đề và chữ trên patch |
-| Nội dung, giao diện | **Be Vietnam Pro** 400/500/600/700 | Mọi chữ thường, nút, menu, form |
+| Tiêu đề, tên, email lớn | **Archivo Variable** (`--font-display`, `font-heading`) | weight 700–800, `font-stretch` 112–125% |
+| Chữ thường, nút, menu, form | **Be Vietnam Pro** (`--font-body`, `font-sans`) | 400/500/600/700, có italic 400 |
+| Nhãn telemetry, đồng hồ, số thứ tự | **JetBrains Mono** (`--font-mono`, class `.mono`) | in hoa, giãn chữ 0.08em |
 
-Thang chữ theo tỷ lệ perfect fourth (×1.333), gốc 17px. Dùng các utility có sẵn, không tự đặt cỡ chữ:
-
-`type-display` (H1) → `type-h2` → `type-h3` → `type-lead` (đoạn mở đầu) → `type-body`
-
-- Mỗi trang có **đúng một** `h1`.
-- Dòng chữ dài tối đa ~70 ký tự (`max-w-[40ch]` cho lead, `max-w-[42ch]` cho đoạn ngắn).
-- Từ ghép tiếng Việt ở tiêu đề lớn: dùng ` ` (khoảng trắng không ngắt dòng) để không ngắt giữa "vũ / trụ".
+Thang cỡ chữ: `--fs-mono`, `--fs-sm`, `--fs-base`, `--fs-lg`, `--fs-h3`, `--fs-h2`, `--fs-h1` (đều dùng `clamp`, tự co giãn theo màn hình).
 
 ### Bố cục
 
-- Khung nội dung: `mx-auto max-w-6xl px-4 sm:px-6 lg:px-8` (lề 16px trên mobile).
-- **Căn trái** là mặc định. Chỉ căn giữa cho trạng thái trống (`Empty`) và trang 404.
-- Hero: lưới 2 cột `md:grid-cols-[1.3fr_1fr]`, chữ bên trái và patch bên phải. Trên mobile, patch lên trên.
-- Không bọc mọi thứ trong card. Card chỉ dùng khi nội dung thật sự là một đơn vị độc lập (một dự án, một video).
+- Khung nội dung: class `.container` (max 1320px, lề `--gutter` = 16–48px).
+- Header cố định cao `--header-h` (68px). Section đầu trang cần `padding-top` cộng thêm khoảng này.
+- Khoảng cách dọc giữa các section: `--section-y`.
 
 ---
 
-## 3. Những thứ CẤM (dấu hiệu "trông như AI làm")
+## 3. Chuyển động (phải giữ nguyên)
 
-Trước khi merge bất kỳ thay đổi giao diện nào, rà danh sách này:
+| Nơi | Chuyển động |
+|---|---|
+| Hero | Orbi bay theo quỹ đạo (SVG `animateMotion`, 16 giây/vòng), vệt cam chạy theo, sao lấp lánh, hành tinh lắc nhẹ, dấu chấm sau tên nảy |
+| Orbi | chớp mắt, đèn ăng-ten nhấp nháy, tấm pin vẫy, bay bồng bềnh (`float`), trôi (`lost`), chữ zZz (`sleep`) |
+| Menu | chấm quỹ đạo phóng to theo spring; chấm trạng thái "ping"; header mờ nền khi cuộn |
+| Menu mobile | mở dạng **vòng tròn** từ nút menu (`.menu-sheet` trong `global.css`), các mục bay vào lần lượt |
+| Nút `launch` | nảy lò xo khi rê chuột, bóng đổ dài ra, mũi tên nhích chéo |
+| Nút mạng xã hội | nảy lên, nghiêng, đổi màu cam |
+| Liên hệ | sóng tín hiệu lan ra quanh Orbi khi rê chuột vào email |
+| Footer | tên lửa phụt lửa khi rê chuột, phóng vút lên khi bấm |
+| Trang chờ | vòng tròn đứt nét quay chậm, chip "Đang lắp ráp" nhấp nháy |
 
-- [ ] **Nhãn chữ IN HOA, giãn chữ** đặt phía trên tiêu đề (eyebrow). Không dùng.
-- [ ] **Font monospace** cho nhãn nhỏ hoặc số liệu trang trí.
-- [ ] **Chuỗi nối bằng dấu chấm giữa** kiểu `A · B · C`.
-- [ ] **Mũi tên `→` / `↗`** gắn sau chữ của nút hoặc link.
-- [ ] **Đánh số 01 / 02 / 03** khi nội dung không phải trình tự thật (timeline, các bước).
-- [ ] **Tô một từ** trong tiêu đề bằng màu hoặc nghiêng khác.
-- [ ] **Nền kem + serif tương phản cao + màu cam đất**, **nền đen + một màu neon**, hay **bố cục kiểu báo giấy viền mảnh**.
-- [ ] **Lưới card giống hệt nhau** với cùng bóng mờ, cùng bo góc, kèm gradient trang trí.
-- [ ] **Hiệu ứng fade/slide-up cho mọi section** khi cuộn, hoặc hover cho mọi card.
-- [ ] **Hạt nhiễu (grain), glow, glassmorphism** chỉ để trang trí.
-- [ ] Gimmick "telemetry" như đồng hồ UTC hay toạ độ GPS khi không mang thông tin.
-
-Chữ thêu trên patch được phép viết hoa, vì đó là chất liệu thật của huy hiệu, không phải nhãn giao diện.
-
----
-
-## 4. Chuyển động
-
-1. **Một khoảnh khắc tải trang duy nhất** cho mỗi trang. Trang chủ: patch "được khâu" lên (`intro` trên `MissionPatch`).
-2. Ngoài ra chỉ có chuyển động **do người dùng kích hoạt**: hover, mở menu, nghiêng patch theo chuột (`tilt`).
-3. Chuyển động tự chạy được phép duy nhất: Orbi chớp mắt (6 giây/lần).
-4. Luôn tôn trọng `prefers-reduced-motion` (đã có reset toàn cục trong `global.css`). Script chuyển động phải tự kiểm tra `matchMedia('(prefers-reduced-motion: reduce)')`.
-5. Script chạy theo `astro:page-load` (vì có View Transitions). Listener gắn vào `window`/`document` phải được gỡ khi chuyển trang.
-6. Khi thêm GSAP/Lenis ở giai đoạn sau: vẫn giữ nguyên tắc "một khoảnh khắc chính mỗi trang".
+Quy tắc kỹ thuật:
+- Đường cong chuẩn: `--ease-spring` (nảy) và `--ease-out` (mượt). Thời lượng: `--dur-fast`, `--dur`, `--dur-slow`.
+- Luôn tôn trọng `prefers-reduced-motion`: đã có reset toàn cục. Animation SMIL phải dừng thủ công bằng `pauseAnimations()` (xem `Hero.astro`).
+- Script chạy theo sự kiện `astro:page-load` (vì có View Transitions). Listener gắn vào `window`/`document` phải gỡ khi chuyển trang (dùng `AbortController`, xem `MissionBar.astro`).
+- Giai đoạn P3 (GSAP, Lenis) **bổ sung** chuyển động mới, không thay thế những chuyển động trên.
 
 ---
 
-## 5. Component: shadcn/ui là mặc định
+## 4. Component: shadcn/ui
 
 Cấu hình: `components.json` (style `radix-nova`, base **radix**, icon **lucide**). Component nằm ở `src/components/ui/`.
 
@@ -110,114 +102,125 @@ npx shadcn@latest search -q "tên"        # tìm trước khi tự viết
 npx shadcn@latest docs <component>        # đọc docs + ví dụ
 npx shadcn@latest add <component> -y      # cài
 ```
-Sau khi `add`, đọc lại file vừa thêm. Không sửa tay theo cách phá vỡ khả năng cập nhật; muốn đổi giao diện thì thêm **variant** trong `cva` (ví dụ `size: "xl"` của Button).
+Sau khi `add`, đọc lại file vừa thêm.
 
-**Chọn component:**
+### Variant riêng của dự án
+
+Phong cách Mission Log được đưa vào component shadcn bằng **variant** (theo đúng cách skill shadcn khuyên), không đè bằng class tuỳ tiện:
+
+| Component | Variant | Dùng cho |
+|---|---|---|
+| `Button` | `launch` + size `pill` | nút chính: viên thuốc cam, bóng đổ nét mực |
+| `Button` | `launch-outline` + size `pill` | nút phụ: viền theo màu chữ, đảo màu khi rê chuột |
+| `Button` | `ink` | nút "Liên hệ" trên thanh menu |
+| `Button` | `social` + size `icon-lg` | nút icon mạng xã hội |
+| `Badge` | `telemetry`, `telemetry-solid` | chip nghề nghiệp ở hero |
+| `Badge` | `signal` | chip "Đang lắp ráp" |
+| `Badge` | `nominal`, `active`, `queued` | trạng thái trong Mission status |
+
+Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx`, rồi ghi vào bảng này.
+
+### Chọn component
 
 | Cần | Dùng |
 |---|---|
-| Nút, link trông như nút | `Button`. Trong file `.astro` dùng `<a class={buttonVariants({...})}>` |
+| Nút, link trông như nút | `Button`. Trong file `.astro`: `<a class={cn(buttonVariants({...}))}>`, **bắt buộc bọc `cn()`** để class mặc định không đè variant |
+| Chip, nhãn trạng thái | `Badge` |
+| Menu mobile, panel bên | `Sheet` (bắt buộc có `SheetTitle`, có thể `sr-only`) |
+| Danh sách link có icon (mạng xã hội…) | `Item` + `ItemGroup` (`SocialList.tsx`) |
+| Trạng thái trống, lỗi 404 | `Empty` |
 | Thông báo, chú thích | `Alert` |
-| Trang hoặc mục chưa có nội dung | `Empty` |
-| Danh sách link có icon (mạng xã hội…) | `Item` + `ItemGroup` |
-| Menu mobile, panel bên | `Sheet` (bắt buộc có `SheetTitle`) |
-| Đường kẻ phân cách | `Separator`, không dùng `<hr>` |
-| Nhãn trạng thái nhỏ | `Badge` |
-| Xem ảnh phóng to (sau này) | `Dialog` |
-| Lọc video theo nhóm (sau này) | `Tabs` hoặc `ToggleGroup` |
-| Form liên hệ (sau này) | `FieldGroup` + `Field` + `Input`/`Textarea` |
+| Đường kẻ phân cách | `Separator` |
+| Xem ảnh phóng to (P4) | `Dialog` |
+| Lọc video theo nhóm (P4) | `Tabs` hoặc `ToggleGroup` |
+| Form liên hệ (P2) | `FieldGroup` + `Field` + `Input`/`Textarea` |
 
-**Luật bắt buộc (trích từ skill shadcn):**
-- `className` chỉ để bố cục (`mt-6`, `max-w-md`), **không** đè màu hay chữ của component.
-- Dùng `flex flex-col gap-*`, **không** dùng `space-y-*` hay `space-x-*`.
-- `size-10` thay cho `w-10 h-10`.
-- Ghép class có điều kiện bằng `cn()`.
+### Luật bắt buộc (từ skill shadcn)
+
+- Ưu tiên variant và token ngữ nghĩa. `className` chủ yếu để bố cục.
+- Dùng `flex flex-col gap-*`, **không** dùng `space-y-*` hay `space-x-*`. Dùng `size-10` thay cho `w-10 h-10`.
+- Ghép class bằng `cn()`.
 - Icon trong nút dùng `data-icon="inline-start|inline-end"`, không thêm class kích thước.
-- Không tự đặt `z-index` cho Dialog, Sheet, Popover.
-- Không viết `dark:` để đổi màu. Token tự đổi theo chế độ. Ngoại lệ: ẩn/hiện icon mặt trời/mặt trăng.
+- Không tự đặt `z-index` cho Dialog, Sheet, Popover. Header dùng `z-index: 40` để nằm dưới các lớp phủ (z-50).
 
-**Astro và React:**
+### Astro và React
+
 - Component React **không có** `client:*` sẽ render thành HTML tĩnh, không tốn JS. Đây là mặc định.
-- Chỉ thêm `client:*` khi thật sự cần tương tác: `ThemeToggle` (`client:load`), `MobileNav` (`client:media`).
-- `asChild` của Radix **không nhận** phần tử từ file `.astro`. Muốn `asChild` với `<a>`, viết component bằng `.tsx` (xem `SocialList.tsx`).
-- Không truyền dữ liệu lớn vào island. Icon thương hiệu được render thành chuỗi SVG lúc build (`brandIconSvg` trong `src/lib/site.ts`).
-- Style scoped trong file `.astro` phải bọc trong `@layer components { … }` để class Tailwind truyền từ ngoài vào vẫn thắng.
-
-**Icon:** giao diện dùng `lucide-react`; logo mạng xã hội dùng Remix Icon qua `brandIconSvg()`.
+- Chỉ thêm `client:*` khi cần tương tác: `ThemeToggle` (`client:load`), `MobileNav` (`client:media`).
+- `asChild` của Radix **không nhận** phần tử viết trong file `.astro`. Muốn `asChild` với `<a>`, viết component bằng `.tsx`.
+- Icon React (lucide) đặt trong file `.astro`: muốn style bằng `<style>` scoped thì phải dùng `:global(.ten-class)`.
+- Icon thương hiệu (YouTube, Instagram…) render thành chuỗi SVG lúc build bằng `brandIconSvg()` trong `src/lib/site.ts`, để không đẩy cả bộ icon xuống trình duyệt.
 
 ---
 
-## 6. Nội dung và câu chữ
+## 5. Nội dung và câu chữ
 
-- Ngôi thứ nhất "tôi", giọng tự nhiên, câu ngắn. Không dùng từ quảng cáo ("đỉnh cao", "tuyệt vời").
-- **Viết hoa kiểu câu** (sentence case) cho mọi tiêu đề, nút, menu.
-- Nút nói đúng việc sẽ xảy ra: "Xem các chuyến đi", "Gửi email". Không dùng "Khám phá ngay", "Tìm hiểu thêm".
-- Trạng thái trống hay lỗi: nói rõ chuyện gì xảy ra và bước tiếp theo, không xin lỗi, không đùa quá đà.
-- **Không bịa thông tin cá nhân** (tên trường, công ty, số liệu). Chưa có dữ liệu thật thì để `PagePlaceholder`.
+- Ngôi thứ nhất "tôi", giọng thân thiện, câu ngắn.
+- Ẩn dụ vũ trụ được phép, miễn không làm khó hiểu: "Về trạm phóng", "Gửi một tín hiệu".
+- Nút nói rõ việc sẽ xảy ra: "Xem hành trình", "Kênh YouTube".
+- **Không bịa thông tin cá nhân** (trường, công ty, số liệu). Chưa có dữ liệu thật thì giữ `ComingSoon`.
 
 **Nơi sửa nội dung:**
 
 | Nội dung | File |
 |---|---|
-| Tên, chức danh, câu giới thiệu, chữ trên patch, menu, mạng xã hội, email | `src/data/site.yaml` (có kiểm tra bằng zod trong `src/lib/site.ts`) |
-| Dự án, chuyến đi, video ghim (từ giai đoạn P2) | `src/content/**` (content collections) |
-| Màu, font, thang chữ | `src/styles/global.css` |
+| Tên, nghề nghiệp, câu giới thiệu, vị trí, menu, mạng xã hội, email | `src/data/site.yaml` (kiểm tra bằng zod trong `src/lib/site.ts`) |
+| Dự án, chuyến đi, video ghim (từ P2) | `src/content/**` (content collections) |
+| Màu, font, khoảng cách | `src/styles/global.css` |
 
-Khi thêm trường mới vào `site.yaml`, cập nhật schema trong `src/lib/site.ts` cùng lúc.
+Thêm trường mới vào `site.yaml` thì cập nhật schema trong `src/lib/site.ts` cùng lúc.
 
 ---
 
-## 7. Cấu trúc thư mục
+## 6. Cấu trúc thư mục
 
 ```
 src/
 ├── components/
-│   ├── ui/          ← shadcn (do CLI quản lý; chỉ sửa bằng cách thêm variant)
-│   ├── brand/       ← MissionPatch, Orbi: tài sản thương hiệu, SVG thuần
-│   ├── layout/      ← SiteHeader, SiteFooter, ThemeToggle (island), MobileNav (island)
-│   └── sections/    ← các khối ghép trang: Hero, TwoSides, SiteNotice, PagePlaceholder…
-├── data/site.yaml   ← cấu hình nội dung chung
+│   ├── ui/          ← shadcn (CLI quản lý; chỉ sửa bằng cách thêm variant)
+│   ├── brand/       ← Orbi (linh vật, SVG thuần)
+│   ├── layout/      ← MissionBar, Footer, ThemeToggle (island), MobileNav (island)
+│   └── sections/    ← Hero, MissionStatus, ComingSoon, SocialList…
+├── data/site.yaml
 ├── layouts/BaseLayout.astro  ← SEO, theme, header/footer
 ├── lib/             ← site.ts (đọc + kiểm tra yaml), utils.ts (cn)
 ├── pages/           ← mỗi file = một URL
 └── styles/global.css
 ```
 
-Đặt tên: component PascalCase (`MissionPatch.astro`, `SocialList.tsx`); file shadcn giữ chữ thường như CLI tạo ra.
-
 ---
 
-## 8. Chất lượng tối thiểu (mọi thay đổi)
+## 7. Chất lượng tối thiểu (mọi thay đổi)
 
 - **Responsive**: kiểm tra ở 390px và 1440px, không có thanh cuộn ngang.
-- **Hai chế độ sáng/tối** đều phải đọc được.
-- **Bàn phím**: mọi thứ bấm được đều focus được, có vòng focus (màu marigold).
-- **Ảnh**: dùng `<Image>`/`<Picture>` của Astro, luôn có `alt` mô tả (ảnh trang trí: `alt=""`).
-- **Hiệu năng**: trang chủ dưới 150KB JS. Không thêm thư viện client khi có thể làm bằng CSS hoặc HTML tĩnh.
+- **Hai chế độ sáng/tối** đều đọc được.
+- **Bàn phím**: mọi thứ bấm được đều focus được (viền đứt nét màu cam).
+- **Ảnh**: dùng `<Image>`/`<Picture>` của Astro, luôn có `alt` (ảnh trang trí: `alt=""`, SVG trang trí: `aria-hidden`).
+- **Hiệu năng**: trang chủ dưới 150KB JS.
 - **SEO**: mỗi trang truyền `title` và `description` riêng cho `BaseLayout`.
-- **Tiếng Việt**: kiểm tra dấu hiển thị đúng ở mọi font, đặc biệt chữ hoa có dấu trên patch.
+- **Tiếng Việt**: kiểm tra dấu hiển thị đúng ở cả 3 font.
 
 **Trước khi commit:**
 ```bash
 npm run check    # 0 lỗi type
 npm run build    # build sạch
 ```
-Rồi chụp màn hình (sáng/tối, desktop/mobile) để tự soát lại theo mục 3.
+Rồi chụp màn hình (sáng/tối, desktop/mobile), so với thiết kế ở mục 1 và các chuyển động ở mục 3.
 
 ---
 
-## 9. Thêm một trang mới
+## 8. Thêm một trang mới
 
 1. Tạo `src/pages/<ten>.astro` dùng `BaseLayout` với `title` và `description`.
-2. Ghép từ `sections/`. Nếu cần khối mới, tạo trong `sections/` từ component shadcn.
-3. Nếu trang có patch riêng: dùng `MissionPatch` với `motif` phù hợp, hoặc thêm motif mới trong `MissionPatch.astro`.
+2. Mở đầu trang bằng nhãn telemetry `MSN-xx · Tên` (đánh số tiếp theo menu) và tiêu đề `h1`.
+3. Ghép từ `sections/`. Khối mới thì tạo trong `sections/`, dựng từ component shadcn và variant ở mục 4.
 4. Thêm vào `nav` trong `site.yaml` nếu cần hiện trên menu.
-5. Chạy checklist mục 8.
+5. Chạy checklist mục 7.
 
 ---
 
-## 10. Deploy
+## 9. Deploy
 
-- Push lên nhánh `main` → Cloudflare Workers tự build (`npm run build`) và phát thư mục `dist/` (cấu hình trong `wrangler.jsonc`, tên worker: `portfolio`).
+- Push lên nhánh `main` → Cloudflare Workers tự build (`npm run build`) và phát thư mục `dist/` (`wrangler.jsonc`, tên worker `portfolio`).
 - Node 24 (file `.node-version`). Trên máy dùng `fnm use`.
-- Tên miền `longpeoo.io.vn` (DNS ở Cloudflare). `www` tự chuyển hướng 301 về tên miền chính.
+- Tên miền `longpeoo.io.vn` (DNS ở Cloudflare). `www` chuyển hướng 301 về tên miền chính.

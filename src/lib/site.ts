@@ -14,21 +14,20 @@ const socialIcons = {
   github: 'github-fill',
 } as const;
 
-const homeBlock = z.object({ title: z.string(), text: z.string(), cta: z.string() });
-
 const schema = z.object({
   name: z.string(),
   handle: z.string(),
-  jobTitle: z.string(),
-  description: z.string().max(160),
-  email: z.string(),
-  home: z.object({
-    headline: z.string(),
-    intro: z.string(),
-    engineering: homeBlock,
-    travel: homeBlock,
+  roles: z.array(z.string()).min(1),
+  tagline: z.string(),
+  description: z.string(),
+  location: z.object({
+    city: z.string(),
+    code: z.string(),
+    timezone: z.string(),
+    lat: z.string(),
+    lon: z.string(),
   }),
-  patch: z.object({ top: z.string(), bottom: z.string() }),
+  email: z.string(),
   nav: z.array(z.object({ label: z.string(), href: z.string() })),
   socials: z.array(
     z.object({
@@ -51,7 +50,7 @@ const data = schema.parse(parse(raw));
 
 export const site = {
   ...data,
-  // Chỉ giữ các mạng xã hội đã điền link
+  // Chỉ giữ các mạng xã hội đã điền link, kèm icon SVG
   socials: data.socials
     .filter((s) => s.url.trim() !== '')
     .map((s) => ({ ...s, iconSvg: brandIconSvg(socialIcons[s.id]) })),
