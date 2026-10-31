@@ -1,0 +1,10 @@
+// Cấu hình deploy lên Cloudflare Workers (static assets).
+// Cloudflare tự build bằng `npm run build` rồi phát nội dung thư mục ./dist qua CDN.
+{
+  "name": "longpeoo",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}

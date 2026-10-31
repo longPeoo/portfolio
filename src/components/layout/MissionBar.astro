@@ -1,0 +1,343 @@
+---
+/**
+ * Thanh điều hướng "Mission Control Bar": logo, menu, đồng hồ UTC/giờ địa phương,
+ * nút đổi giao diện sáng/tối và nút Liên hệ. Trên mobile chuyển thành menu toàn màn hình.
+ */
+import { site } from '@/lib/site';
+import Icon from '@/components/ui/Icon.astro';
+import Orbi from '@/components/mascot/Orbi.astro';
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
+const pad = (n: number) => String(n + 1).padStart(2, '0');
+---
+
+<header class="mbar" data-mbar>
+  <a href="/" class="mbar__brand" aria-label={`${site.name} — trang chủ`}>
+    <Orbi size={34} />
+    <span class="mbar__name">{site.name}<span class="mbar__dot">.</span></span>
+  </a>
+
+  <nav class="mbar__nav" aria-label="Menu chính">
+    <ul>
+      {site.nav.map((item, i) => (
+        <li>
+          <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+            <span class="mono mbar__idx">{pad(i)}</span>{item.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <div class="mbar__tele mono" aria-label="Đồng hồ">
+    <span class="mbar__status" aria-hidden="true"></span>
+    <span>UTC <time data-clock="UTC" data-seconds>--:--:--</time></span>
+    <span class="mbar__sep" aria-hidden="true">/</span>
+    <span>{site.location.code} <time data-clock={site.location.timezone}>--:--</time></span>
+  </div>
+
+  <div class="mbar__actions">
+    <button class="mbar__icon-btn" type="button" data-theme-toggle aria-label="Đổi giao diện sáng/tối">
+      <Icon name="sun-line" class="i-sun" />
+      <Icon name="moon-line" class="i-moon" />
+    </button>
+    <a href="/contact" class="mbar__cta">Liên hệ <Icon name="arrow-right-up-line" size="1em" /></a>
+    <button
+      class="mbar__icon-btn mbar__burger"
+      type="button"
+      data-menu-toggle
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      aria-label="Mở menu"
+    >
+      <Icon name="menu-4-line" class="i-open" />
+      <Icon name="close-line" class="i-close" />
+    </button>
+  </div>
+</header>
+
+<div class="sheet" id="mobile-menu" data-sheet inert>
+  <nav aria-label="Menu di động">
+    <ol>
+      {[...site.nav, { label: 'Liên hệ', href: '/contact' }].map((item, i) => (
+        <li style={`--i:${i}`}>
+          <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+            <span class="mono">{pad(i)}</span>{item.label}
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+  <div class="sheet__foot mono">
+    {site.socials.map((s) => (
+      <a href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.label}>
+        <Icon name={s.icon} size="1.4em" />
+      </a>
+    ))}
+    <a href={`mailto:${site.email}`}>{site.email}</a>
+  </div>
+</div>
+
+<style>
+  .mbar {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 60;
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    gap: clamp(12px, 2vw, 32px);
+    padding-inline: var(--gutter);
+    border-bottom: 1px solid transparent;
+    transition: background-color var(--dur), border-color var(--dur), transform var(--dur) var(--ease-out);
+  }
+  .mbar[data-scrolled] {
+    background: color-mix(in srgb, var(--bg) 86%, transparent);
+    backdrop-filter: blur(12px) saturate(1.2);
+    border-color: var(--line);
+  }
+
+  .mbar__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .mbar__brand :global(.orbi) { transition: transform var(--dur) var(--ease-spring); }
+  .mbar__brand:hover :global(.orbi) { transform: rotate(-12deg) scale(1.08); }
+  .mbar__name {
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+    font-weight: 620;
+    letter-spacing: -0.02em;
+  }
+  .mbar__dot { color: var(--accent); }
+
+  .mbar__nav { margin-inline: auto; }
+  .mbar__nav ul { display: flex; gap: clamp(8px, 1.6vw, 26px); list-style: none; padding: 0; }
+  .mbar__nav a {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 6px 2px;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .mbar__idx { font-size: 0.625rem; color: var(--fg-muted); }
+  /* Chấm "quỹ đạo" đánh dấu trang hiện tại */
+  .mbar__nav a::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -4px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: translateX(-50%) scale(0);
+    transition: transform var(--dur) var(--ease-spring);
+  }
+  .mbar__nav a:hover::after { transform: translateX(-50%) scale(0.6); }
+  .mbar__nav a[aria-current='page']::after { transform: translateX(-50%) scale(1); }
+
+  .mbar__tele {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--fg-muted);
+    font-size: 0.6875rem;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .mbar__status {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ok);
+    box-shadow: 0 0 0 0 var(--ok);
+    animation: ping 2.4s var(--ease-out) infinite;
+  }
+  .mbar__sep { opacity: 0.4; }
+
+  .mbar__actions { display: flex; align-items: center; gap: 8px; }
+  .mbar__icon-btn {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: background-color var(--dur-fast), transform var(--dur) var(--ease-spring);
+  }
+  .mbar__icon-btn:hover { background: var(--bg-sunken); transform: rotate(-15deg); }
+  .mbar__icon-btn > :global(svg) { grid-area: 1 / 1; transition: opacity var(--dur), transform var(--dur) var(--ease-spring); }
+
+  /* Icon là component con → cần :global để style scoped áp được vào class truyền xuống */
+  :global(:root[data-theme='dark']) .mbar__icon-btn :global(.i-sun),
+  :global(:root:not([data-theme='dark'])) .mbar__icon-btn :global(.i-moon) { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+
+  .mbar__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    border-radius: var(--radius-pill);
+    background: var(--fg);
+    color: var(--bg);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform var(--dur) var(--ease-spring), background-color var(--dur-fast);
+  }
+  .mbar__cta:hover { background: var(--accent); color: var(--accent-fg); transform: translateY(-1px); }
+
+  .mbar__burger { display: none; }
+  .mbar__burger :global(.i-close) { opacity: 0; transform: rotate(-90deg); }
+  .mbar__burger[aria-expanded='true'] :global(.i-open) { opacity: 0; transform: rotate(90deg); }
+  .mbar__burger[aria-expanded='true'] :global(.i-close) { opacity: 1; transform: none; }
+
+  /* ---------- Menu mobile ---------- */
+  .sheet {
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: calc(var(--header-h) + 24px) var(--gutter) 32px;
+    background: var(--bg);
+    clip-path: circle(0% at calc(100% - var(--gutter) - 20px) calc(var(--header-h) / 2));
+    transition: clip-path 600ms var(--ease-out);
+  }
+  .sheet[data-open] { clip-path: circle(150% at calc(100% - var(--gutter) - 20px) calc(var(--header-h) / 2)); }
+  .sheet ol { list-style: none; padding: 0; }
+  .sheet li {
+    border-bottom: 1px solid var(--line);
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity var(--dur) var(--ease-out), transform 500ms var(--ease-spring);
+    transition-delay: 0ms;
+  }
+  .sheet[data-open] li {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(120ms + var(--i) * 55ms);
+  }
+  .sheet li a {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding: 14px 0;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 9vw, 3rem);
+    line-height: 1.1;
+    text-decoration: none;
+  }
+  .sheet li a .mono { color: var(--fg-muted); }
+  .sheet li a[aria-current='page'] { color: var(--accent); }
+  .sheet__foot { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; color: var(--fg-muted); }
+  .sheet__foot a { text-decoration: none; }
+
+  @media (max-width: 1080px) {
+    .mbar__tele { display: none; }
+  }
+  @media (max-width: 860px) {
+    .mbar__nav, .mbar__cta { display: none; }
+    .mbar__actions { margin-left: auto; }
+    .mbar__burger { display: grid; }
+  }
+  @media (min-width: 861px) {
+    .sheet { display: none; }
+  }
+
+  @keyframes ping {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 60%, transparent); }
+    70%, 100% { box-shadow: 0 0 0 7px transparent; }
+  }
+</style>
+
+<script>
+  let clockTimer: number | undefined;
+  // Listener gắn vào window/document được gỡ mỗi khi chuyển trang để không bị chồng
+  let pageListeners: AbortController | undefined;
+
+  function initClock() {
+    window.clearInterval(clockTimer);
+    const els = document.querySelectorAll<HTMLTimeElement>('[data-clock]');
+    if (!els.length) return;
+    const formatters = new Map<HTMLTimeElement, Intl.DateTimeFormat>();
+    els.forEach((el) => {
+      formatters.set(
+        el,
+        new Intl.DateTimeFormat('en-GB', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: el.hasAttribute('data-seconds') ? '2-digit' : undefined,
+          hour12: false,
+          timeZone: el.dataset.clock,
+        }),
+      );
+    });
+    const tick = () => {
+      const now = new Date();
+      formatters.forEach((f, el) => (el.textContent = f.format(now)));
+    };
+    tick();
+    clockTimer = window.setInterval(tick, 1000);
+  }
+
+  function initScrollState() {
+    const bar = document.querySelector<HTMLElement>('[data-mbar]');
+    if (!bar) return;
+    const update = () => bar.toggleAttribute('data-scrolled', window.scrollY > 8);
+    update();
+    window.addEventListener('scroll', update, { passive: true, signal: pageListeners?.signal });
+  }
+
+  function initThemeToggle() {
+    document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+      const root = document.documentElement;
+      const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      root.dataset.theme = next;
+      try {
+        localStorage.setItem('theme', next);
+      } catch {}
+    });
+  }
+
+  function initMobileMenu() {
+    const btn = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+    const sheet = document.querySelector<HTMLElement>('[data-sheet]');
+    if (!btn || !sheet) return;
+
+    const setOpen = (open: boolean) => {
+      btn.setAttribute('aria-expanded', String(open));
+      btn.setAttribute('aria-label', open ? 'Đóng menu' : 'Mở menu');
+      sheet.toggleAttribute('data-open', open);
+      sheet.inert = !open;
+      document.documentElement.style.overflow = open ? 'hidden' : '';
+    };
+
+    btn.addEventListener('click', () => setOpen(btn.getAttribute('aria-expanded') !== 'true'));
+    sheet.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+    document.addEventListener(
+      'keydown',
+      (e) => {
+        if (e.key === 'Escape') setOpen(false);
+      },
+      { signal: pageListeners?.signal },
+    );
+    document.addEventListener('astro:before-swap', () => setOpen(false), { signal: pageListeners?.signal });
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    pageListeners?.abort();
+    pageListeners = new AbortController();
+    initClock();
+    initScrollState();
+    initThemeToggle();
+    initMobileMenu();
+  });
+</script>

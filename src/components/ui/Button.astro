@@ -1,0 +1,59 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  href: string;
+  variant?: 'primary' | 'ghost';
+  icon?: string;
+  external?: boolean;
+  class?: string;
+}
+
+const { href, variant = 'primary', icon, external = /^https?:\/\//.test(href), class: className } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={['btn', `btn--${variant}`, className]}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener noreferrer' : undefined}
+>
+  <span class="btn__label"><slot /></span>
+  {icon && <Icon name={icon} size="1.1em" class="btn__icon" />}
+</a>
+
+<style>
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    padding: 0.85em 1.4em;
+    border-radius: var(--radius-pill);
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    text-decoration: none;
+    line-height: 1;
+    transition:
+      transform var(--dur) var(--ease-spring),
+      background-color var(--dur-fast),
+      box-shadow var(--dur) var(--ease-out);
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn:active { transform: translateY(1px) scale(0.98); }
+
+  .btn--primary {
+    background: var(--accent);
+    color: var(--accent-fg);
+    box-shadow: 0 2px 0 0 var(--c-ink);
+  }
+  .btn--primary:hover { box-shadow: 0 5px 0 0 var(--c-ink); }
+
+  .btn--ghost {
+    border: 1.5px solid currentColor;
+  }
+  .btn--ghost:hover { background: var(--fg); color: var(--bg); }
+
+  .btn :global(.btn__icon) { transition: transform var(--dur) var(--ease-spring); }
+  .btn:hover :global(.btn__icon) { transform: translate(2px, -2px) rotate(-8deg); }
+</style>
