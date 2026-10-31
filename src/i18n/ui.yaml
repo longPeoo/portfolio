@@ -1,9 +1,3 @@
-# ==================================================================
-#  CHỮ TRÊN GIAO DIỆN — TIẾNG VIỆT
-#  Sửa được trong /admin → "Chữ trên giao diện" (tab VI / EN). Bản tiếng Anh: ui.en.yaml (cùng các khoá).
-#  Mã kỹ thuật (MSN-01, P1, T+00, PL-01, ALT, UTC) giữ nguyên ở mọi ngôn ngữ, chỉ dịch phần chữ.
-#  {n}, {c} là chỗ điền số tự động — giữ nguyên khi sửa.
-# ==================================================================
 common:
   contact: Liên hệ
   seeAll: Xem tất cả
@@ -21,7 +15,6 @@ common:
     Nominal: Đang chạy
     Complete: Hoàn thành
     Research: Nghiên cứu
-
 chrome:
   countdown: Đếm ngược
   skipIntro: Bấm để bỏ qua
@@ -34,11 +27,10 @@ chrome:
   footerNav: Điều hướng
   footerTagline: Xây ở Trái Đất, phát từ quỹ đạo
   toTop: Lên đầu trang
-
 home:
   heroCode: MSN-00 · Bệ phóng
-  heroNow: Hiện tại ▸
-  hello: Xin chào, tôi là
+  heroNow: LONGPEOO LÀ ▸
+  hello: Hé ca lô, mình là
   rolesLabel: Nghề nghiệp
   ctaJourneys: Xem hành trình
   ctaYoutube: Kênh YouTube
@@ -56,13 +48,24 @@ home:
   statusCode: Tiến độ
   statusTitle: Website đang được lắp ráp, từng tầng một.
   phases:
-    - { code: P1, name: "Nền móng & deploy", state: nominal }
-    - { code: P2, name: "Trang, nội dung & CMS", state: nominal }
-    - { code: P3, name: "Animation & mascot", state: nominal }
-    - { code: P4, name: "YouTube, ảnh, bản đồ", state: nominal }
-    - { code: P5, name: "SEO & tối ưu — launch", state: nominal }
-    - { code: P6, name: "Nội dung thật & song ngữ", state: active }
-
+    - code: P1
+      name: Nền móng & deploy
+      state: nominal
+    - code: P2
+      name: Trang, nội dung & CMS
+      state: nominal
+    - code: P3
+      name: Animation & mascot
+      state: nominal
+    - code: P4
+      name: YouTube, ảnh, bản đồ
+      state: nominal
+    - code: P5
+      name: SEO & tối ưu — launch
+      state: nominal
+    - code: P6
+      name: Nội dung thật & song ngữ
+      state: active
 about:
   code: MSN-01 · Về tôi
   title: Về tôi
@@ -75,7 +78,6 @@ about:
   flightCode: Đo xa · Chuyến bay
   flightPad: Trên bệ phóng
   flightOrbit: Đã vào quỹ đạo
-
 space:
   code: MSN-02 · Dự án
   title: Kỹ thuật
@@ -85,22 +87,20 @@ space:
   role: Vai trò
   time: Thời gian
   systems: Hệ thống
-
 journeys:
   code: MSN-03 · Hành trình
   title: Hành trình
-  intro: "Mỗi chuyến đi là một mission: điểm đến, lộ trình, những người gặp trên đường và video kể lại."
-  stats: "{n} chuyến đi · {c} quốc gia"
+  intro: 'Mỗi chuyến đi là một mission: điểm đến, lộ trình, những người gặp trên đường và video kể lại.'
+  stats: '{n} chuyến đi · {c} quốc gia'
   back: Tất cả hành trình
   log: Nhật ký
   video: Video chuyến đi
-  albumCode: "Cuộn phim · {n} ảnh"
+  albumCode: Cuộn phim · {n} ảnh
   albumTitle: Album
   next: Chuyến tiếp theo
-  stampMonth: "T{n}"
-  globeLabel: "Quả địa cầu đánh dấu {n} chuyến đi. Bấm vào ghim để mở chuyến đi."
+  stampMonth: T{n}
+  globeLabel: Quả địa cầu đánh dấu {n} chuyến đi. Bấm vào ghim để mở chuyến đi.
   globeHint: Kéo để xoay · bấm ghim để mở
-
 videos:
   code: MSN-04 · Video
   title: Video
@@ -112,25 +112,22 @@ videos:
   play: Phát video
   openYoutube: Mở trên YouTube
   close: Đóng video
-
 gallery:
   code: MSN-05 · Cuộn phim
   title: Ảnh
   intro: Những khung hình tôi thích nhất, từ phòng thí nghiệm đến những cung đường xa.
-  count: "{n} khung hình"
+  count: '{n} khung hình'
   open: Xem ảnh lớn
   prev: Ảnh trước
   next: Ảnh sau
   seeJourney: Xem chuyến đi
-
 contact:
   code: MSN-99 · Gửi tín hiệu
   title: Gửi một tín hiệu.
   titleEm: Tôi luôn bắt sóng.
-  intro: "Hợp tác dự án kỹ thuật, tài trợ video, gợi ý điểm đến, hay đơn giản là muốn nói chuyện về vũ trụ: cứ gửi email cho tôi nhé."
+  intro: 'Hợp tác dự án kỹ thuật, tài trợ video, gợi ý điểm đến, hay đơn giản là muốn nói chuyện về vũ trụ: cứ gửi email cho tôi nhé.'
   metaTitle: Liên hệ
-  metaDescription: "Liên hệ hợp tác, tài trợ hoặc chỉ để chào {name}."
-
+  metaDescription: Liên hệ hợp tác, tài trợ hoặc chỉ để chào {name}.
 notFound:
   metaTitle: Lạc vào vũ trụ
   code: Lỗi 404 · Mất tín hiệu
