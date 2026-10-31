@@ -1,6 +1,6 @@
 # ==================================================================
 #  CHỮ TRÊN GIAO DIỆN — TIẾNG VIỆT
-#  Sửa được trong /admin → "Chữ trên giao diện". Bản tiếng Anh: en.yaml (cùng các khoá).
+#  Sửa được trong /admin → "Chữ trên giao diện" (tab VI / EN). Bản tiếng Anh: ui.en.yaml (cùng các khoá).
 #  Mã kỹ thuật (MSN-01, P1, T+00, PL-01, ALT, UTC) giữ nguyên ở mọi ngôn ngữ, chỉ dịch phần chữ.
 #  {n}, {c} là chỗ điền số tự động — giữ nguyên khi sửa.
 # ==================================================================
@@ -12,6 +12,7 @@ common:
   updating: Đang cập nhật
   skipLink: Bỏ qua, đến nội dung chính
   homeLabel: trang chủ
+  orbi: Orbi, chú vệ tinh nhỏ
   status:
     nominal: Ổn định
     active: Đang làm
@@ -71,6 +72,9 @@ about:
   trajectoryTitle: Từng tầng một
   skillsCode: Kỹ năng
   skillsTitle: Các phân hệ
+  flightCode: Đo xa · Chuyến bay
+  flightPad: Trên bệ phóng
+  flightOrbit: Đã vào quỹ đạo
 
 space:
   code: MSN-02 · Dự án
@@ -93,6 +97,7 @@ journeys:
   albumCode: "Cuộn phim · {n} ảnh"
   albumTitle: Album
   next: Chuyến tiếp theo
+  stampMonth: "T{n}"
   globeLabel: "Quả địa cầu đánh dấu {n} chuyến đi. Bấm vào ghim để mở chuyến đi."
   globeHint: Kéo để xoay · bấm ghim để mở
 

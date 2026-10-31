@@ -3,6 +3,8 @@ import { z } from 'astro/zod';
 import { getIconData, iconToSVG, iconToHTML } from '@iconify/utils';
 import ri from '@iconify-json/ri/icons.json';
 import raw from '@/data/site.yaml?raw';
+import enRaw from '@/data/site.en.yaml?raw';
+import { withFallback, locale as currentLocale, type Locale } from '@/lib/i18n';
 
 // Icon thương hiệu lấy từ bộ Remix Icon (lucide không còn icon thương hiệu)
 const socialIcons = {
@@ -46,15 +48,26 @@ export function brandIconSvg(name: string): string {
   return iconToHTML(body, { ...attributes, fill: 'currentColor', 'aria-hidden': 'true' });
 }
 
-const data = schema.parse(parse(raw));
+/**
+ * site.yaml là bản tiếng Việt đầy đủ. site.<locale>.yaml chỉ chứa các trường cần dịch
+ * (nghề nghiệp, câu giới thiệu, mô tả, tên thành phố, tên menu); trường thiếu dùng chung với site.yaml.
+ */
+const base = schema.parse(parse(raw));
+const translations: Partial<Record<Locale, unknown>> = { en: parse(enRaw) ?? {} };
 
-export const site = {
-  ...data,
-  // Chỉ giữ các mạng xã hội đã điền link, kèm icon SVG
-  socials: data.socials
-    .filter((s) => s.url.trim() !== '')
-    .map((s) => ({ ...s, iconSvg: brandIconSvg(socialIcons[s.id]) })),
-};
+export function getSite(locale: Locale = currentLocale) {
+  const data = schema.parse(withFallback(base, translations[locale]));
+  return {
+    ...data,
+    // Chỉ giữ các mạng xã hội đã điền link, kèm icon SVG
+    socials: data.socials
+      .filter((s) => s.url.trim() !== '')
+      .map((s) => ({ ...s, iconSvg: brandIconSvg(socialIcons[s.id]) })),
+  };
+}
+
+/** Thông tin chung theo ngôn ngữ đang phát */
+export const site = getSite();
 
 export type Social = (typeof site.socials)[number];
 export type NavItem = (typeof site.nav)[number];

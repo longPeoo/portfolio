@@ -1,4 +1,5 @@
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
+import { intl } from '@/lib/i18n';
 
 /** Bài nháp (draft: true) chỉ hiện khi chạy `npm run dev` */
 const visible = <T extends { data: { draft: boolean } }>(e: T) => import.meta.env.DEV || !e.data.draft;
@@ -26,10 +27,10 @@ export async function getPhotos() {
   ]);
 }
 
-const dateFmt = new Intl.DateTimeFormat('vi-VN', { month: 'long', year: 'numeric' });
+const dateFmt = new Intl.DateTimeFormat(intl, { month: 'long', year: 'numeric' });
 export const formatMonth = (d: Date) => dateFmt.format(d);
 
-const monthFmt = new Intl.DateTimeFormat('vi-VN', { month: 'long' });
+const monthFmt = new Intl.DateTimeFormat(intl, { month: 'long' });
 
 /** "tháng 3 năm 2026", "tháng 3 – tháng 4 năm 2026" hoặc "tháng 12 năm 2025 – tháng 1 năm 2026" */
 export function formatRange(start: Date, end?: Date) {

@@ -26,7 +26,7 @@ Dễ thương, năng động nhưng vẫn nghiêm túc.
 - Hero: "Xin chào, tôi là", tên cực lớn kèm dấu chấm cam nảy (cỡ chữ tự co theo độ dài tên, luôn một dòng), chip nghề nghiệp,
   **Orbi bay theo quỹ đạo elip quanh Trái Đất**, vệt cam chạy theo, sao lấp lánh.
   - Trái Đất: WebGL (`src/scripts/earth.ts`), ảnh NASA, nghiêng 23,4°, tự quay, ghim cam ở Hà Nội, quầng khí quyển.
-  - Giao diện sáng: **Mặt Trời** góc trên phải (SVG) chiếu sáng Trái Đất. Giao diện tối: nửa đêm có đèn thành phố, **Mặt Trăng** sáng quay quanh, bị che khi đi ra sau.
+  - Giao diện sáng: **Mặt Trời** góc trên phải (vẽ bằng shader: rìa tối dần, hạt sáng, vết đen, nhật hoa; SVG chỉ là bản dự phòng) chiếu sáng Trái Đất. Giao diện tối: nửa đêm có đèn thành phố, **Mặt Trăng** sáng quay quanh, bị che khi đi ra sau.
   - Hành tinh lưới SVG là bản dự phòng (trước khi ảnh tải xong, hoặc máy không có WebGL).
 - Bảng tiến độ (P1–P6) với trạng thái Xong / Đang làm / Chờ (danh sách sửa trong CMS → Chữ trên giao diện → Trang chủ).
 - Linh vật **Orbi** (vệ tinh tròn đeo máy ảnh): vui (header, hero), ngủ trên mặt trăng (footer), bối rối và trôi lơ lửng (404).
@@ -80,7 +80,7 @@ Thang cỡ chữ: `--fs-mono`, `--fs-sm`, `--fs-base`, `--fs-lg`, `--fs-h3`, `--
 
 | Nơi | Chuyển động |
 |---|---|
-| Hero | Orbi bay theo quỹ đạo (SVG `animateMotion`, 16 giây/vòng), vệt cam chạy theo, sao lấp lánh, dấu chấm sau tên nảy. Trái Đất quay 90 giây/vòng, ghim Hà Nội phát sóng; Mặt Trời xoay tia + phập phồng (sáng); Mặt Trăng 36 giây/vòng (tối); đổi giao diện thì ánh sáng chuyển mượt |
+| Hero | Orbi bay theo quỹ đạo (SVG `animateMotion`, 16 giây/vòng), vệt cam chạy theo, sao lấp lánh, dấu chấm sau tên nảy. Trái Đất quay 90 giây/vòng, ghim Hà Nội phát sóng; Mặt Trời bề mặt sôi lăn tăn + nhật hoa toả tia (sáng); Mặt Trăng 36 giây/vòng (tối); đổi giao diện thì ánh sáng chuyển mượt |
 | Orbi | chớp mắt, đèn ăng-ten nhấp nháy, tấm pin vẫy, bay bồng bềnh (`float`), trôi (`lost`), chữ zZz (`sleep`) |
 | Menu | chấm quỹ đạo phóng to theo spring; chấm trạng thái "ping"; header mờ nền khi cuộn |
 | Menu mobile | mở dạng **vòng tròn** từ nút menu (`.menu-sheet` trong `global.css`), các mục bay vào lần lượt |
@@ -91,10 +91,11 @@ Thang cỡ chữ: `--fs-mono`, `--fs-sm`, `--fs-base`, `--fs-lg`, `--fs-h3`, `--
 | Trang chờ | vòng tròn đứt nét quay chậm, chip "Đang lắp ráp" nhấp nháy |
 | **Màn đếm ngược** (P3) | T-3 → 1, Orbi cưỡi tên lửa cất cánh; chỉ lần đầu mỗi phiên, bấm/gõ phím để bỏ qua, tự ẩn sau 3 giây nếu script lỗi |
 | **Bảng lật chữ** (P3) | hero: các nghề trong `site.yaml > roles` lật kiểu bảng giờ bay (ẩn dưới 900px) |
-| **Đồng hồ độ cao** (P3) | thanh bên phải: cuộn trang = ALT 0 → 408 km (ẩn dưới 1180px) |
+| **Đồng hồ độ cao** (P3) | thanh bên phải: cuộn trang = ALT 0 → 408 km (ẩn dưới 1180px; ẩn ở trang Về tôi vì đã có bảng đo xa) |
 | **Cuộn mượt** (P3) | Lenis (chỉ chuột/touchpad; tắt khi đang mở menu/lightbox) |
 | **Hiện dần khi cuộn** (P3) | phần tử có `data-reveal` (chỉ áp cho khối dưới màn hình đầu) |
 | **Quỹ đạo phóng** (P3) | trang Về tôi: `data-trajectory` tự vẽ theo cuộn, `data-stage` bật ra; `data-gauge` thanh kỹ năng đầy dần |
+| **Bảng đo xa chuyến bay** | trang Về tôi, cột phải (≥ 1100px), dính theo khi cuộn (`FlightPanel.astro` + `initFlight()` trong `motion.ts`): tên lửa N tầng = N mốc timeline, qua mỗi mốc tách một tầng; Trái Đất cong dần, trời tối dần, số ALT/VEL; mốc cuối → vào quỹ đạo, Orbi bung ra. Giảm chuyển động: tên lửa nhảy theo từng mốc |
 | Thẻ dự án | rê chuột: lưới bản vẽ kỹ thuật, 4 góc ngắm, đèn trạng thái sáng |
 | Thẻ chuyến đi | rê chuột: con dấu hộ chiếu đóng "cộp"; trang chi tiết: con dấu đóng một lần khi mở |
 | Ảnh polaroid | dán băng keo, xoay nhẹ; rê chuột thì thẳng lại và nhấc lên |
@@ -186,8 +187,18 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 ## 5. Nội dung và câu chữ
 
 - Ngôi thứ nhất "tôi", giọng thân thiện, câu ngắn.
-- **Không viết chữ hiển thị trực tiếp trong component.** Mọi nhãn, tiêu đề mục, chữ trên nút nằm ở `src/i18n/vi.yaml` (đang dùng) và `src/i18n/en.yaml` (chuẩn bị song ngữ), đọc qua `t` trong `src/lib/i18n.ts`.
-  Thêm chữ mới: thêm khoá vào **cả hai** file yaml + schema zod trong `i18n.ts` + trường trong `public/admin/config.yml` (collection `ui`). Island React nhận chữ qua prop `labels`.
+- **Không viết chữ hiển thị trực tiếp trong component.** Mọi nhãn, tiêu đề mục, chữ trên nút nằm ở `src/i18n/ui.yaml` (tiếng Việt, đang dùng) và `src/i18n/ui.en.yaml` (tiếng Anh), đọc qua `t` trong `src/lib/i18n.ts`.
+  Thêm chữ mới: thêm khoá vào **cả hai** file yaml + schema zod trong `i18n.ts` + trường (có `i18n: true`) trong `public/admin/config.yml` (collection `ui`). Island React nhận chữ qua prop `labels`.
+
+### Song ngữ (vi mặc định, en chuẩn bị cho P6)
+
+- **Quy ước file** (theo `i18n` của Sveltia CMS: `multiple_files`, bỏ mã ngôn ngữ mặc định khỏi tên file):
+  tiếng Việt là file gốc (`index.md`, `about.md`, `site.yaml`, `ui.yaml`), tiếng Anh nằm cạnh với hậu tố `.en` (`index.en.md`, `about.en.md`, `site.en.yaml`, `ui.en.yaml`).
+- **Trường cần dịch** (tiêu đề, mô tả, nội dung, alt ảnh, nghề nghiệp, tên menu…) đánh `i18n: true` trong CMS; **trường dùng chung** (ngày, toạ độ, ảnh, link, trạng thái) đánh `i18n: duplicate`.
+- Bản dịch thiếu khoá nào thì **tự dùng bản tiếng Việt** (`withFallback` trong `i18n.ts`), nên dịch dở không làm vỡ build.
+- Định tuyến đã cấu hình trong `astro.config.mjs` (`i18n`: vi ở gốc, en dưới `/en`). Content collection hiện chỉ nạp file tiếng Việt (bỏ `*.en.md`).
+- Ngày/số định dạng bằng `intl` từ `i18n.ts` (đừng viết cứng `'vi-VN'`); `<html lang>` và `og:locale` lấy từ `LOCALES`.
+- Tên riêng, mã kỹ thuật, tên thương hiệu (YouTube, Travel vlogger…) có thể giữ nguyên trong bản tiếng Việt nếu đó là cách gọi quen thuộc.
 - Ẩn dụ vũ trụ được phép, miễn không làm khó hiểu: "Về trạm phóng", "Gửi một tín hiệu".
 - Nút nói rõ việc sẽ xảy ra: "Xem hành trình", "Kênh YouTube".
 - **Không bịa thông tin cá nhân** (trường, công ty, số liệu). Chưa có dữ liệu thật thì giữ `ComingSoon`.
@@ -197,7 +208,8 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 | Nội dung | File |
 |---|---|
 | Tên, nghề nghiệp, câu giới thiệu, vị trí, menu, mạng xã hội, email | `src/data/site.yaml` (kiểm tra bằng zod trong `src/lib/site.ts`) |
-| Chữ cố định trên giao diện (nhãn MSN-xx, tiêu đề mục, nút, bảng tiến độ) | `src/i18n/vi.yaml`, `src/i18n/en.yaml` (zod trong `src/lib/i18n.ts`) |
+| Chữ cố định trên giao diện (nhãn MSN-xx, tiêu đề mục, nút, bảng tiến độ) | `src/i18n/ui.yaml`, `src/i18n/ui.en.yaml` (zod trong `src/lib/i18n.ts`) |
+| Bản tiếng Anh của tên nghề, câu giới thiệu, menu | `src/data/site.en.yaml` (chỉ các trường cần dịch) |
 | Dự án kỹ thuật | `src/content/projects/<ten-khong-dau>/index.md` + ảnh cùng thư mục |
 | Chuyến đi (kèm toạ độ cho địa cầu, album, video) | `src/content/journeys/<ten-khong-dau>/index.md` + ảnh cùng thư mục |
 | Trang Về tôi (timeline, kỹ năng, CV) | `src/content/pages/about.md` |
@@ -221,13 +233,13 @@ src/
 │   ├── brand/       ← Orbi (linh vật, SVG thuần)
 │   ├── layout/      ← MissionBar, Footer, ThemeToggle, MobileNav (island)
 │   ├── media/       ← island React: MissionsGlobe, PhotoGallery, VideoGrid, VideoPlayer
-│   └── sections/    ← Hero, HomeSections, PageHeader, SectionHead, ProjectCard, JourneyCard,
+│   └── sections/    ← Hero, HomeSections, PageHeader, SectionHead, ProjectCard, JourneyCard, FlightPanel,
 │                       MissionStatus, ComingSoon, SocialList
 ├── content/         ← projects/, journeys/, pages/ (Markdown + ảnh)
 ├── assets/earth/    ← ảnh NASA cho Trái Đất hero (day, night, moon .webp)
 ├── content.config.ts← schema nội dung
-├── data/            ← site.yaml, videos.yaml
-├── i18n/            ← vi.yaml, en.yaml (chữ trên giao diện)
+├── data/            ← site.yaml (+ site.en.yaml), videos.yaml
+├── i18n/            ← ui.yaml (vi), ui.en.yaml (en): chữ trên giao diện
 ├── layouts/BaseLayout.astro  ← SEO, JSON-LD, theme, preloader, altimeter, header/footer
 ├── lib/             ← site.ts, i18n.ts, content.ts, photos.ts, youtube.ts, utils.ts (cn, cleanPath)
 ├── pages/           ← mỗi file = một URL ([slug].astro = trang chi tiết)

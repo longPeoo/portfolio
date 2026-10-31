@@ -15,11 +15,11 @@ import { cn } from '@/lib/utils';
 import { getProjects, getJourneys, getPhotos } from '@/lib/content';
 import { getFeaturedVideo } from '@/lib/youtube';
 import { toGalleryPhotos } from '@/lib/photos';
-import { t, fmt } from '@/lib/i18n';
+import { t, fmt, intl } from '@/lib/i18n';
 
 const video = await getFeaturedVideo();
 const isNew = video?.published ? Date.now() - video.published.valueOf() < 14 * 864e5 : false;
-const dateFmt = new Intl.DateTimeFormat('vi-VN', { day: '2-digit', month: 'long', year: 'numeric' });
+const dateFmt = new Intl.DateTimeFormat(intl, { day: '2-digit', month: 'long', year: 'numeric' });
 
 const allProjects = await getProjects();
 const featured = (allProjects.filter((p) => p.data.featured).length ? allProjects.filter((p) => p.data.featured) : allProjects).slice(0, 2);

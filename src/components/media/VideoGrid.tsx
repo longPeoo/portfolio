@@ -20,15 +20,18 @@ interface VideoGridProps {
   categories: string[]
   /** Chữ lấy từ src/i18n (t.videos) */
   labels: { all: string; new: string; views: string; play: string; openYoutube: string; close: string }
+  /** Mã Intl để định dạng ngày/số, ví dụ "vi-VN" */
+  intl: string
 }
 
 const ALL = "__all"
-const dateFmt = new Intl.DateTimeFormat("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" })
-const viewFmt = new Intl.NumberFormat("vi-VN", { notation: "compact" })
+
 /** Video đăng trong 14 ngày gần đây được gắn nhãn "New transmission" */
 const isNew = (iso: string) => Date.now() - new Date(iso).valueOf() < 14 * 864e5
 
-export function VideoGrid({ videos, categories, labels }: VideoGridProps) {
+export function VideoGrid({ videos, categories, labels, intl }: VideoGridProps) {
+  const dateFmt = new Intl.DateTimeFormat(intl, { day: "2-digit", month: "2-digit", year: "numeric" })
+  const viewFmt = new Intl.NumberFormat(intl, { notation: "compact" })
   const [filter, setFilter] = useState(ALL)
   const [playing, setPlaying] = useState<GridVideo | null>(null)
   const shown = filter === ALL ? videos : videos.filter((v) => v.categories.includes(filter))

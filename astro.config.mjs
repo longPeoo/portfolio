@@ -9,6 +9,12 @@ export default defineConfig({
   // URL gọn không có dấu "/" cuối: /journeys/ha-giang (Cloudflare phục vụ ha-giang.html)
   trailingSlash: 'never',
   build: { format: 'file' },
+  // Song ngữ: tiếng Việt ở gốc (/about), tiếng Anh sẽ nằm dưới /en (P6)
+  i18n: {
+    locales: ['vi', 'en'],
+    defaultLocale: 'vi',
+    routing: { prefixDefaultLocale: false },
+  },
   integrations: [sitemap(), react()],
   prefetch: { prefetchAll: true },
   image: {

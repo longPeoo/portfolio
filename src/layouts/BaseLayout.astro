@@ -3,7 +3,7 @@ import { ClientRouter } from 'astro:transitions';
 import '@/styles/global.css';
 
 import { site } from '@/lib/site';
-import { t } from '@/lib/i18n';
+import { t, LOCALES, defaultLocale, type Locale } from '@/lib/i18n';
 import { cleanPath } from '@/lib/utils';
 import MissionBar from '@/components/layout/MissionBar.astro';
 import Footer from '@/components/layout/Footer.astro';
@@ -21,6 +21,7 @@ interface Props {
 }
 
 const { title, description = site.description, image, noindex = false, schema } = Astro.props;
+const lang = LOCALES[(Astro.currentLocale as Locale | undefined) ?? defaultLocale];
 const fullTitle = title ? `${title} · ${site.name}` : `${site.name} — ${site.roles.slice(0, 2).join(' & ')}`;
 const canonical = new URL(cleanPath(Astro.url.pathname), Astro.site);
 const ogImage = new URL(image ?? '/brand/orbi-avatar.png', Astro.site).href;
@@ -38,7 +39,7 @@ const personSchema = {
 ---
 
 <!doctype html>
-<html lang="vi">
+<html lang={lang.lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -53,7 +54,7 @@ const personSchema = {
     <meta name="theme-color" content="#0b1026" media="(prefers-color-scheme: dark)" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="vi_VN" />
+    <meta property="og:locale" content={lang.og} />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />

@@ -32,6 +32,18 @@ slug:
   clean_accents: true
   sanitize_replacement: "-"
 
+# Song ngữ: tiếng Việt là mặc định (file gốc, ví dụ index.md); tiếng Anh nằm cạnh (index.en.md).
+# Bài mới chỉ bật tiếng Việt; bật thêm EN trong trình soạn khi cần.
+# Trường "duplicate" (ngày, toạ độ, ảnh…) chỉ nhập ở tiếng Việt, tự chép sang bản tiếng Anh.
+i18n:
+  structure: multiple_files
+  locales:
+    - vi
+    - en
+  default_locale: vi
+  initial_locales: default
+  omit_default_locale_from_file_path: true
+
 collections:
   # ---------------------------------------------------------------
   - name: journeys
@@ -43,31 +55,33 @@ collections:
     media_folder: ""
     public_folder: ""
     create: true
-    sortable_fields: [date, title]
+    sortable_fields: [ date, title ]
     summary: "{{title}} — {{place}} ({{date}})"
     fields:
-      - { name: title, label: Tiêu đề, widget: string }
-      - { name: summary, label: Tóm tắt (1–2 câu), widget: text }
-      - { name: date, label: Ngày bắt đầu, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
-      - { name: endDate, label: Ngày kết thúc, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false, required: false }
-      - { name: place, label: Địa điểm, widget: string, hint: "Ví dụ: Hà Giang" }
-      - { name: country, label: Quốc gia, widget: string, default: "Việt Nam" }
-      - { name: lat, label: Vĩ độ, widget: number, value_type: float, hint: "Google Maps → chuột phải vào điểm → số đầu tiên" }
-      - { name: lng, label: Kinh độ, widget: number, value_type: float, hint: "Số thứ hai" }
-      - { name: cover, label: Ảnh bìa, widget: image }
-      - { name: coverAlt, label: Mô tả ảnh bìa, widget: string, hint: "Mô tả ngắn cho người khiếm thị và Google" }
+      - { name: title, label: Tiêu đề, widget: string, i18n: true }
+      - { name: summary, label: Tóm tắt (1–2 câu), widget: text, i18n: true }
+      - { name: date, label: Ngày bắt đầu, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false, i18n: duplicate }
+      - { name: endDate, label: Ngày kết thúc, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false, required: false, i18n: duplicate }
+      - { name: place, label: Địa điểm, widget: string, hint: "Ví dụ: Hà Giang", i18n: true }
+      - { name: country, label: Quốc gia, widget: string, default: "Việt Nam", i18n: true }
+      - { name: lat, label: Vĩ độ, widget: number, value_type: float, hint: "Google Maps → chuột phải vào điểm → số đầu tiên", i18n: duplicate }
+      - { name: lng, label: Kinh độ, widget: number, value_type: float, hint: "Số thứ hai", i18n: duplicate }
+      - { name: cover, label: Ảnh bìa, widget: image, i18n: duplicate }
+      - { name: coverAlt, label: Mô tả ảnh bìa, widget: string, hint: "Mô tả ngắn cho người khiếm thị và Google", i18n: true }
       - name: gallery
         label: Album ảnh
         widget: list
         required: false
         fields:
-          - { name: src, label: Ảnh, widget: image }
-          - { name: alt, label: Mô tả ảnh, widget: string }
-          - { name: caption, label: Chú thích, widget: string, required: false }
-      - { name: youtube, label: Link video YouTube, widget: string, required: false }
-      - { name: tags, label: Thẻ, widget: list, required: false }
-      - { name: draft, label: Bản nháp (chưa đăng), widget: boolean, default: false }
-      - { name: body, label: Nội dung, widget: markdown }
+          - { name: src, label: Ảnh, widget: image, i18n: duplicate }
+          - { name: alt, label: Mô tả ảnh, widget: string, i18n: true }
+          - { name: caption, label: Chú thích, widget: string, required: false, i18n: true }
+        i18n: true
+      - { name: youtube, label: Link video YouTube, widget: string, required: false, i18n: duplicate }
+      - { name: tags, label: Thẻ, widget: list, required: false, i18n: true }
+      - { name: draft, label: Bản nháp (chưa đăng), widget: boolean, default: false, i18n: duplicate }
+      - { name: body, label: Nội dung, widget: markdown, i18n: true }
+    i18n: true
 
   # ---------------------------------------------------------------
   - name: projects
@@ -78,13 +92,13 @@ collections:
     media_folder: ""
     public_folder: ""
     create: true
-    sortable_fields: [date, title]
+    sortable_fields: [ date, title ]
     summary: "{{title}} ({{date}})"
     fields:
-      - { name: title, label: Tên dự án, widget: string }
-      - { name: summary, label: Tóm tắt (1–2 câu), widget: text }
-      - { name: date, label: Thời gian, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
-      - { name: role, label: Vai trò của tôi, widget: string }
+      - { name: title, label: Tên dự án, widget: string, i18n: true }
+      - { name: summary, label: Tóm tắt (1–2 câu), widget: text, i18n: true }
+      - { name: date, label: Thời gian, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false, i18n: duplicate }
+      - { name: role, label: Vai trò của tôi, widget: string, i18n: true }
       - name: status
         label: Trạng thái
         widget: select
@@ -93,19 +107,22 @@ collections:
           - { label: "Nominal — đang chạy", value: Nominal }
           - { label: "Complete — đã xong", value: Complete }
           - { label: "Research — nghiên cứu", value: Research }
-      - { name: tags, label: Hệ thống / công nghệ, widget: list, required: false }
-      - { name: cover, label: Ảnh bìa, widget: image, required: false }
-      - { name: coverAlt, label: Mô tả ảnh bìa, widget: string, required: false }
+        i18n: duplicate
+      - { name: tags, label: Hệ thống / công nghệ, widget: list, required: false, i18n: duplicate }
+      - { name: cover, label: Ảnh bìa, widget: image, required: false, i18n: duplicate }
+      - { name: coverAlt, label: Mô tả ảnh bìa, widget: string, required: false, i18n: true }
       - name: links
         label: Liên kết
         widget: list
         required: false
         fields:
-          - { name: label, label: Tên, widget: string }
-          - { name: url, label: URL, widget: string }
-      - { name: featured, label: Hiện ở trang chủ, widget: boolean, default: false }
-      - { name: draft, label: Bản nháp (chưa đăng), widget: boolean, default: false }
-      - { name: body, label: Nội dung, widget: markdown }
+          - { name: label, label: Tên, widget: string, i18n: true }
+          - { name: url, label: URL, widget: string, i18n: duplicate }
+        i18n: true
+      - { name: featured, label: Hiện ở trang chủ, widget: boolean, default: false, i18n: duplicate }
+      - { name: draft, label: Bản nháp (chưa đăng), widget: boolean, default: false, i18n: duplicate }
+      - { name: body, label: Nội dung, widget: markdown, i18n: true }
+    i18n: true
 
   # ---------------------------------------------------------------
   - name: pages
@@ -113,28 +130,32 @@ collections:
     files:
       - name: about
         label: Về tôi
-        file: src/content/pages/about.md
+        file: src/content/pages/about.{{locale}}.md
         fields:
-          - { name: title, label: Tiêu đề, widget: string }
-          - { name: intro, label: Đoạn mở đầu, widget: text }
+          - { name: title, label: Tiêu đề, widget: string, i18n: true }
+          - { name: intro, label: Đoạn mở đầu, widget: text, i18n: true }
           - name: timeline
             label: Các mốc (quỹ đạo phóng)
             widget: list
             fields:
-              - { name: year, label: Năm, widget: string }
-              - { name: title, label: Tiêu đề, widget: string }
-              - { name: text, label: Mô tả, widget: text }
+              - { name: year, label: Năm, widget: string, i18n: true }
+              - { name: title, label: Tiêu đề, widget: string, i18n: true }
+              - { name: text, label: Mô tả, widget: text, i18n: true }
+            i18n: true
           - name: subsystems
             label: Kỹ năng (phân hệ)
             widget: list
             fields:
-              - { name: code, label: Mã (3 chữ), widget: string, hint: "Ví dụ: PWR, COM, NAV" }
-              - { name: name, label: Tên, widget: string }
-              - { name: level, label: Mức độ (0–100), widget: number, value_type: int, min: 0, max: 100 }
-              - { name: items, label: Chi tiết, widget: list }
-          - { name: cv, label: File CV, widget: file, required: false }
-          - { name: draft, label: Bản nháp (chưa đăng), widget: boolean, default: true }
-          - { name: body, label: Câu chuyện, widget: markdown }
+              - { name: code, label: Mã (3 chữ), widget: string, hint: "Ví dụ: PWR, COM, NAV", i18n: true }
+              - { name: name, label: Tên, widget: string, i18n: true }
+              - { name: level, label: Mức độ (0–100), widget: number, value_type: int, min: 0, max: 100, i18n: true }
+              - { name: items, label: Chi tiết, widget: list, i18n: true }
+            i18n: true
+          - { name: cv, label: File CV, widget: file, required: false, i18n: duplicate }
+          - { name: draft, label: Bản nháp (chưa đăng), widget: boolean, default: true, i18n: duplicate }
+          - { name: body, label: Câu chuyện, widget: markdown, i18n: true }
+        i18n: true
+    i18n: true
 
   # ---------------------------------------------------------------
   - name: settings
@@ -142,29 +163,31 @@ collections:
     files:
       - name: site
         label: Thông tin chung
-        file: src/data/site.yaml
+        file: src/data/site.{{locale}}.yaml
         fields:
-          - { name: name, label: Tên hiển thị, widget: string }
-          - { name: handle, label: Tên kênh, widget: string }
-          - { name: roles, label: Nghề nghiệp (chip ở trang chủ), widget: list }
-          - { name: tagline, label: Câu giới thiệu trang chủ, widget: text }
-          - { name: description, label: Mô tả cho Google (≤ 160 ký tự), widget: text }
+          - { name: name, label: Tên hiển thị, widget: string, i18n: duplicate }
+          - { name: handle, label: Tên kênh, widget: string, i18n: duplicate }
+          - { name: roles, label: Nghề nghiệp (chip ở trang chủ), widget: list, i18n: true }
+          - { name: tagline, label: Câu giới thiệu trang chủ, widget: text, i18n: true }
+          - { name: description, label: Mô tả cho Google (≤ 160 ký tự), widget: text, i18n: true }
           - name: location
             label: Vị trí
             widget: object
             fields:
-              - { name: city, label: Thành phố, widget: string }
-              - { name: code, label: Mã sân bay (3 chữ), widget: string }
-              - { name: timezone, label: Múi giờ, widget: string }
-              - { name: lat, label: Vĩ độ hiển thị, widget: string }
-              - { name: lon, label: Kinh độ hiển thị, widget: string }
-          - { name: email, label: Email, widget: string }
+              - { name: city, label: Thành phố, widget: string, i18n: true }
+              - { name: code, label: Mã sân bay (3 chữ), widget: string, i18n: duplicate }
+              - { name: timezone, label: Múi giờ, widget: string, i18n: duplicate }
+              - { name: lat, label: Vĩ độ hiển thị, widget: string, i18n: duplicate }
+              - { name: lon, label: Kinh độ hiển thị, widget: string, i18n: duplicate }
+            i18n: true
+          - { name: email, label: Email, widget: string, i18n: duplicate }
           - name: nav
             label: Menu
             widget: list
             fields:
-              - { name: label, label: Tên, widget: string }
-              - { name: href, label: Đường dẫn, widget: string }
+              - { name: label, label: Tên, widget: string, i18n: true }
+              - { name: href, label: Đường dẫn, widget: string, i18n: duplicate }
+            i18n: true
           - name: socials
             label: Mạng xã hội
             widget: list
@@ -172,9 +195,11 @@ collections:
               - name: id
                 label: Nền tảng
                 widget: select
-                options: [youtube, instagram, tiktok, facebook, linkedin, github]
+                options: [ youtube, instagram, tiktok, facebook, linkedin, github ]
               - { name: label, label: Tên hiển thị, widget: string }
               - { name: url, label: Link (để trống = ẩn), widget: string, required: false }
+            i18n: duplicate
+        i18n: true
       - name: videos
         label: Video YouTube
         file: src/data/videos.yaml
@@ -192,6 +217,7 @@ collections:
             fields:
               - { name: name, label: Tên nhóm, widget: string }
               - { name: videos, label: Link các video, widget: list }
+    i18n: true
 
   # ---------------------------------------------------------------
   # Chữ cố định trên giao diện: nhãn MSN-xx, tiêu đề mục, nút, tiến độ…
@@ -200,183 +226,524 @@ collections:
     label: Chữ trên giao diện
     description: "Nhãn, tiêu đề mục, chữ trên nút. Mã kỹ thuật (MSN-01, P1, T+00) giữ nguyên; {n}, {c}, {name} là chỗ điền số/tên tự động."
     files:
-      - name: vi
-        label: Tiếng Việt (đang hiện trên web)
-        file: src/i18n/vi.yaml
-        fields: &ui_fields
+      - name: strings
+        label: Chữ trên giao diện
+        file: src/i18n/ui.{{locale}}.yaml
+        i18n: true
+        fields:
           - name: common
             label: Dùng chung
             widget: object
             collapsed: true
             fields:
-              - { name: contact, label: "Nút Liên hệ", widget: string }
-              - { name: seeAll, label: "Nút Xem tất cả", widget: string }
-              - { name: backHome, label: "Nút về trang chủ (trang chờ)", widget: string }
-              - { name: assembling, label: "Chip trang chờ", widget: string }
-              - { name: updating, label: "Trạng thái trang chờ", widget: string }
-              - { name: skipLink, label: "Link bỏ qua (bàn phím)", widget: string }
-              - { name: homeLabel, label: "Chữ 'trang chủ' của logo", widget: string }
+              - name: contact
+                label: Nút Liên hệ
+                widget: string
+                i18n: true
+              - name: seeAll
+                label: Nút Xem tất cả
+                widget: string
+                i18n: true
+              - name: backHome
+                label: Nút về trang chủ (trang chờ)
+                widget: string
+                i18n: true
+              - name: assembling
+                label: Chip trang chờ
+                widget: string
+                i18n: true
+              - name: updating
+                label: Trạng thái trang chờ
+                widget: string
+                i18n: true
+              - name: skipLink
+                label: Link bỏ qua (bàn phím)
+                widget: string
+                i18n: true
+              - name: homeLabel
+                label: Chữ 'trang chủ' của logo
+                widget: string
+                i18n: true
+              - name: orbi
+                label: Tên Orbi (trình đọc màn hình)
+                widget: string
+                i18n: true
               - name: status
                 label: Trạng thái (bảng tiến độ, kỹ năng)
                 widget: object
                 fields:
-                  - { name: nominal, label: Xong / ổn định, widget: string }
-                  - { name: active, label: Đang làm, widget: string }
-                  - { name: queued, label: Chờ, widget: string }
+                  - name: nominal
+                    label: Xong / ổn định
+                    widget: string
+                    i18n: true
+                  - name: active
+                    label: Đang làm
+                    widget: string
+                    i18n: true
+                  - name: queued
+                    label: Chờ
+                    widget: string
+                    i18n: true
+                i18n: true
               - name: projectStatus
                 label: Trạng thái dự án
                 widget: object
                 fields:
-                  - { name: Nominal, label: Nominal, widget: string }
-                  - { name: Complete, label: Complete, widget: string }
-                  - { name: Research, label: Research, widget: string }
+                  - name: Nominal
+                    label: Nominal
+                    widget: string
+                    i18n: true
+                  - name: Complete
+                    label: Complete
+                    widget: string
+                    i18n: true
+                  - name: Research
+                    label: Research
+                    widget: string
+                    i18n: true
+                i18n: true
+            i18n: true
           - name: chrome
             label: Thanh menu, chân trang, màn đếm ngược
             widget: object
             collapsed: true
             fields:
-              - { name: countdown, label: Chữ trên màn đếm ngược, widget: string }
-              - { name: skipIntro, label: Gợi ý bỏ qua đếm ngược, widget: string }
-              - { name: clock, label: "Đồng hồ (trình đọc màn hình)", widget: string }
-              - { name: mainMenu, label: Tên menu, widget: string }
-              - { name: openMenu, label: Nút mở menu, widget: string }
-              - { name: closeMenu, label: Nút đóng menu, widget: string }
-              - { name: theme, label: Nút sáng/tối, widget: string }
-              - { name: footerCode, label: "Nhãn chân trang (MSN-99)", widget: string }
-              - { name: footerNav, label: Tiêu đề menu chân trang, widget: string }
-              - { name: footerTagline, label: Dòng bản quyền, widget: string }
-              - { name: toTop, label: Nút lên đầu trang, widget: string }
+              - name: countdown
+                label: Chữ trên màn đếm ngược
+                widget: string
+                i18n: true
+              - name: skipIntro
+                label: Gợi ý bỏ qua đếm ngược
+                widget: string
+                i18n: true
+              - name: clock
+                label: Đồng hồ (trình đọc màn hình)
+                widget: string
+                i18n: true
+              - name: mainMenu
+                label: Tên menu
+                widget: string
+                i18n: true
+              - name: openMenu
+                label: Nút mở menu
+                widget: string
+                i18n: true
+              - name: closeMenu
+                label: Nút đóng menu
+                widget: string
+                i18n: true
+              - name: theme
+                label: Nút sáng/tối
+                widget: string
+                i18n: true
+              - name: footerCode
+                label: Nhãn chân trang (MSN-99)
+                widget: string
+                i18n: true
+              - name: footerNav
+                label: Tiêu đề menu chân trang
+                widget: string
+                i18n: true
+              - name: footerTagline
+                label: Dòng bản quyền
+                widget: string
+                i18n: true
+              - name: toTop
+                label: Nút lên đầu trang
+                widget: string
+                i18n: true
+            i18n: true
           - name: home
             label: Trang chủ
             widget: object
             collapsed: true
             fields:
-              - { name: heroCode, label: "Nhãn hero (MSN-00)", widget: string }
-              - { name: heroNow, label: Chữ trước bảng lật, widget: string }
-              - { name: hello, label: Lời chào, widget: string }
-              - { name: rolesLabel, label: "Nghề nghiệp (trình đọc màn hình)", widget: string }
-              - { name: ctaJourneys, label: Nút chính, widget: string }
-              - { name: ctaYoutube, label: Nút YouTube, widget: string }
-              - { name: videoCode, label: "Nhãn khối video (MSN-04)", widget: string }
-              - { name: videoTitle, label: Tiêu đề khối video, widget: string }
-              - { name: videoNew, label: Chip video mới, widget: string }
-              - { name: videoAll, label: Nút tất cả video, widget: string }
-              - { name: projectsCode, label: "Nhãn khối dự án (MSN-02)", widget: string }
-              - { name: projectsTitle, label: Tiêu đề khối dự án, widget: string }
-              - { name: journeysCode, label: "Nhãn khối hành trình (MSN-03)", widget: string }
-              - { name: journeysTitle, label: Tiêu đề khối hành trình, widget: string }
-              - { name: photosCode, label: "Nhãn khối ảnh (MSN-05)", widget: string }
-              - { name: photosTitle, label: Tiêu đề khối ảnh, widget: string }
-              - { name: photosLink, label: Nút xem tất cả ảnh, widget: string }
-              - { name: statusCode, label: Nhãn bảng tiến độ, widget: string }
-              - { name: statusTitle, label: Tiêu đề bảng tiến độ, widget: string }
+              - name: heroCode
+                label: Nhãn hero (MSN-00)
+                widget: string
+                i18n: true
+              - name: heroNow
+                label: Chữ trước bảng lật
+                widget: string
+                i18n: true
+              - name: hello
+                label: Lời chào
+                widget: string
+                i18n: true
+              - name: rolesLabel
+                label: Nghề nghiệp (trình đọc màn hình)
+                widget: string
+                i18n: true
+              - name: ctaJourneys
+                label: Nút chính
+                widget: string
+                i18n: true
+              - name: ctaYoutube
+                label: Nút YouTube
+                widget: string
+                i18n: true
+              - name: videoCode
+                label: Nhãn khối video (MSN-04)
+                widget: string
+                i18n: true
+              - name: videoTitle
+                label: Tiêu đề khối video
+                widget: string
+                i18n: true
+              - name: videoNew
+                label: Chip video mới
+                widget: string
+                i18n: true
+              - name: videoAll
+                label: Nút tất cả video
+                widget: string
+                i18n: true
+              - name: projectsCode
+                label: Nhãn khối dự án (MSN-02)
+                widget: string
+                i18n: true
+              - name: projectsTitle
+                label: Tiêu đề khối dự án
+                widget: string
+                i18n: true
+              - name: journeysCode
+                label: Nhãn khối hành trình (MSN-03)
+                widget: string
+                i18n: true
+              - name: journeysTitle
+                label: Tiêu đề khối hành trình
+                widget: string
+                i18n: true
+              - name: photosCode
+                label: Nhãn khối ảnh (MSN-05)
+                widget: string
+                i18n: true
+              - name: photosTitle
+                label: Tiêu đề khối ảnh
+                widget: string
+                i18n: true
+              - name: photosLink
+                label: Nút xem tất cả ảnh
+                widget: string
+                i18n: true
+              - name: statusCode
+                label: Nhãn bảng tiến độ
+                widget: string
+                i18n: true
+              - name: statusTitle
+                label: Tiêu đề bảng tiến độ
+                widget: string
+                i18n: true
               - name: phases
                 label: Các giai đoạn (bảng tiến độ)
                 widget: list
                 summary: "{{code}} · {{name}}"
                 fields:
-                  - { name: code, label: Mã, widget: string }
-                  - { name: name, label: Tên, widget: string }
+                  - name: code
+                    label: Mã
+                    widget: string
+                    i18n: true
+                  - name: name
+                    label: Tên
+                    widget: string
+                    i18n: true
                   - name: state
                     label: Trạng thái
                     widget: select
                     options:
-                      - { label: Xong, value: nominal }
-                      - { label: Đang làm, value: active }
-                      - { label: Chờ, value: queued }
+                      - label: Xong
+                        value: nominal
+                      - label: Đang làm
+                        value: active
+                      - label: Chờ
+                        value: queued
+                    i18n: true
+                i18n: true
+            i18n: true
           - name: about
             label: Trang Về tôi
             widget: object
             collapsed: true
             fields:
-              - { name: code, label: "Nhãn (MSN-01)", widget: string }
-              - { name: title, label: Tiêu đề khi chưa có nội dung, widget: string }
-              - { name: intro, label: Mô tả khi chưa có nội dung, widget: text }
-              - { name: cv, label: Nút tải CV, widget: string }
-              - { name: trajectoryCode, label: Nhãn mục các mốc, widget: string }
-              - { name: trajectoryTitle, label: Tiêu đề mục các mốc, widget: string }
-              - { name: skillsCode, label: Nhãn mục kỹ năng, widget: string }
-              - { name: skillsTitle, label: Tiêu đề mục kỹ năng, widget: string }
+              - name: code
+                label: Nhãn (MSN-01)
+                widget: string
+                i18n: true
+              - name: title
+                label: Tiêu đề khi chưa có nội dung
+                widget: string
+                i18n: true
+              - name: intro
+                label: Mô tả khi chưa có nội dung
+                widget: text
+                i18n: true
+              - name: cv
+                label: Nút tải CV
+                widget: string
+                i18n: true
+              - name: trajectoryCode
+                label: Nhãn mục các mốc
+                widget: string
+                i18n: true
+              - name: trajectoryTitle
+                label: Tiêu đề mục các mốc
+                widget: string
+                i18n: true
+              - name: skillsCode
+                label: Nhãn mục kỹ năng
+                widget: string
+                i18n: true
+              - name: skillsTitle
+                label: Tiêu đề mục kỹ năng
+                widget: string
+                i18n: true
+              - name: flightCode
+                label: Nhãn bảng đo xa chuyến bay
+                widget: string
+                i18n: true
+              - name: flightPad
+                label: "Bảng đo xa: trước khi phóng"
+                widget: string
+                i18n: true
+              - name: flightOrbit
+                label: "Bảng đo xa: khi tới mốc cuối"
+                widget: string
+                i18n: true
+            i18n: true
           - name: space
             label: Trang Vũ trụ (dự án)
             widget: object
             collapsed: true
             fields:
-              - { name: code, label: "Nhãn (MSN-02)", widget: string }
-              - { name: title, label: Tiêu đề, widget: string }
-              - { name: intro, label: Mô tả, widget: text }
-              - { name: back, label: Nút quay lại, widget: string }
-              - { name: payload, label: Chữ sau mã PL-xx, widget: string }
-              - { name: role, label: Nhãn Vai trò, widget: string }
-              - { name: time, label: Nhãn Thời gian, widget: string }
-              - { name: systems, label: Nhãn Hệ thống, widget: string }
+              - name: code
+                label: Nhãn (MSN-02)
+                widget: string
+                i18n: true
+              - name: title
+                label: Tiêu đề
+                widget: string
+                i18n: true
+              - name: intro
+                label: Mô tả
+                widget: text
+                i18n: true
+              - name: back
+                label: Nút quay lại
+                widget: string
+                i18n: true
+              - name: payload
+                label: Chữ sau mã PL-xx
+                widget: string
+                i18n: true
+              - name: role
+                label: Nhãn Vai trò
+                widget: string
+                i18n: true
+              - name: time
+                label: Nhãn Thời gian
+                widget: string
+                i18n: true
+              - name: systems
+                label: Nhãn Hệ thống
+                widget: string
+                i18n: true
+            i18n: true
           - name: journeys
             label: Trang Hành trình
             widget: object
             collapsed: true
             fields:
-              - { name: code, label: "Nhãn (MSN-03)", widget: string }
-              - { name: title, label: Tiêu đề, widget: string }
-              - { name: intro, label: Mô tả, widget: text }
-              - { name: stats, label: "Thống kê ({n} chuyến, {c} quốc gia)", widget: string }
-              - { name: back, label: Nút quay lại, widget: string }
-              - { name: log, label: Chữ sau mã M-xx, widget: string }
-              - { name: video, label: Nhãn video chuyến đi, widget: string }
-              - { name: albumCode, label: "Nhãn album ({n} ảnh)", widget: string }
-              - { name: albumTitle, label: Tiêu đề album, widget: string }
-              - { name: next, label: Nhãn chuyến tiếp theo, widget: string }
-              - { name: globeLabel, label: "Mô tả địa cầu ({n} chuyến)", widget: string }
-              - { name: globeHint, label: Gợi ý dưới địa cầu, widget: string }
+              - name: code
+                label: Nhãn (MSN-03)
+                widget: string
+                i18n: true
+              - name: title
+                label: Tiêu đề
+                widget: string
+                i18n: true
+              - name: intro
+                label: Mô tả
+                widget: text
+                i18n: true
+              - name: stats
+                label: Thống kê ({n} chuyến, {c} quốc gia)
+                widget: string
+                i18n: true
+              - name: back
+                label: Nút quay lại
+                widget: string
+                i18n: true
+              - name: log
+                label: Chữ sau mã M-xx
+                widget: string
+                i18n: true
+              - name: video
+                label: Nhãn video chuyến đi
+                widget: string
+                i18n: true
+              - name: albumCode
+                label: Nhãn album ({n} ảnh)
+                widget: string
+                i18n: true
+              - name: albumTitle
+                label: Tiêu đề album
+                widget: string
+                i18n: true
+              - name: next
+                label: Nhãn chuyến tiếp theo
+                widget: string
+                i18n: true
+              - name: stampMonth
+                label: Tháng trên con dấu ({n} = số tháng)
+                widget: string
+                i18n: true
+              - name: globeLabel
+                label: Mô tả địa cầu ({n} chuyến)
+                widget: string
+                i18n: true
+              - name: globeHint
+                label: Gợi ý dưới địa cầu
+                widget: string
+                i18n: true
+            i18n: true
           - name: videos
             label: Trang Video
             widget: object
             collapsed: true
             fields:
-              - { name: code, label: "Nhãn (MSN-04)", widget: string }
-              - { name: title, label: Tiêu đề, widget: string }
-              - { name: intro, label: Mô tả, widget: text }
-              - { name: subscribe, label: Nút theo dõi kênh, widget: string }
-              - { name: all, label: Tab tất cả, widget: string }
-              - { name: new, label: Chip video mới, widget: string }
-              - { name: views, label: Chữ lượt xem, widget: string }
-              - { name: play, label: Nút phát, widget: string }
-              - { name: openYoutube, label: Nút mở trên YouTube, widget: string }
-              - { name: close, label: Nút đóng video, widget: string }
+              - name: code
+                label: Nhãn (MSN-04)
+                widget: string
+                i18n: true
+              - name: title
+                label: Tiêu đề
+                widget: string
+                i18n: true
+              - name: intro
+                label: Mô tả
+                widget: text
+                i18n: true
+              - name: subscribe
+                label: Nút theo dõi kênh
+                widget: string
+                i18n: true
+              - name: all
+                label: Tab tất cả
+                widget: string
+                i18n: true
+              - name: new
+                label: Chip video mới
+                widget: string
+                i18n: true
+              - name: views
+                label: Chữ lượt xem
+                widget: string
+                i18n: true
+              - name: play
+                label: Nút phát
+                widget: string
+                i18n: true
+              - name: openYoutube
+                label: Nút mở trên YouTube
+                widget: string
+                i18n: true
+              - name: close
+                label: Nút đóng video
+                widget: string
+                i18n: true
+            i18n: true
           - name: gallery
             label: Trang Ảnh
             widget: object
             collapsed: true
             fields:
-              - { name: code, label: "Nhãn (MSN-05)", widget: string }
-              - { name: title, label: Tiêu đề, widget: string }
-              - { name: intro, label: Mô tả, widget: text }
-              - { name: count, label: "Số ảnh ({n})", widget: string }
-              - { name: open, label: Nút xem ảnh lớn, widget: string }
-              - { name: prev, label: Nút ảnh trước, widget: string }
-              - { name: next, label: Nút ảnh sau, widget: string }
-              - { name: seeJourney, label: Link xem chuyến đi, widget: string }
+              - name: code
+                label: Nhãn (MSN-05)
+                widget: string
+                i18n: true
+              - name: title
+                label: Tiêu đề
+                widget: string
+                i18n: true
+              - name: intro
+                label: Mô tả
+                widget: text
+                i18n: true
+              - name: count
+                label: Số ảnh ({n})
+                widget: string
+                i18n: true
+              - name: open
+                label: Nút xem ảnh lớn
+                widget: string
+                i18n: true
+              - name: prev
+                label: Nút ảnh trước
+                widget: string
+                i18n: true
+              - name: next
+                label: Nút ảnh sau
+                widget: string
+                i18n: true
+              - name: seeJourney
+                label: Link xem chuyến đi
+                widget: string
+                i18n: true
+            i18n: true
           - name: contact
             label: Trang Liên hệ
             widget: object
             collapsed: true
             fields:
-              - { name: code, label: "Nhãn (MSN-99)", widget: string }
-              - { name: title, label: Tiêu đề dòng 1, widget: string }
-              - { name: titleEm, label: Tiêu đề dòng 2 (in nghiêng), widget: string }
-              - { name: intro, label: Đoạn giới thiệu, widget: text }
-              - { name: metaTitle, label: Tên tab trình duyệt, widget: string }
-              - { name: metaDescription, label: "Mô tả cho Google ({name} = tên)", widget: string }
+              - name: code
+                label: Nhãn (MSN-99)
+                widget: string
+                i18n: true
+              - name: title
+                label: Tiêu đề dòng 1
+                widget: string
+                i18n: true
+              - name: titleEm
+                label: Tiêu đề dòng 2 (in nghiêng)
+                widget: string
+                i18n: true
+              - name: intro
+                label: Đoạn giới thiệu
+                widget: text
+                i18n: true
+              - name: metaTitle
+                label: Tên tab trình duyệt
+                widget: string
+                i18n: true
+              - name: metaDescription
+                label: Mô tả cho Google ({name} = tên)
+                widget: string
+                i18n: true
+            i18n: true
           - name: notFound
             label: Trang lỗi 404
             widget: object
             collapsed: true
             fields:
-              - { name: metaTitle, label: Tên tab trình duyệt, widget: string }
-              - { name: code, label: Nhãn, widget: string }
-              - { name: title, label: Tiêu đề, widget: string }
-              - { name: text, label: Mô tả, widget: string }
-              - { name: back, label: Nút quay về, widget: string }
-      - name: en
-        label: Tiếng Anh (chuẩn bị song ngữ, chưa hiện trên web)
-        file: src/i18n/en.yaml
-        fields: *ui_fields
+              - name: metaTitle
+                label: Tên tab trình duyệt
+                widget: string
+                i18n: true
+              - name: code
+                label: Nhãn
+                widget: string
+                i18n: true
+              - name: title
+                label: Tiêu đề
+                widget: string
+                i18n: true
+              - name: text
+                label: Mô tả
+                widget: string
+                i18n: true
+              - name: back
+                label: Nút quay về
+                widget: string
+                i18n: true
+            i18n: true
+    i18n: true

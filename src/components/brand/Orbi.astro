@@ -1,4 +1,5 @@
 ---
+import { t } from '@/lib/i18n';
 /**
  * Orbi — linh vật vệ tinh nhỏ của website.
  * mood: happy (mặc định) · sleep (ngủ, dùng ở footer) · lost (bối rối, dùng ở 404)
@@ -19,7 +20,7 @@ const { size = 120, mood = 'happy', float = false, class: className } = Astro.pr
   height={size * (110 / 120)}
   viewBox="0 0 120 110"
   role="img"
-  aria-label="Orbi, chú vệ tinh nhỏ"
+  aria-label={t.common.orbi}
 >
   <!-- Ăng-ten + đèn hiệu -->
   <line x1="60" y1="26" x2="60" y2="11" class="o-stroke" stroke-width="3" stroke-linecap="round" />

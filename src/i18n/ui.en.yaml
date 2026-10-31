@@ -1,6 +1,6 @@
 # ==================================================================
 #  UI STRINGS — ENGLISH (chuẩn bị cho song ngữ ở P6, CHƯA hiện trên web)
-#  Cùng các khoá với vi.yaml. Sửa được trong /admin → "Chữ trên giao diện".
+#  Cùng các khoá với ui.yaml. Khoá nào để trống sẽ tự dùng bản tiếng Việt.
 # ==================================================================
 common:
   contact: Contact
@@ -10,6 +10,7 @@ common:
   updating: Coming soon
   skipLink: Skip to main content
   homeLabel: home
+  orbi: Orbi, the little satellite
   status:
     nominal: Nominal
     active: In progress
@@ -69,6 +70,9 @@ about:
   trajectoryTitle: Stage by stage
   skillsCode: Subsystems
   skillsTitle: Skills
+  flightCode: Telemetry · Flight
+  flightPad: On the launch pad
+  flightOrbit: Orbit reached
 
 space:
   code: MSN-02 · Payloads
@@ -91,6 +95,7 @@ journeys:
   albumCode: "Film roll · {n} photos"
   albumTitle: Album
   next: Next mission
+  stampMonth: "M{n}"
   globeLabel: "Globe marking {n} journeys. Click a pin to open the journey."
   globeHint: Drag to rotate · click a pin to open
 

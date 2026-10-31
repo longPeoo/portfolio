@@ -10,6 +10,7 @@ import { z } from 'astro/zod';
 const link = z.object({ label: z.string(), url: z.string() });
 
 const projects = defineCollection({
+  // <tên>/index.md = tiếng Việt; index.en.md (bản dịch từ CMS, P6) không nạp vào đây
   loader: glob({ pattern: '*/index.md', base: './src/content/projects', generateId: ({ entry }) => entry.split('/')[0] }),
   schema: ({ image }) =>
     z.object({
@@ -54,7 +55,8 @@ const journeys = defineCollection({
 });
 
 const pages = defineCollection({
-  loader: glob({ pattern: '*.md', base: './src/content/pages' }),
+  // about.md = tiếng Việt; about.en.md (bản dịch, P6) không nạp vào đây
+  loader: glob({ pattern: ['*.md', '!*.*.md'], base: './src/content/pages' }),
   schema: z.object({
     title: z.string(),
     intro: z.string(),

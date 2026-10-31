@@ -68,7 +68,7 @@ const stars = [
           <circle cx={x} cy={y} r={r} class="star" style={`animation-delay:${i * 0.45}s`} />
         ))}
 
-        <!-- Mặt Trời (chỉ hiện ở giao diện sáng) ở góc trên phải — hướng sáng của Trái Đất (earth.ts) trỏ về đây -->
+        <!-- Mặt Trời SVG: bản dự phòng khi chưa tải xong / không có WebGL (bản thật vẽ trong earth.ts) -->
         <g class="sun">
           <circle cx="508" cy="92" r="78" fill="url(#sun-glow)" class="sun__glow" />
           <g class="sun__rays">
@@ -167,6 +167,8 @@ const stars = [
 
   .sun { transition: opacity var(--dur-slow) var(--ease-out), translate var(--dur-slow) var(--ease-out); }
   :global(.dark) .sun { opacity: 0; translate: 30px 30px; }
+  /* Có WebGL: Mặt Trời thật vẽ trong canvas (earth.ts), ẩn bản SVG dự phòng */
+  .has-earth .sun { opacity: 0; }
   .sun__rays path { stroke: var(--c-sun); stroke-width: 4; stroke-linecap: round; }
   .sun__rays { transform-origin: 508px 92px; animation: sun-spin 40s linear infinite; }
   .sun__glow { transform-origin: 508px 92px; animation: sun-pulse 5s ease-in-out infinite; }

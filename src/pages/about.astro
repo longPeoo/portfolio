@@ -4,6 +4,7 @@ import { DownloadIcon } from 'lucide-react';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ComingSoon from '@/components/sections/ComingSoon.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
+import FlightPanel from '@/components/sections/FlightPanel.astro';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { getPage } from '@/lib/content';
@@ -27,12 +28,15 @@ const Content = page ? (await render(page)).Content : undefined;
         )}
       </PageHeader>
 
-      <section class="container about__story prose prose-lg">
+      <!-- Màn hình rộng: cột trái kể chuyện + timeline, cột phải bảng đo xa chuyến bay dính theo khi cuộn -->
+      <div class="container about__layout">
+      <div class="about__main">
+      <section class="about__story prose prose-lg">
         <Content />
       </section>
 
       {page.data.timeline.length > 0 && (
-        <section class="container about__section" aria-labelledby="trajectory-title">
+        <section class="about__section" aria-labelledby="trajectory-title">
           <p class="mono muted">{t.about.trajectoryCode}</p>
           <h2 id="trajectory-title">{t.about.trajectoryTitle}</h2>
           <!-- Đường quỹ đạo tự vẽ khi cuộn; mỗi mốc là một lần "tách tầng" -->
@@ -40,7 +44,7 @@ const Content = page ? (await render(page)).Content : undefined;
             <span class="trajectory__line" aria-hidden="true"><span data-trajectory-line></span></span>
             <ol>
               {page.data.timeline.map((m, i) => (
-                <li class="stage" data-stage>
+                <li class="stage" data-stage data-year={m.year} data-title={m.title}>
                   <span class="stage__dot" aria-hidden="true"></span>
                   <p class="mono stage__year">T+{String(i).padStart(2, '0')} · {m.year}</p>
                   <h3>{m.title}</h3>
@@ -51,6 +55,9 @@ const Content = page ? (await render(page)).Content : undefined;
           </div>
         </section>
       )}
+      </div>
+      {page.data.timeline.length > 0 && <FlightPanel stages={page.data.timeline.length} />}
+      </div>
 
       {page.data.subsystems.length > 0 && (
         <section class="container about__section" aria-labelledby="subsystems-title">
@@ -80,6 +87,8 @@ const Content = page ? (await render(page)).Content : undefined;
 
 <style>
   .about__cv { margin-top: var(--space-8); }
+  .about__layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-16); }
+  @media (min-width: 1100px) { .about__layout { grid-template-columns: minmax(0, 68ch) minmax(300px, 400px); justify-content: space-between; } }
   .about__story { max-width: 68ch; }
   .about__section { margin-top: var(--section-y); }
   .about__section h2 { font-size: var(--fs-h2); margin-block: var(--space-3) var(--space-12); }

@@ -1,0 +1,22 @@
+# Bản tiếng Anh của các trường cần dịch trong site.yaml (chuẩn bị cho song ngữ, chưa hiện trên web).
+# Trường không có ở đây (email, mạng xã hội, toạ độ…) dùng chung với site.yaml.
+roles:
+  - Space Systems Engineer
+  - Travel Vlogger
+  - Storyteller
+  - Remote Sensing Engineer
+tagline: On weekdays I work with satellites and orbits. On weekends I pack my backpack, travel, and tell the story on video.
+description: Long — space technology engineer & travel vlogger. Engineering projects, journey logs and travel videos.
+location:
+  city: Hanoi
+nav:
+  - label: About
+    href: /about
+  - label: Space
+    href: /space
+  - label: Journeys
+    href: /journeys
+  - label: Videos
+    href: /videos
+  - label: Photos
+    href: /gallery

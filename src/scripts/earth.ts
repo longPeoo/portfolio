@@ -1,7 +1,7 @@
 /**
  * TRÁI ĐẤT Ở HERO — WebGL thuần (~4KB), không dùng thư viện 3D.
  * - Ảnh bề mặt: NASA Blue Marble (ngày) + Black Marble (đèn thành phố ban đêm) + LRO (Mặt Trăng), phạm vi công cộng.
- * - Giao diện sáng: Mặt Trời (SVG ở góc trên trái) chiếu sáng Trái Đất.
+ * - Giao diện sáng: Mặt Trời (shader: rìa tối dần, hạt sáng, vết đen, nhật hoa) ở góc trên phải chiếu sáng Trái Đất.
  * - Giao diện tối: Trái Đất nửa đêm với đèn thành phố, Mặt Trăng sáng quay quanh và bị che khi đi ra sau.
  * Canvas phủ đúng khung viewBox 600×600 của SVG quỹ đạo: Trái Đất tâm (300,300) bán kính 118.
  * Ảnh tải sau khi trang load xong; trước đó vẫn thấy hành tinh lưới SVG (cũng là bản dự phòng khi không có WebGL).
@@ -12,11 +12,13 @@ import moonUrl from '@/assets/earth/moon.webp?url';
 
 const VIEW = 600;
 const EARTH = { x: 300, y: 300, r: 118 };
-const MOON = { r: 24, orbit: 228, squash: 0.26, tilt: -0.21, period: 36 };
+const MOON = { r: 23, orbit: 192, squash: 0.28, tilt: -0.21, period: 36 };
+// Mặt Trời (giao diện sáng) ở góc trên phải, cùng toạ độ viewBox với SVG dự phòng trong Hero.astro
+const SUN = { x: 508, y: 92, r: 38 };
 const SPIN_PERIOD = 90; // giây / vòng
 
 // Hướng ánh sáng (x phải, y lên, z hướng về người xem)
-const SUN_DAY = norm([0.62, 0.62, 0.55]); // từ Mặt Trời ở góc trên phải (SVG trong Hero.astro)
+const SUN_DAY = norm([0.62, 0.62, 0.55]); // từ Mặt Trời ở góc trên phải (SUN)
 const SUN_NIGHT = norm([0.78, 0.22, -0.18]); // Mặt Trời khuất sau bên phải → nửa trái là đêm, thấy đèn thành phố
 
 const VERT = `attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}`;
@@ -24,7 +26,7 @@ const FRAG = `
 precision highp float;
 uniform vec2 uRes;
 uniform sampler2D uDay, uNight, uMoon;
-uniform float uSpin, uNightMix, uMoonOn, uOutline, uAmbient;
+uniform float uSpin, uNightMix, uMoonOn, uSunOn, uOutline, uAmbient;
 uniform vec3 uSun, uMoonPos, uPin, uAtmo, uInk;
 uniform float uMoonR, uTime;
 const float TILT = 0.409;
@@ -32,6 +34,38 @@ const float PI = 3.14159265;
 vec3 rotY(vec3 v, float a){ float c=cos(a), s=sin(a); return vec3(c*v.x+s*v.z, v.y, -s*v.x+c*v.z); }
 vec3 rotZ(vec3 v, float a){ float c=cos(a), s=sin(a); return vec3(c*v.x-s*v.y, s*v.x+c*v.y, v.z); }
 vec2 eq(vec3 n){ return vec2(atan(n.x, n.z)/(2.*PI)+.5, .5-asin(clamp(n.y,-1.,1.))/PI); }
+float hash(vec2 p){ p = fract(p*vec2(123.34, 456.21)); p += dot(p, p+45.32); return fract(p.x*p.y); }
+float vnoise(vec2 p){
+  vec2 i = floor(p), f = fract(p), u = f*f*(3.-2.*f);
+  return mix(mix(hash(i), hash(i+vec2(1.,0.)), u.x), mix(hash(i+vec2(0.,1.)), hash(i+vec2(1.,1.)), u.x), u.y);
+}
+float fbm(vec2 p){ float v = 0., a = .5; for (int i = 0; i < 4; i++) { v += a*vnoise(p); p = p*2.1 + vec2(3.1, 1.7); a *= .5; } return v; }
+
+// Mặt Trời: đĩa sáng với rìa tối dần (limb darkening), hạt sáng lăn tăn, vài vết đen; quầng nhật hoa có tia chuyển động
+vec4 sun(vec2 q, float px){
+  float r = length(q);
+  vec4 o = vec4(0.);
+  if (r > .97) {
+    float k = r - 1.;
+    float rays = fbm(vec2(atan(q.y, q.x)*4.5, uTime*.15))*.6 + .4;
+    float g = (exp(-k*2.6)*.8 + exp(-k*.9)*.24*rays) * (1.-smoothstep(1.5, 2.4, r));
+    vec3 c = mix(vec3(1., .5, .12), vec3(1., .88, .55), exp(-k*1.8));
+    o = vec4(c*g, g);
+  }
+  if (r < 1.) {
+    float mu = sqrt(1.-r*r);
+    vec2 uv = q / (.35 + .65*mu);
+    float gran = fbm(uv*9. + vec2(uTime*.06, -uTime*.04));
+    float spots = smoothstep(.76, .82, fbm(uv*1.8 + 7.1 + uTime*.01));
+    vec3 c = mix(vec3(.96, .36, .03), vec3(1., .88, .42), pow(mu, .7));
+    c *= (.9 + .16*gran) * (1.-.5*spots) * (.8 + .2*mu);
+    c += vec3(1., .96, .78) * pow(mu, 6.) * .3;
+    float a = 1.-smoothstep(1.-px, 1., r);
+    vec4 s = vec4(c*a, a);
+    o = s + o*(1.-s.a);
+  }
+  return o * uSunOn;
+}
 
 vec4 earth(vec2 q, float px){
   float r = length(q);
@@ -79,12 +113,16 @@ void main(){
   float pxM = ${VIEW}. / uRes.x / uMoonR;
   float re = length(qe), rm = length(qm);
   vec4 o = vec4(0.);
+  // Mặt Trời nằm xa nhất, vẽ trước
+  vec2 qs = (p - vec2(${SUN.x}., ${SUN.y}.)) / ${SUN.r}.; qs.y = -qs.y;
+  if (uSunOn > .001 && length(qs) < 2.4) o = sun(qs, ${VIEW}. / uRes.x / ${SUN.r}.);
   // Quầng khí quyển ngoài viền
   if (re > 1. && re < 1.18) {
     vec2 dir = normalize(qe);
     float side = .35 + .65*smoothstep(-.6, .8, dot(dir, normalize(uSun.xy + 1e-4)));
     float g = pow(1.-(re-1.)/.18, 2.4) * .55 * side;
-    o = vec4(uAtmo*g, g);
+    vec4 A = vec4(uAtmo*g, g);
+    o = A + o*(1.-A.a);
   }
   // Quầng sáng Mặt Trăng
   if (rm > 1. && rm < 2.2 && uMoonOn > 0.) {
@@ -202,6 +240,7 @@ export async function mountEarth(canvas: HTMLCanvasElement, signal: AbortSignal)
     gl.uniform1f(u('uNightMix'), mix);
     gl.uniform1f(u('uAmbient'), lerp(0.2, 0.04, mix));
     gl.uniform1f(u('uMoonOn'), mix);
+    gl.uniform1f(u('uSunOn'), 1 - mix);
     gl.uniform1f(u('uOutline'), (1 - mix) * 0.85);
     gl.uniform3f(u('uMoonPos'), mx, my, depth);
     gl.uniform1f(u('uMoonR'), MOON.r * (1 + depth * 0.08));

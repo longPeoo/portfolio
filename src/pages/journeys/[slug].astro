@@ -70,7 +70,7 @@ const article = {
 
     <div class="container trip__body">
       {videoId && (
-        <section class="trip__video" aria-label="Video chuyến đi">
+        <section class="trip__video" aria-label={t.journeys.video}>
           <p class="mono muted">{t.journeys.video}</p>
           <VideoPlayer client:visible id={videoId} title={title} playLabel={t.videos.play} />
         </section>

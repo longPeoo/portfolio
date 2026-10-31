@@ -7,7 +7,7 @@ import { getVideos, videoCategories, channelUrl } from '@/lib/youtube';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { brandIconSvg } from '@/lib/site';
-import { t } from '@/lib/i18n';
+import { t, intl } from '@/lib/i18n';
 
 const videos = await getVideos();
 const grid = videos.map((v) => ({
@@ -34,7 +34,7 @@ const { title, intro, code } = t.videos;
         )}
       </PageHeader>
       <section class="container">
-        <VideoGrid client:visible videos={grid} categories={videoCategories} labels={t.videos} />
+        <VideoGrid client:visible videos={grid} categories={videoCategories} labels={t.videos} intl={intl} />
       </section>
     </>
   )}
