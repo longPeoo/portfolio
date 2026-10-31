@@ -4,12 +4,18 @@ summary: Vào thời điểm chân ướt chân ráo, mình may mắn được s
 date: 2023-04-16
 endDate: 2023-08-30
 place: Pháp
-country: Việt Nam
+country: Pháp
 lat: 47.058247
 lng: 2.627377
-cover: IMG_5393.JPG
-coverAlt: Thử đã tí đổi
-gallery: []
+cover: IMG_4774.jpeg
+coverAlt: Trông cũng ngoan ngoãn hiền lành, chụp với tháp sắt nè
+gallery:
+  - src: IMG_4646.jpeg
+    alt: Đây là con phố mình ở nè đẹp chưa
+    caption: ''
+  - src: IMG_4642.jpeg
+    alt: Công viên cách nhà đúng 10 bước chân, hôm nào đi làm về cũng ra đây chạy mấy vòng
+    caption: ''
 youtube: ''
 tags: []
 draft: false
