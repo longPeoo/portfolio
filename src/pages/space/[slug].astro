@@ -24,13 +24,13 @@ const article = {
   name: title,
   description: summary,
   dateCreated: date.toISOString(),
-  url: new URL(`/engineering/${project.id}`, Astro.site).href,
+  url: new URL(`/space/${project.id}`, Astro.site).href,
 };
 ---
 
 <BaseLayout title={title} description={summary} image={og} schema={article}>
   <article class="case container">
-    <a href="/engineering" class={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'case__back')}>
+    <a href="/space" class={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'case__back')}>
       <ArrowLeftIcon data-icon="inline-start" /> Tất cả dự án
     </a>
 

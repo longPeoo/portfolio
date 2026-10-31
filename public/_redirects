@@ -1,0 +1,3 @@
+# Đường dẫn cũ → mới (Cloudflare Workers static assets)
+/engineering    /space    301
+/engineering/*  /space/:splat  301

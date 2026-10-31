@@ -18,7 +18,7 @@ const { title, summary, role, date, tags, cover, coverAlt, status } = project.da
 const code = `PL-${String(index + 1).padStart(2, '0')}`;
 ---
 
-<a href={`/engineering/${project.id}`} class="pcard" data-reveal>
+<a href={`/space/${project.id}`} class="pcard" data-reveal>
   <Card className="h-full gap-5 pt-0">
     <div class="pcard__cover">
       {cover ? (
