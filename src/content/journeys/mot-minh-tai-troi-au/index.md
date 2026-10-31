@@ -3,7 +3,7 @@ title: Một mình tại trời Âu
 summary: Vào thời điểm chân ướt chân ráo, mình may mắn được sang Pháp để thực tập cho luận án Thạc sĩ tại một  một chiếc tỉnh bé tí hon ngay sát bờ biển (à nhìn sang được cả bờ nước Anh luôn vui lắm hehe).
 date: 2023-04-16
 endDate: 2023-08-30
-place: Pháp
+place: Boulogne Sur Mer
 country: Pháp
 lat: 47.058247
 lng: 2.627377
