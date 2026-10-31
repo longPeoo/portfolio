@@ -90,11 +90,11 @@ space:
 journeys:
   code: MSN-03 · Hành trình
   title: Hành trình
-  intro: 'Mỗi chuyến đi là một mission: điểm đến, lộ trình, những người gặp trên đường và video kể lại.'
+  intro: Mỗi chuyến hành trình với mình đều là một bài học để nhớ, bởi chúng ta đến với thế giới này với nhiệm vụ chính là trải nghiệm tất cả mọi thứ trên đời mà. Từ việc chưa tốt cho đến việc tốt, từ chưa vui cho đến vui, từ chưa hạnh phúc cho đến hạnh phúc. Sống sao cho khỏi ân hận, xót xa khi nhìn lại.
   stats: '{n} chuyến đi · {c} quốc gia'
   back: Tất cả hành trình
   log: Nhật ký
-  video: Video chuyến đi
+  video: Vlog chuyến đi
   albumCode: Cuộn phim · {n} ảnh
   albumTitle: Album
   next: Chuyến tiếp theo
