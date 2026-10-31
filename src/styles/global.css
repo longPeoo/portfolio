@@ -417,6 +417,61 @@ body::before {
   }
   .missions-globe__canvas:active { cursor: grabbing; }
   .missions-globe__canvas.is-ready { opacity: 1; }
+
+  /* Ghim bấm được trên địa cầu: --v = 1 khi điểm ở mặt trước, 0 khi quay ra sau (cobe đặt biến) */
+  .missions-globe__pin {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px 4px 8px;
+    border: 1.5px solid var(--fg);
+    border-radius: var(--r-pill);
+    background: var(--bg-elev);
+    box-shadow: 0 2px 0 var(--fg);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    translate: -50% calc(-100% - 10px);
+    transform-origin: 50% calc(100% + 10px);
+    scale: 0;
+    opacity: 0;
+    transition: scale var(--dur) var(--ease-spring), opacity var(--dur-fast), background-color var(--dur-fast), color var(--dur-fast);
+  }
+  .missions-globe__pin.is-ready { scale: var(--v); opacity: var(--v); }
+  .missions-globe__pin::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--primary); }
+  /* chân ghim chỉ xuống đúng điểm trên địa cầu */
+  .missions-globe__pin::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    width: 1.5px;
+    height: 10px;
+    background: var(--fg);
+    translate: -50% 2px;
+  }
+  .missions-globe__pin:hover,
+  .missions-globe__pin[data-active] { z-index: 2; background: var(--primary); color: var(--primary-foreground); }
+  .missions-globe__pin:hover::before,
+  .missions-globe__pin[data-active]::before { background: var(--primary-foreground); }
+  .missions-globe__hint {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    translate: -50% 0;
+    margin: 0;
+    color: var(--fg-muted);
+    font-size: 0.625rem;
+    white-space: nowrap;
+    pointer-events: none;
+  }
   .missions-globe__list { list-style: none; padding: 0; border-top: 1px solid var(--line); }
   .missions-globe__list a {
     display: grid;

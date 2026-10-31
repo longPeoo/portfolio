@@ -3,6 +3,7 @@ import { ClientRouter } from 'astro:transitions';
 import '@/styles/global.css';
 
 import { site } from '@/lib/site';
+import { t } from '@/lib/i18n';
 import { cleanPath } from '@/lib/utils';
 import MissionBar from '@/components/layout/MissionBar.astro';
 import Footer from '@/components/layout/Footer.astro';
@@ -101,11 +102,11 @@ const personSchema = {
       href="#main"
       class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:rounded-md focus:bg-primary focus:px-3.5 focus:py-2 focus:text-primary-foreground"
     >
-      Bỏ qua, đến nội dung chính
+      {t.common.skipLink}
     </a>
     <div class="preloader" data-preloader aria-hidden="true">
       <div class="preloader__pad">
-        <p class="mono">T-minus</p>
+        <p class="mono">{t.chrome.countdown}</p>
         <span class="preloader__count" data-count>3</span>
         <div class="preloader__rocket">
           <Orbi size={58} />
@@ -116,7 +117,7 @@ const personSchema = {
             <path class="preloader__flame" d="M9.5 22h5l-2.5 9Z" fill="var(--c-sun)" />
           </svg>
         </div>
-        <p class="mono preloader__skip">Bấm để bỏ qua</p>
+        <p class="mono preloader__skip">{t.chrome.skipIntro}</p>
       </div>
     </div>
 

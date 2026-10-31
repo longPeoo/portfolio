@@ -4,15 +4,14 @@ import { ArrowUpRightIcon } from 'lucide-react';
 import Orbi from '@/components/brand/Orbi.astro';
 import { SocialList } from '@/components/sections/SocialList';
 import { site } from '@/lib/site';
+import { t, fmt } from '@/lib/i18n';
 ---
 
-<BaseLayout title="Liên hệ" description={`Liên hệ hợp tác, tài trợ hoặc chỉ để chào ${site.name}.`}>
+<BaseLayout title={t.contact.metaTitle} description={fmt(t.contact.metaDescription, { name: site.name })}>
   <section class="contact container">
-    <p class="mono muted">MSN-99 · Send a signal</p>
-    <h1>Gửi một tín hiệu.<br /><em>Tôi luôn bắt sóng.</em></h1>
-    <p class="contact__intro">
-      Hợp tác dự án kỹ thuật, tài trợ video, gợi ý điểm đến, hay đơn giản là muốn nói chuyện về vũ trụ: cứ gửi email cho tôi nhé.
-    </p>
+    <p class="mono muted">{t.contact.code}</p>
+    <h1>{t.contact.title}<br /><em>{t.contact.titleEm}</em></h1>
+    <p class="contact__intro">{t.contact.intro}</p>
 
     <a class="contact__mail" href={`mailto:${site.email}`}>
       <span class="dish" aria-hidden="true">

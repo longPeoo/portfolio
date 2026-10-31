@@ -4,16 +4,17 @@ import { ArrowUpRightIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { t } from '@/lib/i18n';
 import Orbi from '@/components/brand/Orbi.astro';
 
 interface Props {
   code: string;
   title: string;
   intro: string;
-  phase: string;
+  phase?: string;
 }
 
-const { code, title, intro, phase } = Astro.props;
+const { code, title, intro, phase = t.common.updating } = Astro.props;
 ---
 
 <section class="soon container">
@@ -22,10 +23,10 @@ const { code, title, intro, phase } = Astro.props;
     <h1>{title}</h1>
     <p class="soon__intro">{intro}</p>
     <p class="soon__eta">
-      <Badge variant="signal"><i class="soon__dot" aria-hidden="true"></i>Đang lắp ráp · {phase}</Badge>
+      <Badge variant="signal"><i class="soon__dot" aria-hidden="true"></i>{t.common.assembling} · {phase}</Badge>
     </p>
     <a href="/" class={cn(buttonVariants({ variant: 'launch-outline', size: 'pill' }))}>
-      Về trạm phóng <ArrowUpRightIcon data-icon="inline-end" />
+      {t.common.backHome} <ArrowUpRightIcon data-icon="inline-end" />
     </a>
   </div>
   <div class="soon__art" aria-hidden="true">

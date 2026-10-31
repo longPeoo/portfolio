@@ -16,6 +16,8 @@ interface MissionsGlobeProps {
   points: GlobePoint[]
   /** Bản gọn cho trang chủ: chỉ hiện 4 chuyến gần nhất trong danh sách */
   compact?: boolean
+  /** Chữ lấy từ src/i18n: mô tả cho trình đọc màn hình + gợi ý thao tác */
+  labels: { label: string; hint: string }
 }
 
 const SIGNAL: [number, number, number] = [1, 0.416, 0.239]
@@ -39,9 +41,13 @@ const palette = () =>
 /**
  * Quả địa cầu các chuyến đi (cobe, ~5KB WebGL).
  * Đường bay nối các chuyến theo thứ tự thời gian. Rê chuột vào một chuyến → địa cầu xoay tới đó.
+ * Mỗi chuyến có một ghim nổi trên địa cầu: bấm vào để mở trang chuyến đi. Ghim bám theo điểm neo
+ * cobe tạo cho từng marker (div có left/top theo %), ẩn khi điểm đó quay ra sau địa cầu.
  */
-export function MissionsGlobe({ points, compact = false }: MissionsGlobeProps) {
+export function MissionsGlobe({ points, compact = false, labels }: MissionsGlobeProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const stageRef = useRef<HTMLDivElement>(null)
+  const pinRefs = useRef<(HTMLAnchorElement | null)[]>([])
   const target = useRef<[number, number] | null>(null)
   const [ready, setReady] = useState(false)
   const [active, setActive] = useState<string | null>(null)
@@ -98,6 +104,27 @@ export function MissionsGlobe({ points, compact = false }: MissionsGlobeProps) {
     canvas.addEventListener("pointerup", onUp)
     canvas.addEventListener("pointercancel", onUp)
 
+    // Rê chuột lên địa cầu → ngừng tự quay để ghim đứng yên, dễ bấm
+    const stage = stageRef.current
+    let hovering = false
+    const onEnter = (e: PointerEvent) => (hovering = e.pointerType === "mouse")
+    const onLeave = () => (hovering = false)
+    stage?.addEventListener("pointerenter", onEnter)
+    stage?.addEventListener("pointerleave", onLeave)
+
+    // Ghim đi theo điểm neo của cobe (tạo theo đúng thứ tự markers)
+    let anchors: HTMLElement[] = []
+    const syncPins = () => {
+      // cobe bọc canvas trong một div và gắn điểm neo vào đó (cùng kích thước với khung địa cầu)
+      if (anchors.length < points.length) anchors = Array.from(canvas.parentElement?.querySelectorAll<HTMLElement>(":scope > div") ?? [])
+      pinRefs.current.forEach((pin, i) => {
+        const a = anchors[i]
+        if (!pin || !a) return
+        pin.style.left = a.style.left
+        pin.style.top = a.style.top
+      })
+    }
+
     // Vòng lặp vẽ — chỉ chạy khi địa cầu đang trong màn hình
     let raf = 0
     let visible = true
@@ -105,10 +132,11 @@ export function MissionsGlobe({ points, compact = false }: MissionsGlobeProps) {
       if (target.current) {
         phi += (shortest(phi, target.current[0]) - phi) * 0.08
         theta += (target.current[1] - theta) * 0.08
-      } else if (dragX === null && !reduce) {
+      } else if (dragX === null && !hovering && !reduce) {
         phi += 0.0025
       }
       globe.update({ phi, theta })
+      syncPins()
       if (visible) raf = requestAnimationFrame(loop)
     }
     raf = requestAnimationFrame(loop)
@@ -133,6 +161,8 @@ export function MissionsGlobe({ points, compact = false }: MissionsGlobeProps) {
     return () => {
       cancelAnimationFrame(raf)
       window.clearTimeout(t)
+      stage?.removeEventListener("pointerenter", onEnter)
+      stage?.removeEventListener("pointerleave", onLeave)
       io.disconnect()
       ro.disconnect()
       mo.disconnect()
@@ -150,13 +180,33 @@ export function MissionsGlobe({ points, compact = false }: MissionsGlobeProps) {
 
   return (
     <div className={cn("missions-globe", compact && "missions-globe--compact")}>
-      <div className="missions-globe__stage">
+      <div className="missions-globe__stage" ref={stageRef}>
         <canvas
           ref={canvasRef}
           className={cn("missions-globe__canvas", ready && "is-ready")}
-          aria-label={`Quả địa cầu đánh dấu ${points.length} chuyến đi`}
+          aria-label={labels.label}
           role="img"
         />
+        {/* Trùng với danh sách bên cạnh nên ẩn khỏi bàn phím/trình đọc màn hình */}
+        {points.map((p, i) => (
+          <a
+            key={p.id}
+            ref={(el) => {
+              pinRefs.current[i] = el
+            }}
+            href={`/journeys/${p.id}`}
+            className={cn("missions-globe__pin", ready && "is-ready")}
+            style={{ "--v": `var(--cobe-visible-${p.id}, 0)` } as React.CSSProperties}
+            data-active={active === p.id || undefined}
+            tabIndex={-1}
+            aria-hidden="true"
+            onMouseEnter={() => setActive(p.id)}
+            onMouseLeave={() => setActive(null)}
+          >
+            {p.place}
+          </a>
+        ))}
+        <p className="mono missions-globe__hint">{labels.hint}</p>
       </div>
       <ol className="missions-globe__list">
         {listed.map((p, i) => (

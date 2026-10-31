@@ -5,6 +5,7 @@
  */
 import { ArrowUpRightIcon } from 'lucide-react';
 import { site } from '@/lib/site';
+import { t } from '@/lib/i18n';
 import { buttonVariants } from '@/components/ui/button';
 import { cn, cleanPath } from '@/lib/utils';
 import Orbi from '@/components/brand/Orbi.astro';
@@ -17,13 +18,13 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
 ---
 
 <header class="mbar" data-mbar>
-  <a href="/" class="mbar__brand" aria-label="Longpeoo — trang chủ">
+  <a href="/" class="mbar__brand" aria-label={`${site.name} — ${t.common.homeLabel}`}>
     <Orbi size={34} />
     <!-- Logo chữ Longpeoo: ảnh PNG dùng làm mask nên tự đổi màu theo giao diện sáng/tối -->
     <span class="mbar__wordmark" aria-hidden="true"></span>
   </a>
 
-  <nav class="mbar__nav" aria-label="Menu chính">
+  <nav class="mbar__nav" aria-label={t.chrome.mainMenu}>
     <ul>
       {site.nav.map((item, i) => (
         <li>
@@ -35,7 +36,7 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
     </ul>
   </nav>
 
-  <div class="mbar__tele mono" aria-label="Đồng hồ">
+  <div class="mbar__tele mono" aria-label={t.chrome.clock}>
     <span class="mbar__status" aria-hidden="true"></span>
     <span>UTC <time data-clock="UTC" data-seconds>--:--:--</time></span>
     <span class="mbar__sep" aria-hidden="true">/</span>
@@ -43,9 +44,9 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
   </div>
 
   <div class="mbar__actions">
-    <ThemeToggle />
+    <ThemeToggle label={t.chrome.theme} />
     <a href="/contact" class={cn(buttonVariants({ variant: 'ink', size: 'lg' }), 'mbar__cta')}>
-      Liên hệ <ArrowUpRightIcon data-icon="inline-end" />
+      {t.common.contact} <ArrowUpRightIcon data-icon="inline-end" />
     </a>
     <div class="mbar__burger">
       <MobileNav
@@ -54,6 +55,7 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
         socials={site.socials}
         email={site.email}
         currentPath={path}
+        labels={{ contact: t.common.contact, openMenu: t.chrome.openMenu, closeMenu: t.chrome.closeMenu, mainMenu: t.chrome.mainMenu }}
       />
     </div>
   </div>

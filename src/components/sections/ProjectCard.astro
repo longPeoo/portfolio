@@ -7,6 +7,7 @@ import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { t } from '@/lib/i18n';
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -28,7 +29,7 @@ const code = `PL-${String(index + 1).padStart(2, '0')}`;
       )}
       <span class="pcard__grid" aria-hidden="true"></span>
       <span class="pcard__corners" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-      <span class:list={['pcard__led mono', `is-${status.toLowerCase()}`]}><i aria-hidden="true"></i>{status}</span>
+      <span class:list={['pcard__led mono', `is-${status.toLowerCase()}`]}><i aria-hidden="true"></i>{t.common.projectStatus[status]}</span>
     </div>
     <CardHeader>
       <p class="mono muted">{code} · {date.getFullYear()}</p>
@@ -36,7 +37,7 @@ const code = `PL-${String(index + 1).padStart(2, '0')}`;
       <CardDescription className="text-base">{summary}</CardDescription>
     </CardHeader>
     <CardContent>
-      <p class="mono muted">Vai trò · {role}</p>
+      <p class="mono muted">{t.space.role} · {role}</p>
     </CardContent>
     {tags.length > 0 && (
       <CardFooter className="flex-wrap gap-2 border-t pt-4 pb-4">

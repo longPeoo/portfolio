@@ -8,6 +8,8 @@ interface VideoPlayerProps {
   title: string
   /** Khung kiểu màn hình CRT ở mission control (dùng ở trang chủ) */
   crt?: boolean
+  /** Nhãn cho trình đọc màn hình, ví dụ "Phát video" */
+  playLabel?: string
   className?: string
 }
 
@@ -15,7 +17,7 @@ interface VideoPlayerProps {
  * Trình phát YouTube kiểu "lite": chỉ hiện ảnh thu nhỏ, bấm mới tải player
  * (nhẹ hơn ~500KB mỗi video, dùng youtube-nocookie để không đặt cookie theo dõi).
  */
-export function VideoPlayer({ id, title, crt = false, className }: VideoPlayerProps) {
+export function VideoPlayer({ id, title, crt = false, playLabel = "Play", className }: VideoPlayerProps) {
   const [playing, setPlaying] = useState(false)
 
   return (
@@ -28,7 +30,7 @@ export function VideoPlayer({ id, title, crt = false, className }: VideoPlayerPr
           allowFullScreen
         />
       ) : (
-        <button type="button" onClick={() => setPlaying(true)} aria-label={`Phát video: ${title}`}>
+        <button type="button" onClick={() => setPlaying(true)} aria-label={`${playLabel}: ${title}`}>
           <img src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} alt="" loading="lazy" decoding="async" />
           <span className="video-player__play" aria-hidden="true">
             <PlayIcon />

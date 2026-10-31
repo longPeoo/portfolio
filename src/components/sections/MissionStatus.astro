@@ -1,30 +1,22 @@
 ---
 import { Badge } from '@/components/ui/badge';
+import { t } from '@/lib/i18n';
 /** Bảng tiến độ xây website — gỡ section này khỏi trang chủ khi launch chính thức. */
-const phases = [
-  { code: 'P1', name: 'Nền móng & deploy', state: 'done' },
-  { code: 'P2', name: 'Trang, nội dung & CMS', state: 'done' },
-  { code: 'P3', name: 'Animation & mascot', state: 'done' },
-  { code: 'P4', name: 'YouTube, ảnh, bản đồ', state: 'done' },
-  { code: 'P5', name: 'SEO & tối ưu — launch', state: 'done' },
-  { code: 'P6', name: 'Nội dung thật & song ngữ', state: 'active' },
-] as const;
-
-const label = { done: 'Nominal', active: 'In progress', queued: 'Queued' };
-const badgeVariant = { done: 'nominal', active: 'active', queued: 'queued' } as const;
+// Danh sách giai đoạn sửa trong /admin → Chữ trên giao diện → Trang chủ
+const phases = t.home.phases;
 ---
 
 <section class="status container" aria-labelledby="status-title">
   <div class="status__head">
-    <p class="mono muted">Mission status</p>
-    <h2 id="status-title">Website đang được lắp ráp, từng tầng một.</h2>
+    <p class="mono muted">{t.home.statusCode}</p>
+    <h2 id="status-title">{t.home.statusTitle}</h2>
   </div>
   <ol class="status__list">
     {phases.map((p) => (
       <li class:list={['status__row', `is-${p.state}`]}>
         <span class="mono status__code">{p.code}</span>
         <span class="status__name">{p.name}</span>
-        <Badge variant={badgeVariant[p.state]}><i class="status__dot" aria-hidden="true"></i>{label[p.state]}</Badge>
+        <Badge variant={p.state}><i class="status__dot" aria-hidden="true"></i>{t.common.status[p.state]}</Badge>
       </li>
     ))}
   </ol>

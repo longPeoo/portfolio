@@ -20,10 +20,12 @@ interface PhotoGalleryProps {
   photos: GalleryPhoto[]
   /** polaroid: ảnh dán băng keo, xoay nhẹ (trang Ảnh, trang chủ); grid: lưới gọn (trang chuyến đi) */
   variant?: "polaroid" | "grid"
+  /** Chữ lấy từ src/i18n (t.gallery) */
+  labels: { open: string; prev: string; next: string; seeJourney: string }
 }
 
 /** Lưới ảnh + lightbox (shadcn Dialog). Phím ← → để chuyển ảnh. */
-export function PhotoGallery({ photos, variant = "grid" }: PhotoGalleryProps) {
+export function PhotoGallery({ photos, variant = "grid", labels }: PhotoGalleryProps) {
   const [index, setIndex] = useState<number | null>(null)
   const open = index !== null
   const current = open ? photos[index] : undefined
@@ -48,7 +50,7 @@ export function PhotoGallery({ photos, variant = "grid" }: PhotoGalleryProps) {
       <ul className={cn("photo-gallery", `photo-gallery--${variant}`)}>
         {photos.map((p, i) => (
           <li key={p.full} style={{ "--i": i } as React.CSSProperties}>
-            <button type="button" onClick={() => setIndex(i)} aria-label={`Xem ảnh lớn: ${p.alt}`}>
+            <button type="button" onClick={() => setIndex(i)} aria-label={`${labels.open}: ${p.alt}`}>
               <img src={p.thumb} alt={p.alt} width={p.width} height={p.height} loading="lazy" decoding="async" />
               {variant === "polaroid" && p.caption && <span className="photo-gallery__caption">{p.caption}</span>}
             </button>
@@ -80,7 +82,7 @@ export function PhotoGallery({ photos, variant = "grid" }: PhotoGalleryProps) {
                       <>
                         {" · "}
                         <a href={current.href} className="underline underline-offset-4">
-                          Xem chuyến đi
+                          {labels.seeJourney}
                         </a>
                       </>
                     )}
@@ -88,10 +90,10 @@ export function PhotoGallery({ photos, variant = "grid" }: PhotoGalleryProps) {
                 </div>
                 {photos.length > 1 && (
                   <div className="flex gap-1">
-                    <Button variant="outline" size="icon" onClick={() => step(-1)} aria-label="Ảnh trước">
+                    <Button variant="outline" size="icon" onClick={() => step(-1)} aria-label={labels.prev}>
                       <ChevronLeftIcon />
                     </Button>
-                    <Button variant="outline" size="icon" onClick={() => step(1)} aria-label="Ảnh sau">
+                    <Button variant="outline" size="icon" onClick={() => step(1)} aria-label={labels.next}>
                       <ChevronRightIcon />
                     </Button>
                   </div>

@@ -18,17 +18,19 @@ interface MobileNavProps {
   socials: Social[]
   email: string
   currentPath: string
+  /** Chữ lấy từ src/i18n (MissionBar.astro truyền vào) */
+  labels: { contact: string; openMenu: string; closeMenu: string; mainMenu: string }
 }
 
 /** Menu toàn màn hình trên mobile: mở dạng vòng tròn từ nút menu (CSS `.menu-sheet`), các mục bay vào lần lượt. */
-export function MobileNav({ items, socials, email, currentPath }: MobileNavProps) {
-  const links = [...items, { label: "Liên hệ", href: "/contact" }]
+export function MobileNav({ items, socials, email, currentPath, labels }: MobileNavProps) {
+  const links = [...items, { label: labels.contact, href: "/contact" }]
   const isActive = (href: string) => currentPath === href || currentPath.startsWith(`${href}/`)
 
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon-lg" className="rounded-full" aria-label="Mở menu">
+        <Button variant="ghost" size="icon-lg" className="rounded-full" aria-label={labels.openMenu}>
           <MenuIcon />
         </Button>
       </SheetTrigger>
@@ -43,18 +45,18 @@ export function MobileNav({ items, socials, email, currentPath }: MobileNavProps
             variant="secondary"
             size="icon-lg"
             className="absolute top-[calc((var(--header-h)-2.25rem)/2)] right-[var(--gutter)] rounded-full"
-            aria-label="Đóng menu"
+            aria-label={labels.closeMenu}
           >
             <XIcon />
           </Button>
         </SheetClose>
 
         <SheetHeader className="sr-only">
-          <SheetTitle>Menu</SheetTitle>
-          <SheetDescription>Các trang của website</SheetDescription>
+          <SheetTitle>{labels.mainMenu}</SheetTitle>
+          <SheetDescription>{labels.mainMenu}</SheetDescription>
         </SheetHeader>
 
-        <nav aria-label="Menu di động">
+        <nav aria-label={labels.mainMenu}>
           <ol>
             {links.map((item, i) => (
               <li

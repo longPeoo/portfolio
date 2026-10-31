@@ -6,13 +6,13 @@ import { Button } from "@/components/ui/button"
  * Nút đổi giao diện sáng/tối — render tĩnh (không hydrate React để trang nhẹ hơn ~65KB).
  * Sự kiện click gắn bằng script thuần trong MissionBar.astro qua thuộc tính data-theme-toggle.
  */
-export function ThemeToggle() {
+export function ThemeToggle({ label }: { label: string }) {
   return (
     <Button
       variant="ghost"
       size="icon-lg"
       data-theme-toggle
-      aria-label="Đổi giao diện sáng/tối"
+      aria-label={label}
       className="rounded-full duration-300 ease-[var(--ease-spring)] hover:-rotate-[15deg]"
     >
       {/* Hai icon chồng nhau, xoay/thu nhỏ khi đổi chế độ — dựa vào class `dark` nên không lệch khi hydrate */}

@@ -10,6 +10,7 @@ import { VideoPlayer } from '@/components/media/VideoPlayer';
 import { PhotoGallery } from '@/components/media/PhotoGallery';
 import JourneyCard from '@/components/sections/JourneyCard.astro';
 import { cn } from '@/lib/utils';
+import { t, fmt } from '@/lib/i18n';
 import { getJourneys, formatMonth, formatRange } from '@/lib/content';
 import { toGalleryPhotos } from '@/lib/photos';
 import { youtubeId } from '@/lib/youtube';
@@ -45,11 +46,11 @@ const article = {
   <article class="trip">
     <header class="container trip__head">
       <a href="/journeys" class={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'trip__back')}>
-        <ArrowLeftIcon data-icon="inline-start" /> Tất cả hành trình
+        <ArrowLeftIcon data-icon="inline-start" /> {t.journeys.back}
       </a>
       <div class="trip__title">
         <div>
-          <p class="mono muted">M-{String(number).padStart(2, '0')} · Mission log · {coord} · {formatRange(date, endDate)}</p>
+          <p class="mono muted">M-{String(number).padStart(2, '0')} · {t.journeys.log} · {coord} · {formatRange(date, endDate)}</p>
           <h1>{title}</h1>
           <p class="trip__lead">{summary}</p>
         </div>
@@ -70,8 +71,8 @@ const article = {
     <div class="container trip__body">
       {videoId && (
         <section class="trip__video" aria-label="Video chuyến đi">
-          <p class="mono muted">Transmission · Video chuyến đi</p>
-          <VideoPlayer client:visible id={videoId} title={title} />
+          <p class="mono muted">{t.journeys.video}</p>
+          <VideoPlayer client:visible id={videoId} title={title} playLabel={t.videos.play} />
         </section>
       )}
       <div class="prose prose-lg">
@@ -81,16 +82,16 @@ const article = {
 
     {photos.length > 0 && (
       <section class="container trip__gallery" aria-labelledby="gallery-title">
-        <p class="mono muted">Film roll · {photos.length} ảnh</p>
-        <h2 id="gallery-title">Album</h2>
-        <PhotoGallery client:visible photos={photos} variant="grid" />
+        <p class="mono muted">{fmt(t.journeys.albumCode, { n: photos.length })}</p>
+        <h2 id="gallery-title">{t.journeys.albumTitle}</h2>
+        <PhotoGallery client:visible photos={photos} variant="grid" labels={t.gallery} />
       </section>
     )}
 
     {next && next.id !== journey.id && (
       <section class="container trip__next">
         <Separator className="mb-12" />
-        <p class="mono muted">Mission tiếp theo</p>
+        <p class="mono muted">{t.journeys.next}</p>
         <div class="trip__next-card"><JourneyCard journey={next} size="compact" /></div>
       </section>
     )}

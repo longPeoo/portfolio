@@ -5,24 +5,25 @@ import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import Orbi from '@/components/brand/Orbi.astro';
+import { t } from '@/lib/i18n';
 ---
 
-<BaseLayout title="Lạc vào vũ trụ" noindex>
+<BaseLayout title={t.notFound.metaTitle} noindex>
   <section class="lost container">
     <Empty>
       <EmptyHeader>
         <EmptyMedia>
           <Orbi size={170} mood="lost" />
         </EmptyMedia>
-        <p class="mono muted">Error 404 · Signal lost</p>
+        <p class="mono muted">{t.notFound.code}</p>
         <EmptyTitle>
-          <h1>Houston, chúng ta có vấn đề.</h1>
+          <h1>{t.notFound.title}</h1>
         </EmptyTitle>
-        <EmptyDescription>Trang bạn tìm đã trôi ra khỏi quỹ đạo, hoặc chưa từng được phóng lên.</EmptyDescription>
+        <EmptyDescription>{t.notFound.text}</EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
         <a href="/" class={cn(buttonVariants({ variant: 'launch', size: 'pill' }))}>
-          Quay về trạm phóng <ArrowUpRightIcon data-icon="inline-end" />
+          {t.notFound.back} <ArrowUpRightIcon data-icon="inline-end" />
         </a>
       </EmptyContent>
     </Empty>

@@ -1,0 +1,132 @@
+# ==================================================================
+#  UI STRINGS — ENGLISH (chuẩn bị cho song ngữ ở P6, CHƯA hiện trên web)
+#  Cùng các khoá với vi.yaml. Sửa được trong /admin → "Chữ trên giao diện".
+# ==================================================================
+common:
+  contact: Contact
+  seeAll: See all
+  backHome: Back to the launch pad
+  assembling: Assembling
+  updating: Coming soon
+  skipLink: Skip to main content
+  homeLabel: home
+  status:
+    nominal: Nominal
+    active: In progress
+    queued: Queued
+  projectStatus:
+    Nominal: Nominal
+    Complete: Complete
+    Research: Research
+
+chrome:
+  countdown: T-minus
+  skipIntro: Tap to skip
+  clock: Clock
+  mainMenu: Main menu
+  openMenu: Open menu
+  closeMenu: Close menu
+  theme: Toggle light/dark mode
+  footerCode: MSN-99 · Send a signal
+  footerNav: Navigate
+  footerTagline: Built on Earth, served from orbit
+  toTop: Back to top
+
+home:
+  heroCode: MSN-00 · Launch pad
+  heroNow: Now ▸
+  hello: Hello, I'm
+  rolesLabel: Roles
+  ctaJourneys: See the journeys
+  ctaYoutube: YouTube channel
+  videoCode: MSN-04 · Latest transmission
+  videoTitle: Latest video
+  videoNew: New transmission
+  videoAll: All videos
+  projectsCode: MSN-02 · Payloads
+  projectsTitle: Engineering projects
+  journeysCode: MSN-03 · Missions
+  journeysTitle: Places I've been
+  photosCode: MSN-05 · Film roll
+  photosTitle: Recent film roll
+  photosLink: See all photos
+  statusCode: Mission status
+  statusTitle: This website is being assembled, stage by stage.
+  phases:
+    - { code: P1, name: "Foundation & deploy", state: nominal }
+    - { code: P2, name: "Pages, content & CMS", state: nominal }
+    - { code: P3, name: "Animation & mascot", state: nominal }
+    - { code: P4, name: "YouTube, photos, map", state: nominal }
+    - { code: P5, name: "SEO & performance — launch", state: nominal }
+    - { code: P6, name: "Real content & bilingual", state: active }
+
+about:
+  code: MSN-01 · About
+  title: About me
+  intro: From a kid who kept looking up at the night sky to a space engineer, and why I still keep packing my backpack.
+  cv: Download CV
+  trajectoryCode: Trajectory
+  trajectoryTitle: Stage by stage
+  skillsCode: Subsystems
+  skillsTitle: Skills
+
+space:
+  code: MSN-02 · Payloads
+  title: Engineering
+  intro: Projects, research and systems I've worked on in space technology.
+  back: All projects
+  payload: Payload
+  role: Role
+  time: Date
+  systems: Systems
+
+journeys:
+  code: MSN-03 · Missions
+  title: Journeys
+  intro: "Every trip is a mission: the destination, the route, the people met along the way and the video that tells it."
+  stats: "{n} missions · {c} countries"
+  back: All journeys
+  log: Mission log
+  video: Trip video
+  albumCode: "Film roll · {n} photos"
+  albumTitle: Album
+  next: Next mission
+  globeLabel: "Globe marking {n} journeys. Click a pin to open the journey."
+  globeHint: Drag to rotate · click a pin to open
+
+videos:
+  code: MSN-04 · Transmissions
+  title: Videos
+  intro: The latest videos from my YouTube channel, updated automatically.
+  subscribe: Subscribe
+  all: All
+  new: New transmission
+  views: views
+  play: Play video
+  openYoutube: Open on YouTube
+  close: Close video
+
+gallery:
+  code: MSN-05 · Film roll
+  title: Photos
+  intro: My favourite frames, from the lab to faraway roads.
+  count: "{n} frames"
+  open: View larger
+  prev: Previous photo
+  next: Next photo
+  seeJourney: See the journey
+
+contact:
+  code: MSN-99 · Send a signal
+  title: Send a signal.
+  titleEm: I'm always listening.
+  intro: "Engineering collaborations, video sponsorships, destination tips, or just a chat about space: drop me an email."
+  metaTitle: Contact
+  metaDescription: "Get in touch for collaborations, sponsorships or just to say hi to {name}."
+
+notFound:
+  metaTitle: Lost in space
+  code: Error 404 · Signal lost
+  title: Houston, we have a problem.
+  text: The page you're looking for drifted out of orbit, or was never launched.
+  back: Back to the launch pad

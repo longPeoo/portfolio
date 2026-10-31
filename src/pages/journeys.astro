@@ -5,24 +5,24 @@ import PageHeader from '@/components/sections/PageHeader.astro';
 import JourneyCard from '@/components/sections/JourneyCard.astro';
 import { MissionsGlobe } from '@/components/media/MissionsGlobe';
 import { getJourneys } from '@/lib/content';
+import { t, fmt } from '@/lib/i18n';
 
 const journeys = await getJourneys();
-const title = 'Hành trình';
-const intro = 'Mỗi chuyến đi là một mission: điểm đến, lộ trình, những người gặp trên đường và video kể lại.';
+const { title, intro, code } = t.journeys;
 const points = journeys.map((j) => ({ id: j.id, title: j.data.title, place: j.data.place, lat: j.data.lat, lng: j.data.lng, date: j.data.date.toISOString() }));
 const countries = new Set(journeys.map((j) => j.data.country)).size;
 ---
 
 <BaseLayout title={title} description={intro}>
   {journeys.length === 0 ? (
-    <ComingSoon code="MSN-03 · Missions" title={title} intro={intro} phase="Đang cập nhật" />
+    <ComingSoon code={code} title={title} intro={intro} />
   ) : (
     <>
-      <PageHeader code="MSN-03 · Missions" title={title} intro={intro}>
-        <p class="mono stats">{journeys.length} missions · {countries} quốc gia</p>
+      <PageHeader code={code} title={title} intro={intro}>
+        <p class="mono stats">{fmt(t.journeys.stats, { n: journeys.length, c: countries })}</p>
       </PageHeader>
       <section class="container globe-wrap">
-        <MissionsGlobe client:visible points={points} />
+        <MissionsGlobe client:visible points={points} labels={{ label: fmt(t.journeys.globeLabel, { n: points.length }), hint: t.journeys.globeHint }} />
       </section>
       <section class="container grid">
         {journeys.map((j) => <JourneyCard journey={j} />)}

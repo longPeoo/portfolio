@@ -18,6 +18,8 @@ export interface GridVideo {
 interface VideoGridProps {
   videos: GridVideo[]
   categories: string[]
+  /** Chữ lấy từ src/i18n (t.videos) */
+  labels: { all: string; new: string; views: string; play: string; openYoutube: string; close: string }
 }
 
 const ALL = "__all"
@@ -26,7 +28,7 @@ const viewFmt = new Intl.NumberFormat("vi-VN", { notation: "compact" })
 /** Video đăng trong 14 ngày gần đây được gắn nhãn "New transmission" */
 const isNew = (iso: string) => Date.now() - new Date(iso).valueOf() < 14 * 864e5
 
-export function VideoGrid({ videos, categories }: VideoGridProps) {
+export function VideoGrid({ videos, categories, labels }: VideoGridProps) {
   const [filter, setFilter] = useState(ALL)
   const [playing, setPlaying] = useState<GridVideo | null>(null)
   const shown = filter === ALL ? videos : videos.filter((v) => v.categories.includes(filter))
@@ -36,7 +38,7 @@ export function VideoGrid({ videos, categories }: VideoGridProps) {
       {categories.length > 0 && (
         <Tabs value={filter} onValueChange={setFilter}>
           <TabsList>
-            <TabsTrigger value={ALL}>Tất cả</TabsTrigger>
+            <TabsTrigger value={ALL}>{labels.all}</TabsTrigger>
             {categories.map((c) => (
               <TabsTrigger key={c} value={c}>
                 {c}
@@ -49,7 +51,7 @@ export function VideoGrid({ videos, categories }: VideoGridProps) {
       <ul className="video-grid">
         {shown.map((v) => (
           <li key={v.id}>
-            <button type="button" className="video-card" onClick={() => setPlaying(v)}>
+            <button type="button" className="video-card" onClick={() => setPlaying(v)} aria-label={`${labels.play}: ${v.title}`}>
               <span className="video-card__thumb">
                 <img src={`https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`} alt="" loading="lazy" decoding="async" />
                 <span className="video-player__play" aria-hidden="true">
@@ -58,14 +60,14 @@ export function VideoGrid({ videos, categories }: VideoGridProps) {
                 {isNew(v.published) && (
                   <Badge variant="active" className="video-card__new">
                     <i aria-hidden="true" />
-                    New transmission
+                    {labels.new}
                   </Badge>
                 )}
               </span>
               <span className="video-card__title">{v.title}</span>
               <span className="mono text-muted-foreground">
                 {dateFmt.format(new Date(v.published))}
-                {v.views > 0 && ` · ${viewFmt.format(v.views)} lượt xem`}
+                {v.views > 0 && ` · ${viewFmt.format(v.views)} ${labels.views}`}
               </span>
             </button>
           </li>
@@ -94,11 +96,11 @@ export function VideoGrid({ videos, categories }: VideoGridProps) {
                 <div className="flex gap-2">
                   <Button variant="outline" asChild>
                     <a href={playing.url} target="_blank" rel="noopener noreferrer">
-                      Mở trên YouTube <ExternalLinkIcon data-icon="inline-end" />
+                      {labels.openYoutube} <ExternalLinkIcon data-icon="inline-end" />
                     </a>
                   </Button>
                   <DialogClose asChild>
-                    <Button variant="ghost" size="icon" aria-label="Đóng video">
+                    <Button variant="ghost" size="icon" aria-label={labels.close}>
                       <XIcon />
                     </Button>
                   </DialogClose>
