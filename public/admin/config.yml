@@ -1,6 +1,7 @@
 # ==================================================================
 #  SVELTIA CMS — trang quản trị nội dung tại https://longpeoo.io.vn/admin
-#  Đăng nhập: "Sign in with GitHub" hoặc "Sign in with Token" (GitHub personal access token).
+#  Đăng nhập: "Sign In with GitHub" (qua worker sveltia-cms-auth ở auth.longpeoo.io.vn)
+#  hoặc "Sign In Using Access Token" (GitHub fine-grained token, xem README.md).
 #  Mỗi lần bấm Lưu = một commit lên GitHub → Cloudflare tự build & deploy (~1 phút).
 # ==================================================================
 
@@ -8,6 +9,9 @@ backend:
   name: github
   repo: longPeoo/portfolio
   branch: main
+  base_url: https://auth.longpeoo.io.vn
+  # Repo public → chỉ xin quyền public_repo (không đụng tới repo private). Đổi repo sang private thì xoá dòng này.
+  auth_scope: public_repo
   commit_messages:
     create: "Thêm {{collection}}: {{slug}}"
     update: "Cập nhật {{collection}}: {{slug}}"

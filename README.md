@@ -20,7 +20,12 @@ npm run build    # build production (ẩn bài nháp)
 
 **Cách dễ nhất: vào `https://longpeoo.io.vn/admin`.**
 
-Đăng nhập bằng **"Sign In Using Access Token"**:
+Bấm **"Sign In with GitHub"**. Nút này đi qua worker `sveltia-cms-auth` tại `https://auth.longpeoo.io.vn`.
+- Code của worker nằm ở thư mục `../sveltia-cms-auth`, nguồn từ [sveltia/sveltia-cms-auth](https://github.com/sveltia/sveltia-cms-auth).
+- `GITHUB_CLIENT_ID` và `GITHUB_CLIENT_SECRET` lấy từ GitHub OAuth App "Longpeoo CMS", có callback `https://auth.longpeoo.io.vn/callback`.
+- Hai biến trên được đặt dạng Secret ở Cloudflare → Workers & Pages → `sveltia-cms-auth` → Settings → Variables and Secrets.
+
+Cách dự phòng: đăng nhập bằng **"Sign In Using Access Token"**.
 1. GitHub → Settings → Developer settings → **Fine-grained tokens** → Generate new token.
 2. Repository access: chỉ chọn `longPeoo/portfolio`. Permissions → **Contents: Read and write**.
 3. Chép token, dán vào trang `/admin`.
