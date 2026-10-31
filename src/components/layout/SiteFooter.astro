@@ -1,0 +1,56 @@
+---
+import { site } from '@/lib/site';
+import { buttonVariants } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import Orbi from '@/components/brand/Orbi.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t bg-card">
+  <div class="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr] lg:px-8">
+    <div class="flex flex-col gap-4">
+      <p class="type-h3">Có ý tưởng hợp tác, hay chỉ muốn chào?</p>
+      <a
+        href={`mailto:${site.email}`}
+        class="w-fit text-lg font-semibold text-primary underline decoration-highlight decoration-2 underline-offset-[6px] hover:decoration-4"
+      >
+        {site.email}
+      </a>
+      {site.socials.length > 0 && (
+        <ul class="flex flex-wrap gap-2">
+          {site.socials.map((s) => (
+            <li>
+              <a
+                href={s.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={s.label}
+                class={buttonVariants({ variant: 'outline', size: 'icon-lg' })}
+                set:html={s.iconSvg}
+              />
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+
+    <nav aria-label="Menu chân trang">
+      <h2 class="mb-3 text-sm font-semibold text-muted-foreground">Trang</h2>
+      <ul class="flex flex-col gap-2">
+        {site.nav.map((item) => <li><a href={item.href} class="hover:text-primary hover:underline underline-offset-4">{item.label}</a></li>)}
+        <li><a href="/contact" class="hover:text-primary hover:underline underline-offset-4">Liên hệ</a></li>
+      </ul>
+    </nav>
+
+    <div class="flex items-end justify-start md:justify-end">
+      <Orbi size={72} mood="sleep" decorative />
+    </div>
+  </div>
+
+  <Separator />
+  <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-6 text-sm text-muted-foreground sm:px-6 lg:px-8">
+    <p>© {year} {site.name}</p>
+    <a href="/" class="hover:text-foreground">{new URL(Astro.site ?? 'https://longpeoo.io.vn').host}</a>
+  </div>
+</footer>

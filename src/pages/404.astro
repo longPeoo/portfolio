@@ -1,30 +1,27 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Button from '@/components/ui/Button.astro';
-import Orbi from '@/components/mascot/Orbi.astro';
+import { buttonVariants } from '@/components/ui/button';
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import Orbi from '@/components/brand/Orbi.astro';
 ---
 
-<BaseLayout title="Lạc vào vũ trụ" noindex>
-  <section class="lost container">
-    <Orbi size={170} mood="lost" />
-    <p class="mono muted">Error 404 · Signal lost</p>
-    <h1>Houston, chúng ta có vấn đề.</h1>
-    <p class="muted">Trang bạn tìm đã trôi ra khỏi quỹ đạo, hoặc chưa từng được phóng lên.</p>
-    <Button href="/" icon="arrow-right-up-line">Quay về trạm phóng</Button>
+<BaseLayout title="Không tìm thấy trang" noindex>
+  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24 lg:px-8">
+    <Empty className="py-16">
+      <EmptyHeader>
+        <EmptyMedia>
+          <Orbi size={140} mood="lost" decorative />
+        </EmptyMedia>
+        <EmptyTitle>
+          <h1 class="type-h2">Không tìm thấy trang này</h1>
+        </EmptyTitle>
+        <EmptyDescription>
+          Đường dẫn có thể đã bị đổi hoặc gõ nhầm. Hãy quay về trang chủ hoặc chọn một mục trong menu.
+        </EmptyDescription>
+      </EmptyHeader>
+      <EmptyContent>
+        <a href="/" class={buttonVariants({ size: 'lg' })}>Về trang chủ</a>
+      </EmptyContent>
+    </Empty>
   </section>
 </BaseLayout>
-
-<style>
-  .lost {
-    min-height: 88svh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-4);
-    padding-top: var(--header-h);
-    text-align: center;
-  }
-  h1 { font-size: var(--fs-h2); max-width: 14ch; }
-  .lost > p:last-of-type { margin-bottom: var(--space-4); }
-</style>

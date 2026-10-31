@@ -1,108 +1,228 @@
-@import './tokens.css';
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/archivo/standard.css";
+@import "@fontsource/be-vietnam-pro/400.css";
+@import "@fontsource/be-vietnam-pro/400-italic.css";
+@import "@fontsource/be-vietnam-pro/500.css";
+@import "@fontsource/be-vietnam-pro/600.css";
+@import "@fontsource/be-vietnam-pro/700.css";
 
-/* ---------- Reset gọn ---------- */
-*, *::before, *::after { box-sizing: border-box; }
-* { margin: 0; }
-html {
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-  scroll-padding-top: calc(var(--header-h) + 1rem);
+@custom-variant dark (&:is(.dark *));
+
+/* ==================================================================
+   DESIGN TOKENS — xem quy tắc đầy đủ trong SKILLS.md
+   Màu dùng qua token ngữ nghĩa của shadcn (bg-primary, text-muted-foreground…)
+   ================================================================== */
+
+@theme inline {
+  --font-sans: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-heading: "Archivo Variable", "Be Vietnam Pro", system-ui, sans-serif;
+
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
+  --color-travel: var(--travel);
+  --color-travel-foreground: var(--travel-foreground);
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
-body {
-  min-height: 100dvh;
-  background: var(--bg);
-  color: var(--fg);
-  font-family: var(--font-body);
-  font-size: var(--fs-base);
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  overflow-x: clip;
-  transition: background-color var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
+
+/* Chế độ sáng — "Day" */
+:root {
+  /* Bảng màu thương hiệu (hình minh hoạ: mission patch, Orbi) */
+  --brand-ultramarine: #1f2e7a;
+  --brand-deep-space: #16225e;
+  --brand-marigold: #f2a900;
+  --brand-rice: #2f7d5b;
+  --brand-sky: #8db8f2;
+  --brand-flag: #d93a2b;
+  --brand-cloud: #f4f6fa;
+
+  --background: var(--brand-cloud);
+  --foreground: #17204f;
+  --card: #ffffff;
+  --card-foreground: #17204f;
+  --popover: #ffffff;
+  --popover-foreground: #17204f;
+  --primary: var(--brand-ultramarine);
+  --primary-foreground: #ffffff;
+  --secondary: #e4e9f5;
+  --secondary-foreground: var(--brand-ultramarine);
+  --muted: #e9edf6;
+  --muted-foreground: #556084;
+  --accent: #e4e9f5;
+  --accent-foreground: #17204f;
+  --destructive: #c2352a;
+  --border: #d8deec;
+  --input: #d8deec;
+  --ring: var(--brand-marigold);
+  --highlight: var(--brand-marigold);
+  --highlight-foreground: #17204f;
+  --travel: var(--brand-rice);
+  --travel-foreground: #ffffff;
+  --chart-1: var(--brand-ultramarine);
+  --chart-2: var(--brand-marigold);
+  --chart-3: var(--brand-rice);
+  --chart-4: var(--brand-sky);
+  --chart-5: var(--brand-flag);
+  --radius: 0.625rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #17204f;
+  --sidebar-primary: var(--brand-ultramarine);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e4e9f5;
+  --sidebar-accent-foreground: #17204f;
+  --sidebar-border: #d8deec;
+  --sidebar-ring: var(--brand-marigold);
 }
-img, picture, video, canvas, svg { display: block; max-width: 100%; }
-input, button, textarea, select { font: inherit; color: inherit; }
-button { cursor: pointer; background: none; border: 0; padding: 0; }
-a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
-h1, h2, h3, h4 {
-  font-family: var(--font-display);
-  font-weight: 560;
-  line-height: 1.02;
-  letter-spacing: -0.02em;
-  font-variation-settings: 'SOFT' 60, 'opsz' 96;
+
+/* Chế độ tối — "Night" (xanh đêm, không phải đen) */
+.dark {
+  --background: #0e1433;
+  --foreground: #e8ecf7;
+  --card: #151c42;
+  --card-foreground: #e8ecf7;
+  --popover: #151c42;
+  --popover-foreground: #e8ecf7;
+  --primary: var(--brand-marigold);
+  --primary-foreground: #0e1433;
+  --secondary: #1e2756;
+  --secondary-foreground: #e8ecf7;
+  --muted: #1b2350;
+  --muted-foreground: #a3abcb;
+  --accent: #1e2756;
+  --accent-foreground: #e8ecf7;
+  --destructive: #f0786c;
+  --border: rgb(232 236 247 / 12%);
+  --input: rgb(232 236 247 / 16%);
+  --ring: var(--brand-marigold);
+  --highlight: var(--brand-marigold);
+  --highlight-foreground: #0e1433;
+  --travel: #5dbb8f;
+  --travel-foreground: #0e1433;
+  --sidebar: #151c42;
+  --sidebar-foreground: #e8ecf7;
+  --sidebar-primary: var(--brand-marigold);
+  --sidebar-primary-foreground: #0e1433;
+  --sidebar-accent: #1e2756;
+  --sidebar-accent-foreground: #e8ecf7;
+  --sidebar-border: rgb(232 236 247 / 12%);
+  --sidebar-ring: var(--brand-marigold);
+}
+
+/* ==================================================================
+   THANG CHỮ — perfect fourth (×1.333), gốc 17px.
+   Tiêu đề: Archivo kéo rộng (chữ sơn thân tên lửa). Nội dung: Be Vietnam Pro.
+   ================================================================== */
+
+@utility type-display {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 1.5rem + 3.8vw, 4.5rem);
+  font-weight: 800;
+  font-stretch: 125%;
+  line-height: 1;
+  letter-spacing: -0.025em;
   text-wrap: balance;
 }
-p { text-wrap: pretty; }
-::selection { background: var(--c-sun); color: var(--c-ink); }
-
-:focus-visible {
-  outline: 2px dashed var(--accent);
-  outline-offset: 3px;
-  border-radius: 4px;
+@utility type-h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.875rem, 1.3rem + 2.2vw, 3rem);
+  font-weight: 750;
+  font-stretch: 118%;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+@utility type-h3 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.375rem, 1.2rem + 0.7vw, 1.75rem);
+  font-weight: 700;
+  font-stretch: 110%;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+@utility type-lead {
+  font-size: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+@utility type-body {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  text-wrap: pretty;
 }
 
-/* ---------- Lớp grain giấy/phim — làm nền bớt "phẳng kiểu AI" ---------- */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  pointer-events: none;
-  opacity: var(--grain-opacity);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-/* ---------- Tiện ích dùng chung ---------- */
-.container {
-  width: 100%;
-  max-width: var(--max-w);
-  margin-inline: auto;
-  padding-inline: var(--gutter);
-}
-
-/* Nhãn kiểu telemetry: MSN-01 · ABOUT */
-.mono {
-  font-family: var(--font-mono);
-  font-size: var(--fs-mono);
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.muted { color: var(--fg-muted); }
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-.skip-link {
-  position: fixed;
-  top: 8px;
-  left: 8px;
-  z-index: 200;
-  padding: 8px 14px;
-  background: var(--accent);
-  color: var(--accent-fg);
-  border-radius: var(--radius-sm);
-  transform: translateY(-150%);
-  transition: transform var(--dur-fast) var(--ease-out);
-}
-.skip-link:focus { transform: none; }
-
-/* ---------- Tôn trọng người dùng tắt chuyển động ---------- */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  ::selection {
+    background: var(--highlight);
+    color: var(--highlight-foreground);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }

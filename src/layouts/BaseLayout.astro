@@ -1,16 +1,10 @@
 ---
 import { ClientRouter } from 'astro:transitions';
-import '@fontsource-variable/fraunces/full.css';
-import '@fontsource/be-vietnam-pro/400.css';
-import '@fontsource/be-vietnam-pro/400-italic.css';
-import '@fontsource/be-vietnam-pro/500.css';
-import '@fontsource/be-vietnam-pro/600.css';
-import '@fontsource-variable/jetbrains-mono';
 import '@/styles/global.css';
 
 import { site } from '@/lib/site';
-import MissionBar from '@/components/layout/MissionBar.astro';
-import Footer from '@/components/layout/Footer.astro';
+import SiteHeader from '@/components/layout/SiteHeader.astro';
+import SiteFooter from '@/components/layout/SiteFooter.astro';
 
 interface Props {
   /** Tiêu đề trang — bỏ trống ở trang chủ */
@@ -22,9 +16,9 @@ interface Props {
 }
 
 const { title, description = site.description, image, noindex = false } = Astro.props;
-const fullTitle = title ? `${title} · ${site.name}` : `${site.name} — ${site.roles.slice(0, 2).join(' & ')}`;
+const fullTitle = title ? `${title} | ${site.name}` : `${site.name}, ${site.jobTitle.toLowerCase()} và travel vlogger`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const ogImage = image ? new URL(image, Astro.site).href : undefined;
+const ogImage = new URL(image ?? '/brand/orbi-avatar.png', Astro.site).href;
 
 const personSchema = {
   '@context': 'https://schema.org',
@@ -32,7 +26,7 @@ const personSchema = {
   name: site.name,
   alternateName: site.handle,
   url: Astro.site?.href,
-  jobTitle: site.roles[0],
+  jobTitle: site.jobTitle,
   email: `mailto:${site.email}`,
   sameAs: site.socials.map((s) => s.url),
 };
@@ -50,8 +44,8 @@ const personSchema = {
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <meta name="theme-color" content="#f4eee1" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0b1026" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f4f6fa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1433" media="(prefers-color-scheme: dark)" />
 
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="vi_VN" />
@@ -59,12 +53,12 @@ const personSchema = {
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    {ogImage && <meta property="og:image" content={ogImage} />}
-    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary" />
 
     <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
 
-    <!-- Áp giao diện sáng/tối trước khi vẽ trang để không bị nháy -->
+    <!-- Áp giao diện sáng/tối (class `dark` theo chuẩn shadcn) trước khi vẽ trang để không bị nháy -->
     <script is:inline>
       (() => {
         const apply = () => {
@@ -72,10 +66,8 @@ const personSchema = {
           try {
             theme = localStorage.getItem('theme');
           } catch {}
-          if (theme !== 'light' && theme !== 'dark') {
-            theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-          }
-          document.documentElement.dataset.theme = theme;
+          const dark = theme ? theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+          document.documentElement.classList.toggle('dark', dark);
         };
         apply();
         if (!window.__themeBound) {
@@ -87,12 +79,17 @@ const personSchema = {
 
     <ClientRouter />
   </head>
-  <body>
-    <a class="skip-link" href="#main">Bỏ qua, đến nội dung chính</a>
-    <MissionBar />
-    <main id="main">
+  <body class="flex min-h-dvh flex-col">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
+    >
+      Bỏ qua, đến nội dung chính
+    </a>
+    <SiteHeader />
+    <main id="main" class="flex-1">
       <slot />
     </main>
-    <Footer />
+    <SiteFooter />
   </body>
 </html>

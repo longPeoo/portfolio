@@ -1,0 +1,31 @@
+---
+/** Hai mảng chính: kỹ thuật (nền xanh ultramarine) và du lịch (nền xanh ruộng lúa). */
+import { site } from '@/lib/site';
+import { cn } from '@/lib/utils';
+import MissionPatch from '@/components/brand/MissionPatch.astro';
+
+const sides = [
+  { ...site.home.engineering, href: '/engineering', motif: 'orbit', tone: 'bg-primary text-primary-foreground' },
+  { ...site.home.travel, href: '/journeys', motif: 'trail', tone: 'bg-travel text-travel-foreground' },
+] as const;
+---
+
+<section class="mx-auto mt-12 max-w-6xl px-4 sm:px-6 lg:px-8">
+  <div class="grid overflow-hidden rounded-2xl md:grid-cols-2">
+    {sides.map((side) => (
+      <a href={side.href} class={cn('group flex flex-col gap-5 p-8 md:p-10', side.tone)}>
+        <MissionPatch
+          motif={side.motif}
+          size={104}
+          class="transition-transform duration-500 group-hover:-rotate-6"
+          label=""
+        />
+        <h2 class="type-h3">{side.title}</h2>
+        <p class="max-w-[42ch] opacity-85">{side.text}</p>
+        <span class="mt-auto w-fit pt-2 font-semibold underline decoration-2 underline-offset-[6px] group-hover:decoration-4">
+          {side.cta}
+        </span>
+      </a>
+    ))}
+  </div>
+</section>

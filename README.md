@@ -15,25 +15,21 @@ npm run dev      # mở http://localhost:4321
 
 | Muốn đổi | Sửa file |
 |---|---|
-| Tên, giới thiệu, menu, mạng xã hội, email | `src/data/site.yaml` |
-| Màu sắc, font, khoảng cách | `src/styles/tokens.css` |
+| Tên, câu giới thiệu, chữ trên huy hiệu, menu, mạng xã hội, email | `src/data/site.yaml` |
+| Màu sắc, font, thang chữ | `src/styles/global.css` |
 | Thứ tự các section trang chủ | `src/pages/index.astro` |
 
 Mạng xã hội để trống link (`url: ""`) sẽ tự ẩn.
 
-## Cấu trúc
+## Quy tắc thiết kế & code
 
-```
-src/
-├── data/site.yaml          cấu hình chung
-├── styles/                 tokens.css (design tokens) + global.css
-├── layouts/BaseLayout      khung trang: SEO, font, theme, header, footer
-├── components/
-│   ├── layout/             MissionBar (header), Footer
-│   ├── sections/           Hero, MissionStatus, ComingSoon…
-│   ├── mascot/Orbi         linh vật vệ tinh
-│   └── ui/                 Button, Icon
-└── pages/                  mỗi file = một đường dẫn
+Xem **[SKILLS.md](SKILLS.md)**: bắt buộc đọc trước khi thêm trang hoặc component.
+Stack: Astro 7 · React islands · Tailwind v4 · shadcn/ui (radix-nova).
+
+```bash
+npm run check    # kiểm tra type
+npm run build    # build production
+npx shadcn@latest add <component>   # thêm component shadcn
 ```
 
 ## Deploy

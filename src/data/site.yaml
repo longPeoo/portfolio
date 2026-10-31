@@ -2,32 +2,40 @@
 #  CẤU HÌNH CHUNG CỦA WEBSITE
 #  Sửa file này để đổi tên, lời giới thiệu, menu và mạng xã hội.
 #  • Link mạng xã hội để trống ("") sẽ tự ẩn khỏi trang.
-#  • Lưu file → web tự cập nhật (khi chạy `npm run dev` hoặc sau khi deploy).
+#  • Viết câu thường (sentence case), không viết HOA toàn bộ — xem SKILLS.md.
 # ==================================================================
 
 name: "Long"
 handle: "longpeoo"
 
-# Các dòng nghề nghiệp — sẽ chạy trên bảng lật chữ ở trang chủ
-roles:
-  - "Space Systems Engineer"
-  - "Travel Vlogger"
-  - "Storyteller"
-
-# Một câu giới thiệu ngắn (hiện ở trang chủ)
-tagline: "Ngày thường tôi làm việc với vệ tinh và quỹ đạo. Cuối tuần, tôi xách ba lô đi khắp nơi và kể lại bằng video."
+# Chức danh ngắn — dùng cho SEO và dữ liệu cấu trúc
+jobTitle: "Kỹ sư công nghệ vũ trụ"
 
 # Mô tả cho Google & khi chia sẻ link lên Facebook/Zalo (≤ 160 ký tự)
-description: "Long — kỹ sư công nghệ vũ trụ & travel vlogger. Dự án kỹ thuật, nhật ký hành trình và video du lịch."
-
-location:
-  city: "Hà Nội"
-  code: "HAN"
-  timezone: "Asia/Ho_Chi_Minh"
-  lat: "21.03°N"
-  lon: "105.85°E"
+description: "Long, kỹ sư công nghệ vũ trụ và travel vlogger. Dự án kỹ thuật, nhật ký hành trình và video du lịch."
 
 email: "contact@longpeoo.io.vn"
+
+# ------------------------------------------------------------------
+#  TRANG CHỦ
+# ------------------------------------------------------------------
+home:
+  # \u00A0 = khoảng trắng không ngắt dòng, giữ từ ghép (vũ trụ, xê dịch) trên cùng một dòng
+  headline: "Kỹ sư vũ\u00A0trụ, người kể chuyện xê\u00A0dịch."
+  intro: "Tôi là Long. Ngày thường tôi làm việc trong ngành công nghệ vũ trụ. Cuối tuần, tôi xách ba lô lên đường và quay lại hành trình cho kênh YouTube của mình."
+  engineering:
+    title: "Công việc kỹ thuật"
+    text: "Các dự án, hệ thống tôi từng tham gia và những điều học được từ ngành vũ trụ."
+    cta: "Xem dự án"
+  travel:
+    title: "Hành trình"
+    text: "Những chuyến đi, con người gặp trên đường và video kể lại từng chặng."
+    cta: "Xem các chuyến đi"
+
+# Chữ thêu trên huy hiệu (mission patch) ở trang chủ — ngắn, tối đa ~24 ký tự mỗi dòng
+patch:
+  top: "Kỹ sư công nghệ vũ trụ"
+  bottom: "Travel vlogger"
 
 # Menu chính — thứ tự ở đây là thứ tự hiển thị
 nav:
