@@ -37,7 +37,7 @@ subsystems:
       - Leo núi
       - Du lịch bụi
 cv: ''
-draft: true
+draft: false
 ---
 
 Ví dụ: Phần này là câu chuyện dài hơn về bạn, viết bằng Markdown. Bạn đến với ngành vũ trụ thế nào, điều gì khiến bạn bắt đầu làm video, và bạn muốn người xem nhận được gì.
