@@ -56,6 +56,14 @@ subsystems:
       - Bản đồ tương tác Leaflet/MapLibre
       - GeoServer
       - WMS/WFS/WMTS
+  - code: BE
+    name: Backend Dev
+    level: 80
+    items:
+      - Thiết kế REST API
+      - Python; FastAPI; Flask; NodeJS
+      - Auth & Authz
+      - Microservice xử lý ảnh & GIS
 cv: /uploads/LongNguyen.pdf
 draft: false
 ---
