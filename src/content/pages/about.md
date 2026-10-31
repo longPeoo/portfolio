@@ -1,6 +1,6 @@
 ---
 title: Về tôi
-intro: Xin chào mọi người, mình là Long, mọi người hay gọi là longpeoo - một cậu nhóc lang thang khắp đó đây. Mình hiện tại là một kỹ sư công nghệ Vũ trụ đây là niềm đam mê cả đời của mình, nhưng tâm hồn mình cũng được nuôi lớn bởi những khung cảnh hùng vĩ, bởi những màu xanh tươi mát của cây cối, bởi những màu xanh ngọc biếc của mặt hồ. Nên nếu mọi người có thời gian thì đi cùng mình nhé.
+intro: Xin chào mọi người, mình là Long, mọi người hay gọi là longpeoo - một cậu nhóc lang thang khắp đó đây. Mình hiện tại là một kỹ sư công nghệ Vũ trụ (đây là niềm đam mê cả đời của mình), nhưng tâm hồn mình cũng được nuôi lớn bởi những khung cảnh hùng vĩ, bởi những màu xanh tươi mát của cây cối, bởi những màu xanh ngọc biếc của mặt hồ. Nên nếu mọi người có thời gian thì đi cùng mình nhé.
 timeline:
   - year: Tuổi thơ
     title: Một cậu nhóc luôn mơ mộng bên ngoài Vũ trụ
@@ -23,30 +23,81 @@ timeline:
   - year: '2025'
     title: Con đường theo đuổi tri thức
     text: Đến năm này là mình đã quyết định mình sẽ sống chết với ngành rồi kkk nên mình quyết định nâng cao cái học vị của mình. Nên là giờ các bạn đang thấy một NCS Tiến sĩ đang loay hoay với con đường mình đã chọn. Mình chọn theo Địa lý, Tài nguyên và Môi trường để có thể ứng dụng Công nghệ Vũ trụ vào với Địa lý, để theo dõi, giám sát, bảo vệ và gìn giữ Tài nguyên cũng như Môi trường của Tổ quốc mến thương.
+  - year: 2026 & Beyond
+    title: Khám phá Thế giới
+    text: Là một cậu nhóc luôn mang trong mình những hoài bão khám phá thế giới xung quanh, luôn mong muốn được tận mắt chứng kiến những khung cảnh hùng vĩ, luôn muốn được bao bọc bởi thiên nhiên, luôn muốn được cảm nhận những sự rung động. Nên cậu nhóc ấy quyết định ghi lại những hành trình, những chuyến đi lang thang của mình.
 subsystems:
-  - code: PWR
-    name: Hệ thống vệ tinh
-    level: 85
+  - code: Viễn thám
+    name: Xử lý ảnh viễn thám
+    level: 100
     items:
-      - Phân hệ năng lượng
-      - Ngân sách khối lượng/điện
-      - Thử nghiệm môi trường
-  - code: COM
-    name: Kể chuyện
-    level: 75
+      - Xử lý đủ loại ảnh trên đời
+      - Tiền xử lý ảnh
+      - Xử lý chuỗi thời gian
+  - code: GIS
+    name: GIS & Phân tích không gian
+    level: 80
     items:
-      - Viết kịch bản
-      - Quay & dựng video
-      - Chụp ảnh
-  - code: NAV
-    name: Xê dịch
+      - ArcGIS, QGIS, SNAP
+      - Lập trình công cụ xử lý
+      - Xây dựng, quản lý CSDL GIS
+  - code: Tự động hóa
+    name: Tự động hóa quy trình
     level: 90
     items:
-      - Phượt xe máy
-      - Leo núi
-      - Du lịch bụi
-cv: ''
+      - Python, NodeJS, Javascript, TypeScript
+      - Xử lý đa tác vụ
+      - Xây dựng, nghiên cứu, và phát triển quy trình tự động hóa
+  - code: WebGIS
+    name: Lập trình WebGIS
+    level: 100
+    items:
+      - Xây dựng WebGIS
+      - Bản đồ tương tác Leaflet/MapLibre
+      - GeoServer
+      - WMS/WFS/WMTS
+  - code: Backend
+    name: Phát triển lõi sản phẩm
+    level: 80
+    items:
+      - Thiết kế REST API
+      - Python; FastAPI; Flask; NodeJS
+      - Auth & Authz
+      - Microservice xử lý ảnh & GIS
+  - code: Frontend
+    name: Phát triển giao diện người dùng
+    level: 100
+    items:
+      - Thiết kế, xây dựng WebGIS
+      - Giao diện bản đồ tương tác với raster & vector
+      - Tối ưu hiển thị UI & UX
+      - Responsive UI
+  - code: Kiến trúc
+    name: Thiết kế kiến trúc
+    level: 90
+    items:
+      - Thiết kế kiến trúc phần mềm, nền tảng
+      - Kiến trúc API
+      - Hệ thống xử lý dữ liệu lớn
+      - Client-Server
+      - Tích hợp đa nguồn dữ liệu
+  - code: Đào tạo
+    name: Đào tạo viễn thám & GIS
+    level: 100
+    items:
+      - Xây dựng chương trình đào tạo
+      - Giảng dạy về viễn thám & GIS
+      - Đào tạo WebGIS/AI Agent
+  - code: Giải pháp
+    name: Tư vấn và đề xuất giải pháp
+    level: 100
+    items:
+      - Phân tích yêu cầu
+      - Đề xuất giải pháp kỹ thuật
+      - Lựa chọn Tech Stack
+      - Xây dựng PoC và giải pháp triển khai thực tế
+cv: /uploads/LongNguyen.pdf
 draft: false
 ---
 
-Ví dụ: Phần này là câu chuyện dài hơn về bạn, viết bằng Markdown. Bạn đến với ngành vũ trụ thế nào, điều gì khiến bạn bắt đầu làm video, và bạn muốn người xem nhận được gì.
+Hmmm đợi xíu tui nghĩ
