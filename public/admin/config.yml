@@ -233,6 +233,20 @@ collections:
             fields:
               - { name: name, label: Tên nhóm, widget: string }
               - { name: videos, label: Link các video, widget: list }
+      - name: music
+        label: Nhạc nền
+        file: src/data/music.yaml
+        fields:
+          - { name: volume, label: Âm lượng khi bật (0–1), widget: number, value_type: float, min: 0, max: 1, step: 0.05, default: 0.5 }
+          - name: tracks
+            label: Danh sách bài (phát lần lượt, hết bài cuối quay lại bài đầu)
+            hint: "Để trống = ẩn nút nhạc. Chỉ dùng nhạc bạn có quyền sử dụng. File mp3/m4a, nên ≤ 5 MB mỗi bài."
+            widget: list
+            required: false
+            fields:
+              - { name: title, label: Tên bài, widget: string, required: false, hint: "Để trống = lấy tên file" }
+              - { name: artist, label: Ca sĩ / tác giả, widget: string, required: false }
+              - { name: file, label: File nhạc, widget: file, media_folder: /public/music, public_folder: /music }
     i18n: true
 
   # ---------------------------------------------------------------
@@ -366,6 +380,14 @@ collections:
                 i18n: true
               - name: toTop
                 label: Nút lên đầu trang
+                widget: string
+                i18n: true
+              - name: musicPlay
+                label: Nút bật nhạc nền (chữ cho trình đọc màn hình)
+                widget: string
+                i18n: true
+              - name: musicPause
+                label: Nút tắt nhạc nền (chữ cho trình đọc màn hình)
                 widget: string
                 i18n: true
             i18n: true

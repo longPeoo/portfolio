@@ -133,8 +133,9 @@ const article = {
 
   .trip__cover { width: 100%; height: auto; border-radius: var(--r-lg); margin-block: var(--space-12); }
   .trip__body { display: flex; flex-direction: column; gap: var(--space-12); }
-  .trip__body .prose { max-width: 68ch; }
-  .trip__video { display: flex; flex-direction: column; gap: var(--space-3); max-width: 960px; }
+  /* Nội dung trải hết khung trang (container 1320px), giống ảnh bìa phía trên */
+  .trip__body .prose { max-width: none; }
+  .trip__video { display: flex; flex-direction: column; gap: var(--space-3); }
   .trip__gallery { margin-top: var(--section-y); }
   .trip__gallery h2 { font-size: var(--fs-h3); margin-block: var(--space-2) var(--space-6); }
   .trip__next { margin-top: var(--section-y); }

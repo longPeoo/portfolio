@@ -22,7 +22,7 @@ Dễ thương, năng động nhưng vẫn nghiêm túc.
 - Nhãn telemetry chữ mono in hoa: mã + tên mục, ví dụ `MSN-00 · Bệ phóng`, `MSN-99 · Gửi tín hiệu`, toạ độ `21.03°N · 105.85°E`.
   Mã (`MSN-xx`, `P1`, `T+00`, `PL-01`, `ALT`, `UTC`) giữ nguyên ở mọi ngôn ngữ; phần chữ lấy từ `src/i18n/` (xem mục 5).
 - Logo góc trái: Orbi + chữ **Longpeoo** (`public/brand/longpeoo-wordmark.webp`, dùng làm CSS mask nên tự đổi màu theo sáng/tối; rê chuột chuyển cam).
-- Thanh menu "Mission Control": số thứ tự `01–05`, chấm "quỹ đạo" dưới mục đang mở, đồng hồ UTC và giờ Hà Nội, chấm trạng thái nhấp nháy.
+- Thanh menu "Mission Control": số thứ tự `01–05`, chấm "quỹ đạo" dưới mục đang mở, đồng hồ UTC và giờ Hà Nội, chấm trạng thái nhấp nháy, nút nhạc nền cạnh nút đổi giao diện.
 - Hero: "Xin chào, tôi là", tên cực lớn kèm dấu chấm cam nảy (cỡ chữ tự co theo độ dài tên, luôn một dòng), chip nghề nghiệp,
   **Orbi bay theo quỹ đạo elip quanh Trái Đất**, vệt cam chạy theo, sao lấp lánh.
   - Trái Đất: WebGL (`src/scripts/earth.ts`), ảnh NASA, nghiêng 23,4°, tự quay, ghim cam ở Hà Nội, quầng khí quyển.
@@ -86,6 +86,7 @@ Thang cỡ chữ: `--fs-mono`, `--fs-sm`, `--fs-base`, `--fs-lg`, `--fs-h3`, `--
 | Hero | Orbi bay theo quỹ đạo (SVG `animateMotion`, 16 giây/vòng), vệt cam chạy theo, sao lấp lánh, dấu chấm sau tên nảy. Trái Đất quay 90 giây/vòng, ghim Hà Nội phát sóng; Mặt Trời bề mặt sôi lăn tăn + nhật hoa toả tia (sáng); Mặt Trăng 36 giây/vòng (tối); đổi giao diện thì ánh sáng chuyển mượt |
 | Orbi | chớp mắt, đèn ăng-ten nhấp nháy, tấm pin vẫy, bay bồng bềnh (`float`), trôi (`lost`), chữ zZz (`sleep`) |
 | Menu | chấm quỹ đạo phóng to theo spring; chấm trạng thái "ping"; header mờ nền khi cuộn |
+| Nút nhạc nền | nốt nhạc ↔ cột sóng cam nhảy theo nhịp khi đang phát; âm lượng tăng dần ~0,8 giây khi bật |
 | Menu mobile | mở dạng **vòng tròn** từ nút menu (`.menu-sheet` trong `global.css`), các mục bay vào lần lượt |
 | Nút `launch` | nảy lò xo khi rê chuột, bóng đổ dài ra, mũi tên nhích chéo |
 | Nút mạng xã hội | nảy lên, nghiêng, đổi màu cam |
@@ -178,6 +179,7 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
   | `MobileNav` | `client:media="(max-width: 860px)"` | desktop không tải React |
   | `MissionsGlobe`, `PhotoGallery`, `VideoGrid`, `VideoPlayer` | `client:visible` | chỉ tải khi cuộn tới |
   | `ThemeToggle` | **không hydrate** | render tĩnh, click gắn bằng script thuần trong `MissionBar.astro` |
+| `MusicToggle.astro` | không phải island | script thuần; `Audio` sống trong script module nên chuyển trang nhạc vẫn phát. `preload="none"`: không tải byte nhạc nào trước khi bấm. Mặc định tắt (trình duyệt chặn tự phát có tiếng). Danh sách trống = không render nút |
 
   **Không dùng `client:load`** cho component chỉ cần một sự kiện click: render tĩnh rồi gắn sự kiện bằng `<script>`.
 - **Ngân sách JS:** JS tải ngay ở trang chủ (desktop) ≤ 30 KB gzip (hiện khoảng 15 KB). Kiểm tra sau mỗi lần thêm thư viện.
@@ -216,6 +218,7 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 | Dự án kỹ thuật | `src/content/projects/<ten-khong-dau>/index.md` + ảnh cùng thư mục |
 | Chuyến đi (kèm toạ độ cho địa cầu, album, video) | `src/content/journeys/<ten-khong-dau>/index.md` + ảnh cùng thư mục |
 | Trang Về tôi (timeline, kỹ năng) | `src/content/pages/about.md` |
+| Nhạc nền (2–3 bài, phát lần lượt) | `src/data/music.yaml` (zod trong `src/lib/music.ts`), file nhạc ở `public/music/`. CMS: Cài đặt → Nhạc nền |
 | Kênh YouTube, video nổi bật, ghim, ẩn, nhóm, bật/tắt Shorts | `src/data/videos.yaml` (Shorts nhận biết qua playlist tự động `UUSH…` của kênh) |
 | Màu, font, khoảng cách | `src/styles/global.css` |
 
@@ -240,14 +243,14 @@ src/
 ├── components/
 │   ├── ui/          ← shadcn (CLI quản lý; chỉ sửa bằng cách thêm variant)
 │   ├── brand/       ← Orbi (linh vật, SVG thuần)
-│   ├── layout/      ← MissionBar, Footer, ThemeToggle, MobileNav (island)
+│   ├── layout/      ← MissionBar, Footer, ThemeToggle, MusicToggle, MobileNav (island)
 │   ├── media/       ← island React: MissionsGlobe, PhotoGallery, VideoGrid, VideoPlayer
 │   └── sections/    ← Hero, HomeSections, PageHeader, SectionHead, ProjectCard, JourneyCard, CosmosBackdrop,
 │                       MissionStatus, ComingSoon, SocialList
 ├── content/         ← projects/, journeys/, pages/ (Markdown + ảnh)
 ├── assets/earth/    ← ảnh NASA cho Trái Đất hero (day, night, moon .webp)
 ├── content.config.ts← schema nội dung
-├── data/            ← site.yaml (+ site.en.yaml), videos.yaml
+├── data/            ← site.yaml (+ site.en.yaml), videos.yaml, music.yaml
 ├── i18n/            ← ui.yaml (vi), ui.en.yaml (en): chữ trên giao diện
 ├── layouts/BaseLayout.astro  ← SEO, JSON-LD, theme, preloader, altimeter, header/footer
 ├── lib/             ← site.ts, i18n.ts, content.ts, photos.ts, youtube.ts, utils.ts (cn, cleanPath)

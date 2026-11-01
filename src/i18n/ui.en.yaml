@@ -27,6 +27,8 @@ chrome:
   footerNav: Navigate
   footerTagline: Built on Earth, served from orbit
   toTop: Back to top
+  musicPlay: Play background music
+  musicPause: Pause background music
 home:
   heroCode: MSN-00 · Launch pad
   heroNow: Now ▸

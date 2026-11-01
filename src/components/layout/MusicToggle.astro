@@ -1,0 +1,166 @@
+---
+/**
+ * Nút nhạc nền cạnh nút đổi giao diện. Danh sách bài ở src/data/music.yaml (CMS: Cài đặt → Nhạc nền); trống thì không render.
+ * Không tải gì cho tới khi người xem bấm (preload none); trình duyệt chặn tự phát nhạc có tiếng nên mặc định tắt.
+ * Đối tượng Audio sống trong script module (chạy một lần) → chuyển trang nhạc vẫn phát tiếp.
+ */
+import { MusicIcon } from 'lucide-react';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { t } from '@/lib/i18n';
+import { music } from '@/lib/music';
+
+const config = JSON.stringify(music);
+---
+
+{music.tracks.length > 0 && (
+  <button
+    type="button"
+    class={cn(buttonVariants({ variant: 'ghost', size: 'icon-lg' }), 'music rounded-full')}
+    data-music-toggle
+    data-music={config}
+    data-label-play={t.chrome.musicPlay}
+    data-label-pause={t.chrome.musicPause}
+    aria-label={t.chrome.musicPlay}
+    aria-pressed="false"
+    title={t.chrome.musicPlay}
+  >
+    <span class="music__icon">
+      <MusicIcon className="music__note" />
+      <!-- Cột sóng nhạc nhảy theo nhịp khi đang phát -->
+      <span class="music__eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    </span>
+  </button>
+)}
+
+<style>
+  .music__icon { display: grid; place-items: center; }
+  .music__icon > :global(*) { grid-area: 1 / 1; }
+  .music :global(.music__note) { transition: scale var(--dur) var(--ease-spring), opacity var(--dur); }
+  .music__eq { display: flex; align-items: flex-end; gap: 2px; height: 16px; opacity: 0; scale: 0.5; transition: scale var(--dur) var(--ease-spring), opacity var(--dur); }
+  .music__eq i { width: 3px; height: 100%; border-radius: 2px; background: var(--primary); transform-origin: bottom; animation: eq 0.9s ease-in-out infinite alternate; }
+  .music__eq i:nth-child(2) { animation-duration: 0.7s; animation-delay: -0.3s; }
+  .music__eq i:nth-child(3) { animation-duration: 1.1s; animation-delay: -0.6s; }
+  .music__eq i:nth-child(4) { animation-duration: 0.8s; animation-delay: -0.1s; }
+
+  .music[data-playing] :global(.music__note) { opacity: 0; scale: 0.5; }
+  .music[data-playing] .music__eq { opacity: 1; scale: 1; }
+  .music:not([data-playing]) .music__eq i { animation-play-state: paused; }
+
+  @keyframes eq {
+    from { transform: scaleY(0.25); }
+    to { transform: scaleY(1); }
+  }
+</style>
+
+<script>
+  interface Track { title: string; artist: string; file: string }
+  interface Config { volume: number; tracks: Track[] }
+
+  // Sống suốt phiên (script module chỉ chạy một lần), chuyển trang không ngắt nhạc
+  let audio: HTMLAudioElement | undefined;
+  let config: Config | undefined;
+  let index = 0;
+  let button: HTMLButtonElement | null = null;
+  let fade = 0;
+
+  const STORE = 'music';
+
+  function sync() {
+    if (!button) return;
+    const playing = !!audio && !audio.paused;
+    const label = playing ? button.dataset.labelPause! : button.dataset.labelPlay!;
+    const track = config?.tracks[index];
+    button.toggleAttribute('data-playing', playing);
+    button.setAttribute('aria-pressed', String(playing));
+    button.setAttribute('aria-label', label);
+    button.title = playing && track ? `${label} · ${track.title}${track.artist ? ` – ${track.artist}` : ''}` : label;
+  }
+
+  function remember() {
+    if (!audio) return;
+    try {
+      sessionStorage.setItem(STORE, JSON.stringify({ index, time: audio.currentTime }));
+    } catch {}
+  }
+
+  function load(i: number, time = 0) {
+    if (!audio || !config) return;
+    index = ((i % config.tracks.length) + config.tracks.length) % config.tracks.length;
+    const track = config.tracks[index];
+    audio.src = track.file;
+    if (time) audio.currentTime = time;
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.metadata = new MediaMetadata({ title: track.title, artist: track.artist, album: 'Longpeoo' });
+    }
+  }
+
+  /** Tăng âm lượng từ 0 lên mức cấu hình trong ~0,8 giây, tránh bật cái "đùng" */
+  function fadeIn() {
+    if (!audio || !config) return;
+    cancelAnimationFrame(fade);
+    const target = config.volume;
+    const start = performance.now();
+    audio.volume = 0;
+    const step = (now: number) => {
+      const k = Math.min(1, (now - start) / 800);
+      audio!.volume = target * k;
+      if (k < 1) fade = requestAnimationFrame(step);
+    };
+    fade = requestAnimationFrame(step);
+  }
+
+  function play() {
+    if (!audio) return;
+    if (!audio.src) load(index);
+    fadeIn();
+    audio.play().catch(() => {});
+  }
+
+  function setup(cfg: Config) {
+    config = cfg;
+    audio = new Audio();
+    audio.preload = 'none';
+    // Tải lại trang trong cùng phiên → bấm phát là nghe tiếp đúng bài, đúng đoạn
+    let saved: { index?: number; time?: number } | null = null;
+    try {
+      saved = JSON.parse(sessionStorage.getItem(STORE) ?? 'null');
+    } catch {}
+    load(saved?.index ?? 0, saved?.time ?? 0);
+    audio.addEventListener('ended', () => {
+      load(index + 1);
+      audio!.play().catch(() => {});
+    });
+    // Bài lỗi (file bị xoá, sai đường dẫn) → bỏ qua sang bài kế
+    audio.addEventListener('error', () => {
+      if (config!.tracks.length > 1 && !audio!.paused) {
+        load(index + 1);
+        audio!.play().catch(() => {});
+      } else sync();
+    });
+    audio.addEventListener('play', sync);
+    audio.addEventListener('pause', sync);
+    audio.addEventListener('pause', remember);
+    window.addEventListener('pagehide', remember);
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.setActionHandler('play', play);
+      navigator.mediaSession.setActionHandler('pause', () => audio!.pause());
+      navigator.mediaSession.setActionHandler('nexttrack', () => {
+        load(index + 1);
+        play();
+      });
+      navigator.mediaSession.setActionHandler('previoustrack', () => {
+        load(index - 1);
+        play();
+      });
+    }
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    button = document.querySelector<HTMLButtonElement>('[data-music-toggle]');
+    if (!button) return;
+    if (!audio) setup(JSON.parse(button.dataset.music!));
+    sync();
+    button.addEventListener('click', () => (audio!.paused ? play() : audio!.pause()));
+  });
+</script>

@@ -26,7 +26,7 @@ const schema = z.object({
     status: group(['nominal', 'active', 'queued'] as const),
     projectStatus: group(['Nominal', 'Complete', 'Research'] as const),
   }),
-  chrome: group(['countdown', 'skipIntro', 'clock', 'mainMenu', 'openMenu', 'closeMenu', 'theme', 'footerCode', 'footerNav', 'footerTagline', 'toTop'] as const),
+  chrome: group(['countdown', 'skipIntro', 'clock', 'mainMenu', 'openMenu', 'closeMenu', 'theme', 'footerCode', 'footerNav', 'footerTagline', 'toTop', 'musicPlay', 'musicPause'] as const),
   home: group([
     'heroCode', 'heroNow', 'hello', 'rolesLabel', 'ctaJourneys', 'ctaYoutube',
     'videoCode', 'videoTitle', 'videoNew', 'videoAll',

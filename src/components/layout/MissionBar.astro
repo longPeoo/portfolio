@@ -1,7 +1,7 @@
 ---
 /**
  * Thanh điều hướng "Mission Control Bar": logo, menu, đồng hồ UTC/giờ địa phương,
- * nút đổi giao diện sáng/tối và nút Liên hệ. Trên mobile chuyển thành menu toàn màn hình (shadcn Sheet).
+ * nút nhạc nền, nút đổi giao diện sáng/tối và nút Liên hệ. Trên mobile chuyển thành menu toàn màn hình (shadcn Sheet).
  */
 import { ArrowUpRightIcon } from 'lucide-react';
 import { site } from '@/lib/site';
@@ -10,6 +10,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { cn, cleanPath } from '@/lib/utils';
 import Orbi from '@/components/brand/Orbi.astro';
 import { ThemeToggle } from './ThemeToggle';
+import MusicToggle from './MusicToggle.astro';
 import { MobileNav } from './MobileNav';
 
 const path = cleanPath(Astro.url.pathname);
@@ -44,6 +45,7 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
   </div>
 
   <div class="mbar__actions">
+    <MusicToggle />
     <ThemeToggle label={t.chrome.theme} />
     <a href="/contact" class={cn(buttonVariants({ variant: 'ink', size: 'lg' }), 'mbar__cta')}>
       {t.common.contact} <ArrowUpRightIcon data-icon="inline-end" />
