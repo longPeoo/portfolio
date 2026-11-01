@@ -11,12 +11,36 @@ lng: 1.6147
 cover: boulogne_00.webp
 coverAlt: Con phố nhà mình ở, hai dãy nhà nhuộm cam trong nắng chiều
 gallery:
-  - src: boulogne_05.webp
-    caption: Đây là con phố mình ở nè đẹp chưa
-    alt: Đây là con phố mình ở nè đẹp chưa
   - src: boulogne_04.webp
     caption: Công viên cách nhà đúng 10 bước chân, hôm nào đi làm về cũng ra đây chạy mấy vòng
     alt: Công viên cách nhà đúng 10 bước chân, hôm nào đi làm về cũng ra đây chạy mấy vòng
+  - src: boulogne_01.webp
+    caption: Chắc lúc này trên đường đi làm đẹp quá nên chụp lại
+    alt: Chắc lúc này trên đường đi làm đẹp quá nên chụp lại
+  - src: boulogne_02.webp
+    caption: Ở gần chỗ mình ở có cái pháo đài siêu to
+    alt: Ở gần chỗ mình ở có cái pháo đài siêu to
+  - src: boulogne_06.webp
+    caption: Thỉnh thoảng ngắm đường tàu vì bố mẹ, cũng không hiểu tại sao
+    alt: Thỉnh thoảng ngắm đường tàu vì bố mẹ, cũng không hiểu tại sao
+  - src: boulogne_03.webp
+    caption: Đi bộ hẳn 7km ra biển ngắm cối xay gió
+    alt: Đi bộ hẳn 7km ra biển ngắm cối xay gió
+  - src: boulogne_12.webp
+    caption: À đấy ngắm cả ngọn hải đăng bỏ hoang này nữa
+    alt: À đấy ngắm cả ngọn hải đăng bỏ hoang này nữa
+  - src: boulogne_11.webp
+    caption: Một đàn hải cẩu nhìn mình... vì mình nhìn chúng nó
+    alt: Một đàn hải cẩu nhìn mình... vì mình nhìn chúng nó
+  - src: boulogne_09.webp
+    caption: Xe buýt đi về nhà đón ở đây nè
+    alt: Xe buýt đi về nhà đón ở đây nè
+  - src: boulogne_08.webp
+    caption: Bò đỏ hân hạnh tài trợ chương trình này
+    alt: Bò đỏ hân hạnh tài trợ chương trình này
+  - src: boulogne_07.webp
+    caption: Thì cũng gọi là Châu Âu mà nên mê mẩn lắm
+    alt: Thì cũng gọi là Châu Âu mà nên mê mẩn lắm
 youtube: ''
 tags: []
 draft: false
