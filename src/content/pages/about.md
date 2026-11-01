@@ -100,4 +100,6 @@ cv: /uploads/LongNguyen.pdf
 draft: false
 ---
 
-Hmmm đợi xíu tui nghĩ
+"Muốn ghét thế giới, hãy đọc tin tức
+
+Muốn yêu thế giới, hãy đi đến tận cùng"
