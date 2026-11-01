@@ -90,8 +90,8 @@ collections:
         required: false
         fields:
           - { name: src, label: Ảnh, widget: image, i18n: duplicate }
-          - { name: alt, label: Mô tả ảnh, widget: string, i18n: true }
-          - { name: caption, label: Chú thích, widget: string, required: false, i18n: true }
+          - { name: caption, label: Chú thích (hiện dưới ảnh), widget: string, required: false, hint: "Để trống = dùng phần mô tả ảnh bên dưới", i18n: true }
+          - { name: alt, label: Mô tả ảnh (cho người khiếm thị và Google), widget: string, hint: "Tả những gì có trong ảnh. Không hiện trên trang, trừ khi bỏ trống chú thích", i18n: true }
         i18n: true
       - { name: youtube, label: Link video YouTube, widget: string, required: false, i18n: duplicate }
       - { name: tags, label: Thẻ, widget: list, required: false, i18n: true }

@@ -52,7 +52,12 @@ export function PhotoGallery({ photos, variant = "grid", labels }: PhotoGalleryP
           <li key={p.full} style={{ "--i": i } as React.CSSProperties}>
             <button type="button" onClick={() => setIndex(i)} aria-label={`${labels.open}: ${p.alt}`}>
               <img src={p.thumb} alt={p.alt} width={p.width} height={p.height} loading="lazy" decoding="async" />
-              {variant === "polaroid" && p.caption && <span className="photo-gallery__caption">{p.caption}</span>}
+              {/* Chú thích trùng mô tả ảnh (alt) thì ẩn với trình đọc màn hình để không đọc lặp hai lần */}
+              {variant === "polaroid" && p.caption && (
+                <span className="photo-gallery__caption" aria-hidden={p.caption === p.alt || undefined}>
+                  {p.caption}
+                </span>
+              )}
             </button>
           </li>
         ))}
@@ -75,7 +80,7 @@ export function PhotoGallery({ photos, variant = "grid", labels }: PhotoGalleryP
               />
               <div className="flex items-center gap-3">
                 <div className="flex min-w-0 flex-1 flex-col">
-                  <DialogTitle className="truncate">{current.caption ?? current.alt}</DialogTitle>
+                  <DialogTitle className="truncate">{current.caption || current.alt}</DialogTitle>
                   <DialogDescription className="mono">
                     {String(index! + 1).padStart(2, "0")} / {String(photos.length).padStart(2, "0")}
                     {current.href && (

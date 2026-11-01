@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
-import createGlobe from "cobe"
 
 import { cn } from "@/lib/utils"
+import { createGlobe, toVec, GLOBE_R, type Vec3 } from "@/scripts/globe"
 
 export interface GlobePoint {
   id: string
@@ -20,162 +20,185 @@ interface MissionsGlobeProps {
   labels: { label: string; hint: string }
 }
 
-const SIGNAL: [number, number, number] = [1, 0.416, 0.239]
-
-/** Toạ độ → góc quay của cobe (phi: kinh độ, theta: vĩ độ) */
-const toAngles = (lat: number, lng: number): [number, number] => [
-  Math.PI - ((lng * Math.PI) / 180 - Math.PI / 2),
-  (lat * Math.PI) / 180,
-]
+const toRad = (deg: number) => (deg * Math.PI) / 180
+const clampLat = (lat: number) => Math.max(-0.9, Math.min(0.9, lat))
 /** Quãng xoay ngắn nhất giữa hai góc */
 const shortest = (from: number, to: number) => {
   const d = (to - from) % (2 * Math.PI)
   return from + (d > Math.PI ? d - 2 * Math.PI : d < -Math.PI ? d + 2 * Math.PI : d)
 }
 
-const palette = () =>
-  document.documentElement.classList.contains("dark")
-    ? { dark: 1, baseColor: [0.22, 0.27, 0.48] as [number, number, number], glowColor: [0.15, 0.19, 0.38] as [number, number, number], mapBrightness: 5 }
-    : { dark: 0, baseColor: [0.97, 0.94, 0.87] as [number, number, number], glowColor: [0.93, 0.88, 0.79] as [number, number, number], mapBrightness: 6 }
+/** Đường bay: các điểm trên cung lớn giữa a và b, nhô lên khỏi mặt đất ở giữa (dài thì nhô cao hơn) */
+function arcPoints(a: Vec3, b: Vec3, steps = 40): [Vec3, number][] {
+  const dot = Math.max(-1, Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2]))
+  const angle = Math.acos(dot)
+  if (angle < 1e-4) return []
+  const lift = 0.06 + 0.22 * Math.min(1, angle / 1.6)
+  return Array.from({ length: steps + 1 }, (_, i) => {
+    const t = i / steps
+    const s1 = Math.sin((1 - t) * angle) / Math.sin(angle)
+    const s2 = Math.sin(t * angle) / Math.sin(angle)
+    const v: Vec3 = [a[0] * s1 + b[0] * s2, a[1] * s1 + b[1] * s2, a[2] * s1 + b[2] * s2]
+    return [v, 1 + lift * Math.sin(Math.PI * t)]
+  })
+}
 
 /**
- * Quả địa cầu các chuyến đi (cobe, ~5KB WebGL).
- * Đường bay nối các chuyến theo thứ tự thời gian. Rê chuột vào một chuyến → địa cầu xoay tới đó.
- * Mỗi chuyến có một ghim nổi trên địa cầu: bấm vào để mở trang chuyến đi. Ghim bám theo điểm neo
- * cobe tạo cho từng marker (div có left/top theo %), ẩn khi điểm đó quay ra sau địa cầu.
+ * Quả địa cầu các chuyến đi: Trái Đất thật (ảnh vệ tinh NASA, src/scripts/globe.ts), tự xoay chậm, kéo để xoay.
+ * Đường bay nối các chuyến theo thứ tự thời gian. Rê chuột vào một chuyến trong danh sách → địa cầu xoay tới đó.
+ * Mỗi chuyến có một ghim nổi: bấm để mở trang chuyến đi; ghim mờ dần khi điểm quay ra sau địa cầu.
  */
 export function MissionsGlobe({ points, compact = false, labels }: MissionsGlobeProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const arcRef = useRef<HTMLCanvasElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
   const pinRefs = useRef<(HTMLAnchorElement | null)[]>([])
   const target = useRef<[number, number] | null>(null)
   const [ready, setReady] = useState(false)
   const [active, setActive] = useState<string | null>(null)
 
-  const chronological = [...points].sort((a, b) => a.date.localeCompare(b.date))
   const listed = compact ? points.slice(0, 4) : points
 
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas) return
-    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches
-    const dpr = Math.min(2, window.devicePixelRatio || 1)
-    const start = points[0] ? toAngles(points[0].lat, points[0].lng) : [0, 0.3]
-    let phi = start[0]
-    let theta = Math.max(-0.6, Math.min(0.6, start[1]))
-    let size = canvas.offsetWidth
-
-    const globe = createGlobe(canvas, {
-      devicePixelRatio: dpr,
-      width: size * dpr,
-      height: size * dpr,
-      phi,
-      theta,
-      diffuse: 1.2,
-      mapSamples: 16000,
-      markerColor: SIGNAL,
-      arcColor: SIGNAL,
-      arcWidth: 0.6,
-      arcHeight: 0.25,
-      markerElevation: 0.02,
-      markers: points.map((p) => ({ location: [p.lat, p.lng] as [number, number], size: 0.07, id: p.id })),
-      arcs: chronological.slice(1).map((p, i) => ({
-        from: [chronological[i].lat, chronological[i].lng] as [number, number],
-        to: [p.lat, p.lng] as [number, number],
-      })),
-      ...palette(),
-    })
-
-    // Kéo để xoay
-    let dragX: number | null = null
-    const onDown = (e: PointerEvent) => {
-      dragX = e.clientX
-      target.current = null
-      canvas.setPointerCapture(e.pointerId)
-    }
-    const onMove = (e: PointerEvent) => {
-      if (dragX === null) return
-      phi += (e.clientX - dragX) / 180
-      dragX = e.clientX
-    }
-    const onUp = () => (dragX = null)
-    canvas.addEventListener("pointerdown", onDown)
-    canvas.addEventListener("pointermove", onMove)
-    canvas.addEventListener("pointerup", onUp)
-    canvas.addEventListener("pointercancel", onUp)
-
-    // Rê chuột lên địa cầu → ngừng tự quay để ghim đứng yên, dễ bấm
+    const arcCanvas = arcRef.current
     const stage = stageRef.current
-    let hovering = false
-    const onEnter = (e: PointerEvent) => (hovering = e.pointerType === "mouse")
-    const onLeave = () => (hovering = false)
-    stage?.addEventListener("pointerenter", onEnter)
-    stage?.addEventListener("pointerleave", onLeave)
+    if (!canvas || !arcCanvas || !stage) return
+    let disposed = false
+    let cleanup = () => {}
 
-    // Ghim đi theo điểm neo của cobe (tạo theo đúng thứ tự markers)
-    let anchors: HTMLElement[] = []
-    const syncPins = () => {
-      // cobe bọc canvas trong một div và gắn điểm neo vào đó (cùng kích thước với khung địa cầu)
-      if (anchors.length < points.length) anchors = Array.from(canvas.parentElement?.querySelectorAll<HTMLElement>(":scope > div") ?? [])
-      pinRefs.current.forEach((pin, i) => {
-        const a = anchors[i]
-        if (!pin || !a) return
-        pin.style.left = a.style.left
-        pin.style.top = a.style.top
-      })
-    }
+    createGlobe(canvas).then((globe) => {
+      if (!globe || disposed) return globe?.destroy()
+      const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches
+      const isDark = () => document.documentElement.classList.contains("dark")
+      const vecs = points.map((p) => toVec(p.lat, p.lng))
+      const chronological = points.map((p, i) => ({ p, v: vecs[i] })).sort((a, b) => a.p.date.localeCompare(b.p.date))
+      const arcs = chronological.slice(1).map((c, i) => arcPoints(chronological[i].v, c.v))
+      const ctx = arcCanvas.getContext("2d")
+      const signal = getComputedStyle(stage).getPropertyValue("--primary").trim() || "#ff6a3d"
 
-    // Vòng lặp vẽ — chỉ chạy khi địa cầu đang trong màn hình
-    let raf = 0
-    let visible = true
-    const loop = () => {
-      if (target.current) {
-        phi += (shortest(phi, target.current[0]) - phi) * 0.08
-        theta += (target.current[1] - theta) * 0.08
-      } else if (dragX === null && !hovering && !reduce) {
-        phi += 0.0025
+      // Bắt đầu nhìn vào chuyến gần nhất, hơi nghiêng để thấy cả bán cầu Bắc
+      let lon = points[0] ? toRad(points[0].lng) : toRad(105)
+      let lat = points[0] ? clampLat(toRad(points[0].lat) * 0.7) : 0.3
+      let night = isDark() ? 1 : 0
+
+      // Kéo để xoay (chuột: cả ngang và dọc; cảm ứng: chỉ ngang, để vẫn cuộn trang được)
+      let drag: { x: number; y: number; mouse: boolean } | null = null
+      const onDown = (e: PointerEvent) => {
+        drag = { x: e.clientX, y: e.clientY, mouse: e.pointerType === "mouse" }
+        target.current = null
+        canvas.setPointerCapture(e.pointerId)
       }
-      globe.update({ phi, theta })
-      syncPins()
-      if (visible) raf = requestAnimationFrame(loop)
-    }
-    raf = requestAnimationFrame(loop)
-    const io = new IntersectionObserver(([entry]) => {
-      const was = visible
-      visible = entry.isIntersecting
-      if (visible && !was) raf = requestAnimationFrame(loop)
+      const onMove = (e: PointerEvent) => {
+        if (!drag) return
+        const perPx = 2 / (canvas.clientWidth * GLOBE_R)
+        lon -= (e.clientX - drag.x) * perPx
+        if (drag.mouse) lat = clampLat(lat + (e.clientY - drag.y) * perPx)
+        drag.x = e.clientX
+        drag.y = e.clientY
+      }
+      const onUp = () => (drag = null)
+      canvas.addEventListener("pointerdown", onDown)
+      canvas.addEventListener("pointermove", onMove)
+      canvas.addEventListener("pointerup", onUp)
+      canvas.addEventListener("pointercancel", onUp)
+
+      // Rê chuột lên địa cầu → ngừng tự quay để ghim đứng yên, dễ bấm
+      let hovering = false
+      const onEnter = (e: PointerEvent) => (hovering = e.pointerType === "mouse")
+      const onLeave = () => (hovering = false)
+      stage.addEventListener("pointerenter", onEnter)
+      stage.addEventListener("pointerleave", onLeave)
+
+      const drawArcs = (time: number) => {
+        if (!ctx) return
+        const dpr = Math.min(2, window.devicePixelRatio || 1)
+        const w = arcCanvas.clientWidth
+        if (arcCanvas.width !== Math.round(w * dpr)) arcCanvas.width = arcCanvas.height = Math.round(w * dpr)
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+        ctx.clearRect(0, 0, w, w)
+        ctx.strokeStyle = signal
+        ctx.lineWidth = 1.6
+        ctx.lineCap = "round"
+        ctx.setLineDash([5, 6])
+        ctx.lineDashOffset = reduce ? 0 : -time * 0.02
+        for (const arc of arcs) {
+          ctx.beginPath()
+          let pen = false
+          for (const [v, h] of arc) {
+            const s = globe.project(v, h)
+            // Thấy được khi ở mặt trước, hoặc đã nhô ra ngoài viền quả cầu
+            if (s.z > 0 || s.r > 1) {
+              if (pen) ctx.lineTo(s.x * w, s.y * w)
+              else ctx.moveTo(s.x * w, s.y * w)
+              pen = true
+            } else pen = false
+          }
+          ctx.stroke()
+        }
+      }
+
+      const syncPins = () => {
+        pinRefs.current.forEach((pin, i) => {
+          if (!pin) return
+          const s = globe.project(vecs[i])
+          pin.style.left = `${s.x * 100}%`
+          pin.style.top = `${s.y * 100}%`
+          const v = Math.max(0, Math.min(1, s.z / 0.18))
+          pin.style.setProperty("--v", v.toFixed(3))
+          pin.style.visibility = v > 0.02 ? "" : "hidden"
+        })
+      }
+
+      // Vòng lặp vẽ — chỉ chạy khi địa cầu đang trong màn hình
+      let raf = 0
+      let visible = true
+      const loop = (time: number) => {
+        if (target.current) {
+          const k = reduce ? 1 : 0.08
+          lon += (shortest(lon, target.current[0]) - lon) * k
+          lat += (target.current[1] - lat) * k
+        } else if (!drag && !hovering && !reduce) {
+          lon -= 0.0022 // Trái Đất quay về phía đông: bề mặt trôi sang phải
+        }
+        night += ((isDark() ? 1 : 0) - night) * (reduce ? 1 : 0.08)
+        globe.draw({ lon, lat, night })
+        drawArcs(time)
+        syncPins()
+        if (visible) raf = requestAnimationFrame(loop)
+      }
+      raf = requestAnimationFrame(loop)
+      const io = new IntersectionObserver(([entry]) => {
+        const was = visible
+        visible = entry.isIntersecting
+        if (visible && !was) raf = requestAnimationFrame(loop)
+      })
+      io.observe(canvas)
+      setReady(true)
+
+      cleanup = () => {
+        cancelAnimationFrame(raf)
+        io.disconnect()
+        canvas.removeEventListener("pointerdown", onDown)
+        canvas.removeEventListener("pointermove", onMove)
+        canvas.removeEventListener("pointerup", onUp)
+        canvas.removeEventListener("pointercancel", onUp)
+        stage.removeEventListener("pointerenter", onEnter)
+        stage.removeEventListener("pointerleave", onLeave)
+        globe.destroy()
+      }
     })
-    io.observe(canvas)
 
-    const ro = new ResizeObserver(() => {
-      size = canvas.offsetWidth
-      globe.update({ width: size * dpr, height: size * dpr })
-    })
-    ro.observe(canvas)
-
-    // Đổi màu theo chế độ sáng/tối
-    const mo = new MutationObserver(() => globe.update(palette()))
-    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] })
-
-    const t = window.setTimeout(() => setReady(true), 80)
     return () => {
-      cancelAnimationFrame(raf)
-      window.clearTimeout(t)
-      stage?.removeEventListener("pointerenter", onEnter)
-      stage?.removeEventListener("pointerleave", onLeave)
-      io.disconnect()
-      ro.disconnect()
-      mo.disconnect()
-      globe.destroy()
+      disposed = true
+      cleanup()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const focus = (p: GlobePoint | null) => {
     setActive(p?.id ?? null)
-    if (!p) return (target.current = null)
-    const [ph, th] = toAngles(p.lat, p.lng)
-    target.current = [ph, Math.max(-0.9, Math.min(0.9, th))]
+    target.current = p ? [toRad(p.lng), clampLat(toRad(p.lat))] : null
   }
 
   return (
@@ -187,6 +210,7 @@ export function MissionsGlobe({ points, compact = false, labels }: MissionsGlobe
           aria-label={labels.label}
           role="img"
         />
+        <canvas ref={arcRef} className={cn("missions-globe__arcs", ready && "is-ready")} aria-hidden="true" />
         {/* Trùng với danh sách bên cạnh nên ẩn khỏi bàn phím/trình đọc màn hình */}
         {points.map((p, i) => (
           <a
@@ -196,7 +220,6 @@ export function MissionsGlobe({ points, compact = false, labels }: MissionsGlobe
             }}
             href={`/journeys/${p.id}`}
             className={cn("missions-globe__pin", ready && "is-ready")}
-            style={{ "--v": `var(--cobe-visible-${p.id}, 0)` } as React.CSSProperties}
             data-active={active === p.id || undefined}
             tabIndex={-1}
             aria-hidden="true"

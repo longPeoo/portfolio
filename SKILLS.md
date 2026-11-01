@@ -102,7 +102,7 @@ Thang cỡ chữ: `--fs-mono`, `--fs-sm`, `--fs-base`, `--fs-lg`, `--fs-h3`, `--
 | Thẻ chuyến đi | rê chuột: con dấu hộ chiếu đóng "cộp"; trang chi tiết: con dấu đóng một lần khi mở |
 | Ảnh polaroid | dán băng keo, xoay nhẹ; rê chuột thì thẳng lại và nhấc lên. Lưới đọc trái → phải: 2 cột (< 480px) → 3 → 4 (≥ 768px) → 5 (≥ 1024px). Trang chủ tối đa 2 dòng đầy |
 | Vlog (`/vlogs`, đường dẫn cũ `/videos` chuyển hướng 301) | khung CRT có vạch quét, nhấp nháy khi rê chuột; nút play nảy |
-| Địa cầu Missions | tự xoay chậm, kéo để xoay, rê vào tên chuyến đi → xoay tới đó; đường bay nối các chuyến theo thời gian; **ghim bấm được** trên từng điểm → mở trang chuyến đi (ẩn khi quay ra sau); rê chuột lên địa cầu thì ngừng quay |
+| Địa cầu Missions | Trái Đất thật (WebGL, ảnh NASA dùng chung với hero: `src/scripts/globe.ts`), sáng: chiếu chính diện; tối: phía khuất có đèn thành phố. Tự xoay chậm (dừng khi giảm chuyển động), kéo để xoay (chuột: ngang + dọc, cảm ứng: chỉ ngang), rê vào tên chuyến đi → xoay tới đó; đường bay nối các chuyến theo thời gian; **ghim bấm được** trên từng điểm → mở trang chuyến đi (ẩn khi quay ra sau); rê chuột lên địa cầu thì ngừng quay |
 | Trứng phục sinh | gõ `launch` ở bất kỳ đâu → mưa sao băng |
 
 Quy tắc kỹ thuật:
@@ -215,7 +215,7 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 | Dự án kỹ thuật | `src/content/projects/<ten-khong-dau>/index.md` + ảnh cùng thư mục |
 | Chuyến đi (kèm toạ độ cho địa cầu, album, video) | `src/content/journeys/<ten-khong-dau>/index.md` + ảnh cùng thư mục |
 | Trang Về tôi (timeline, kỹ năng, CV) | `src/content/pages/about.md` |
-| Kênh YouTube, video nổi bật, ghim, ẩn, nhóm | `src/data/videos.yaml` |
+| Kênh YouTube, video nổi bật, ghim, ẩn, nhóm, bật/tắt Shorts | `src/data/videos.yaml` (Shorts nhận biết qua playlist tự động `UUSH…` của kênh) |
 | Màu, font, khoảng cách | `src/styles/global.css` |
 
 - Schema của nội dung nằm ở `src/content.config.ts`. Thêm trường thì cập nhật cả schema lẫn `public/admin/config.yml`.
@@ -251,7 +251,7 @@ src/
 ├── layouts/BaseLayout.astro  ← SEO, JSON-LD, theme, preloader, altimeter, header/footer
 ├── lib/             ← site.ts, i18n.ts, content.ts, photos.ts, youtube.ts, utils.ts (cn, cleanPath)
 ├── pages/           ← mỗi file = một URL ([slug].astro = trang chi tiết)
-├── scripts/         ← motion.ts (chuyển động toàn trang), earth.ts (Trái Đất WebGL ở hero), cosmos.ts (nền vũ trụ ở Về tôi)
+├── scripts/         ← motion.ts (chuyển động toàn trang), earth.ts (Trái Đất WebGL ở hero), globe.ts (địa cầu chuyến đi), cosmos.ts (nền vũ trụ ở Về tôi)
 └── styles/global.css
 public/admin/        ← Sveltia CMS
 .github/workflows/refresh.yml ← build lại mỗi 6 giờ (video mới)

@@ -56,7 +56,7 @@ async function api<T>(path: string, params: Record<string, string>): Promise<T> 
   return res.json() as Promise<T>;
 }
 
-/** ISO 8601 (PT1M5S) → giây; dùng để nhận diện Shorts (≤ 3 phút và có #shorts hoặc dọc) */
+/** ISO 8601 (PT1M5S) → giây; dùng để đoán Shorts khi không đọc được playlist Shorts của kênh */
 const seconds = (d = '') => {
   const m = d.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
   return m ? Number(m[1] ?? 0) * 3600 + Number(m[2] ?? 0) * 60 + Number(m[3] ?? 0) : 0;
@@ -69,16 +69,26 @@ async function fromApi(): Promise<Video[]> {
     ...(config.channelId ? { id: config.channelId } : handle ? { forHandle: handle } : {}),
   });
   const uploads = ch.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
-  if (!uploads) throw new Error('Không tìm thấy kênh — kiểm tra channelUrl/channelId trong videos.yaml');
+  const channelId: string | undefined = ch.items?.[0]?.id;
+  if (!uploads || !channelId) throw new Error('Không tìm thấy kênh — kiểm tra channelUrl/channelId trong videos.yaml');
 
-  const list = await api<any>('playlistItems', { part: 'contentDetails', playlistId: uploads, maxResults: '30' });
+  // API không có cờ "đây là Shorts". Mỗi kênh có playlist tự động chỉ chứa Shorts: "UUSH" + phần sau "UC" của channel ID.
+  // Không đọc được (kênh chưa có Shorts, YouTube đổi quy ước) → đoán theo thời lượng.
+  const [list, shortsList] = await Promise.all([
+    api<any>('playlistItems', { part: 'contentDetails', playlistId: uploads, maxResults: '30' }),
+    api<any>('playlistItems', { part: 'contentDetails', playlistId: `UUSH${channelId.slice(2)}`, maxResults: '50' }).catch(() => null),
+  ]);
+  const shorts = new Set<string>((shortsList?.items ?? []).map((i: any) => i.contentDetails.videoId));
   const ids: string[] = list.items.map((i: any) => i.contentDetails.videoId);
   if (!ids.length) return [];
   const details = await api<any>('videos', { part: 'snippet,statistics,contentDetails', id: ids.join(',') });
 
   return details.items.map((v: any): Video => {
     const title: string = v.snippet.title;
-    const isShort = seconds(v.contentDetails.duration) <= 180 && /#shorts?/i.test(`${title} ${v.snippet.description}`);
+    const length = seconds(v.contentDetails.duration);
+    const isShort = shortsList
+      ? shorts.has(v.id)
+      : length <= 60 || (length <= 180 && /#shorts?/i.test(`${title} ${v.snippet.description}`));
     return {
       id: v.id,
       title,

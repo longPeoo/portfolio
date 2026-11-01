@@ -18,12 +18,16 @@ export async function getPage(id: string): Promise<CollectionEntry<'pages'> | un
   return page && visible(page) ? page : undefined;
 }
 
-/** Tất cả ảnh của mọi chuyến đi (ảnh bìa + album) — dùng cho trang Ảnh */
+/**
+ * Tất cả ảnh của mọi chuyến đi (ảnh bìa + album) — dùng cho trang Ảnh.
+ * Chú thích hiện dưới ảnh: ô "Chú thích" trong CMS; để trống thì dùng mô tả ảnh (ảnh bìa: tên chuyến đi).
+ * CMS lưu ô trống thành chuỗi rỗng '' nên phải dùng || (không dùng ??).
+ */
 export async function getPhotos() {
   const journeys = await getJourneys();
   return journeys.flatMap((j) => [
     { src: j.data.cover, alt: j.data.coverAlt, caption: j.data.title, journey: j },
-    ...j.data.gallery.map((g) => ({ src: g.src, alt: g.alt, caption: g.caption ?? j.data.title, journey: j })),
+    ...j.data.gallery.map((g) => ({ src: g.src, alt: g.alt, caption: g.caption?.trim() || g.alt || j.data.title, journey: j })),
   ]);
 }
 

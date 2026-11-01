@@ -435,8 +435,11 @@ body::before {
   }
   .missions-globe__canvas:active { cursor: grabbing; }
   .missions-globe__canvas.is-ready { opacity: 1; }
+  /* Đường bay vẽ trên lớp canvas 2D riêng, không chặn thao tác kéo */
+  .missions-globe__arcs { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity 1s var(--ease-out); }
+  .missions-globe__arcs.is-ready { opacity: 1; }
 
-  /* Ghim bấm được trên địa cầu: --v = 1 khi điểm ở mặt trước, 0 khi quay ra sau (cobe đặt biến) */
+  /* Ghim bấm được trên địa cầu: --v = 1 khi điểm ở mặt trước, 0 khi quay ra sau (MissionsGlobe.tsx đặt biến) */
   .missions-globe__pin {
     position: absolute;
     left: 50%;
@@ -462,7 +465,7 @@ body::before {
     opacity: 0;
     transition: scale var(--dur) var(--ease-spring), opacity var(--dur-fast), background-color var(--dur-fast), color var(--dur-fast);
   }
-  .missions-globe__pin.is-ready { scale: var(--v); opacity: var(--v); }
+  .missions-globe__pin.is-ready { scale: var(--v, 0); opacity: var(--v, 0); }
   .missions-globe__pin::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--primary); }
   /* chân ghim chỉ xuống đúng điểm trên địa cầu */
   .missions-globe__pin::after {
