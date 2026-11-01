@@ -19,7 +19,7 @@ timeline:
     text: Và ý trời đã sắp đặt, nghề chọn người thì sau gần 2 năm, cậu nhóc 23 tuổi năm ấy ẵm cho mình 2 bằng Thạc sĩ về ngành Công nghệ và Khoa học Vũ trụ, một bằng của Việt Nam và một bằng của Pháp. Cũng là lúc mình quyết định theo con đường Quan sát Trái Đất, để có thể ứng dụng nhiều nhất cho Tổ quốc, cho Việt Nam thân iu và hơn hết là cho cả nhân loại.
   - year: '2023'
     title: Ngọn lửa nhiệt huyết
-    text: Sau khi sang Pháp nửa năm, mình làm về môi trường Biển, mình quyết định về Việt Nam thay vì nhận làm NCS Tiến sĩ ở bên Pháp. Và rồi mình cũng tìm được cho mình một bến đỗ ở tập đoàn Vegastar, nay mình ở bên công ty con tên Vegacosmos chuyên làm về Địa không gian, Công nghệ Vệ tinh và Quan sát Trái Đất. Cứ gọi mình tạm là Kỹ sư Công nghệ Vũ trụ đi nghe cho oách!
+    text: Sau khi sang Pháp nửa năm, mình làm về môi trường Biển, mình quyết định về Việt Nam thay vì nhận làm NCS Tiến sĩ ở bên Pháp. Và rồi mình cũng tìm được cho mình một bến đỗ ở tập đoàn Vegastar, nay mình ở bên công ty con tên Vegacosmos chuyên làm về Địa không gian, Công nghệ Vệ tinh và Quan sát Trái Đất. Cứ gọi là Kỹ sư Công nghệ Vũ trụ đi nghe cho oách!
   - year: '2025'
     title: Con đường theo đuổi tri thức
     text: Đến năm này là mình đã quyết định mình sẽ sống chết với ngành rồi kkk nên mình quyết định nâng cao cái học vị của mình. Nên là giờ các bạn đang thấy một NCS Tiến sĩ đang loay hoay với con đường mình đã chọn. Mình chọn theo Địa lý, Tài nguyên và Môi trường để có thể ứng dụng Công nghệ Vũ trụ vào với Địa lý, để theo dõi, giám sát, bảo vệ và gìn giữ Tài nguyên cũng như Môi trường của Tổ quốc mến thương.
