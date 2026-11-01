@@ -1,5 +1,5 @@
 ---
-/** Khung tạm cho các trang chưa xây xong. */
+/** Khung tạm cho các trang chưa xây xong: Orbi trên vòng quỹ đạo, chữ căn giữa bên dưới. Slot = nút phụ (vd. tải CV). */
 import { ArrowUpRightIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
@@ -18,48 +18,47 @@ const { code, title, intro, phase = t.common.updating } = Astro.props;
 ---
 
 <section class="soon container">
-  <div class="soon__text">
-    <p class="mono muted">{code}</p>
-    <h1>{title}</h1>
-    <p class="soon__intro">{intro}</p>
-    <p class="soon__eta">
-      <Badge variant="signal"><i class="soon__dot" aria-hidden="true"></i>{t.common.assembling} · {phase}</Badge>
-    </p>
+  <div class="soon__art" aria-hidden="true">
+    <div class="soon__ring"></div>
+    <Orbi size={110} float />
+  </div>
+  <p class="mono muted">{code}</p>
+  <h1>{title}</h1>
+  <p class="soon__intro">{intro}</p>
+  <p class="soon__eta">
+    <Badge variant="signal"><i class="soon__dot" aria-hidden="true"></i>{t.common.assembling} · {phase}</Badge>
+  </p>
+  <div class="soon__actions">
+    <slot />
     <a href="/" class={cn(buttonVariants({ variant: 'launch-outline', size: 'pill' }))}>
       {t.common.backHome} <ArrowUpRightIcon data-icon="inline-end" />
     </a>
-  </div>
-  <div class="soon__art" aria-hidden="true">
-    <div class="soon__ring"></div>
-    <Orbi size={150} float />
   </div>
 </section>
 
 <style>
   .soon {
     min-height: 80svh;
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: var(--space-12);
-    padding-top: calc(var(--header-h) + var(--space-12));
+    justify-content: center;
+    text-align: center;
+    padding-top: calc(var(--header-h) + var(--space-8));
   }
-  h1 { font-size: var(--fs-h2); margin-block: var(--space-3) var(--space-6); }
-  .soon__intro { max-width: 46ch; font-size: var(--fs-lg); color: var(--fg-muted); }
+  h1 { font-size: var(--fs-h2); margin-block: var(--space-3) var(--space-6); max-width: 24ch; text-wrap: balance; }
+  .soon__intro { max-width: 60ch; font-size: var(--fs-lg); color: var(--fg-muted); text-wrap: balance; }
   .soon__eta { margin-block: var(--space-8); }
   .soon__dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: blink 1.2s steps(2) infinite; }
-  .soon__art { position: relative; display: grid; place-items: center; aspect-ratio: 1; }
+  .soon__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-4); }
+  .soon__art { position: relative; display: grid; place-items: center; width: clamp(150px, 22vh, 220px); aspect-ratio: 1; margin-bottom: var(--space-4); }
   .soon__ring {
     position: absolute;
-    inset: 12%;
+    inset: 0;
     border: 1.5px dashed var(--line);
     border-radius: 50%;
     animation: spin 40s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
   @keyframes blink { 50% { opacity: 0.2; } }
-  @media (max-width: 760px) {
-    .soon { grid-template-columns: 1fr; }
-    .soon__art { width: 60%; justify-self: center; grid-row: 1; }
-  }
 </style>

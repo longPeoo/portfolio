@@ -167,7 +167,6 @@ collections:
               - { name: level, label: Mức độ (0–100), widget: number, value_type: int, min: 0, max: 100, i18n: true }
               - { name: items, label: Chi tiết, widget: list, i18n: true }
             i18n: true
-          - { name: cv, label: File CV, widget: file, required: false, i18n: duplicate }
           - { name: draft, label: Bản nháp (chưa đăng), widget: boolean, default: true, i18n: duplicate }
           - { name: body, label: Câu chuyện, widget: markdown, i18n: true }
         i18n: true
@@ -197,6 +196,7 @@ collections:
               - { name: lon, label: Kinh độ hiển thị, widget: string, i18n: duplicate }
             i18n: true
           - { name: email, label: Email, widget: string, i18n: duplicate }
+          - { name: cv, label: File CV (nút tải ở trang Vũ trụ), widget: file, required: false, i18n: duplicate }
           - name: nav
             label: Menu
             widget: list
@@ -493,10 +493,6 @@ collections:
                 label: Mô tả khi chưa có nội dung
                 widget: text
                 i18n: true
-              - name: cv
-                label: Nút tải CV
-                widget: string
-                i18n: true
               - name: trajectoryCode
                 label: Nhãn mục các mốc
                 widget: string
@@ -577,6 +573,10 @@ collections:
                 i18n: true
               - name: back
                 label: Nút quay lại
+                widget: string
+                i18n: true
+              - name: cv
+                label: Nút tải CV
                 widget: string
                 i18n: true
               - name: payload

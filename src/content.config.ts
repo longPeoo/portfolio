@@ -66,7 +66,6 @@ const pages = defineCollection({
     subsystems: z
       .array(z.object({ code: z.string(), name: z.string(), level: z.number().min(0).max(100), items: z.array(z.string()) }))
       .default([]),
-    cv: z.string().optional(),
     draft: z.boolean().default(false),
   }),
 });

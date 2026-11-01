@@ -34,10 +34,17 @@ import { t, fmt } from '@/lib/i18n';
   /* Icon là component React → cần :global để style scoped áp vào */
   .contact__mail :global(.contact__arrow) { width: 0.8em; height: 0.8em; transition: transform var(--dur) var(--ease-spring); }
   .contact__mail:hover :global(.contact__arrow) { transform: translate(3px, -3px); }
-  .contact { padding-top: calc(var(--header-h) + var(--space-16)); }
-  h1 { font-size: var(--fs-h2); margin-block: var(--space-3) var(--space-6); max-width: 18ch; }
+  /* Căn giữa như các trang khác (trừ Về tôi) */
+  .contact {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-top: calc(var(--header-h) + var(--space-16));
+  }
+  h1 { font-size: var(--fs-h2); margin-block: var(--space-3) var(--space-6); max-width: 24ch; text-wrap: balance; }
   h1 em { color: var(--fg-muted); font-weight: 400; }
-  .contact__intro { max-width: 52ch; font-size: var(--fs-lg); color: var(--fg-muted); }
+  .contact__intro { max-width: 68ch; font-size: var(--fs-lg); color: var(--fg-muted); text-wrap: balance; }
 
   .contact__mail {
     display: inline-flex;
@@ -67,5 +74,5 @@ import { t, fmt } from '@/lib/i18n';
     to { opacity: 0; transform: scale(2.2); }
   }
 
-  .contact__socials { margin-top: var(--space-16); }
+  .contact__socials { width: min(100%, 720px); margin-top: var(--space-16); text-align: start; }
 </style>

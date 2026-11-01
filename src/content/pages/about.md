@@ -96,7 +96,6 @@ subsystems:
       - Đề xuất giải pháp kỹ thuật
       - Lựa chọn Tech Stack
       - Xây dựng PoC và giải pháp triển khai thực tế
-cv: /uploads/LongNguyen.pdf
 draft: false
 ---
 

@@ -1,14 +1,18 @@
 ---
-/** Đầu trang chuẩn: nhãn telemetry MSN-xx, tiêu đề h1, đoạn mở đầu. */
+/**
+ * Đầu trang chuẩn: nhãn telemetry MSN-xx, tiêu đề h1, đoạn mở đầu.
+ * Mặc định căn giữa; trang Về tôi dùng align="start" (cột chữ bên trái, nền vũ trụ bên phải).
+ */
 interface Props {
   code: string;
   title: string;
   intro?: string;
+  align?: 'center' | 'start';
 }
-const { code, title, intro } = Astro.props;
+const { code, title, intro, align = 'center' } = Astro.props;
 ---
 
-<header class="phead container">
+<header class:list={['phead container', `phead--${align}`]}>
   <p class="mono muted">{code}</p>
   <h1>{title}</h1>
   {intro && <p class="phead__intro">{intro}</p>}
@@ -19,4 +23,9 @@ const { code, title, intro } = Astro.props;
   .phead { padding-top: calc(var(--header-h) + var(--space-16)); padding-bottom: var(--space-12); }
   h1 { font-size: var(--fs-h2); margin-block: var(--space-3) var(--space-6); max-width: 18ch; }
   .phead__intro { max-width: 52ch; font-size: var(--fs-lg); color: var(--fg-muted); }
+
+  /* Căn giữa: tiêu đề và mô tả trải rộng hơn, chia dòng đều (không để một từ lẻ loi ở dòng cuối) */
+  .phead--center { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .phead--center h1 { max-width: 24ch; text-wrap: balance; }
+  .phead--center .phead__intro { max-width: 68ch; text-wrap: balance; }
 </style>

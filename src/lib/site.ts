@@ -30,6 +30,8 @@ const schema = z.object({
     lon: z.string(),
   }),
   email: z.string(),
+  /** File CV (nút tải ở trang Vũ trụ); CMS lưu '' khi để trống */
+  cv: z.string().default(''),
   nav: z.array(z.object({ label: z.string(), href: z.string() })),
   socials: z.array(
     z.object({

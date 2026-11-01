@@ -70,7 +70,6 @@ about:
   code: MSN-01 · About
   title: About me
   intro: From a kid who kept looking up at the night sky to a space engineer, and why I still keep packing my backpack.
-  cv: Download CV
   trajectoryCode: Trajectory
   trajectoryTitle: Stage by stage
   skillsCode: Subsystems
@@ -91,6 +90,7 @@ space:
   title: Engineering
   intro: Projects, research and systems I've worked on in space technology.
   back: All projects
+  cv: Download CV
   payload: Payload
   role: Role
   time: Date

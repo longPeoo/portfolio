@@ -29,8 +29,8 @@ Dễ thương, năng động nhưng vẫn nghiêm túc.
   - Giao diện sáng: **Mặt Trời** góc trên phải (vẽ bằng shader: rìa tối dần, hạt sáng, vết đen, nhật hoa; SVG chỉ là bản dự phòng) chiếu sáng Trái Đất. Giao diện tối: nửa đêm có đèn thành phố, **Mặt Trăng** sáng quay quanh, bị che khi đi ra sau.
   - Hành tinh lưới SVG là bản dự phòng (trước khi ảnh tải xong, hoặc máy không có WebGL).
 - Bảng tiến độ (P1–P6) với trạng thái Xong / Đang làm / Chờ (danh sách sửa trong CMS → Chữ trên giao diện → Trang chủ).
-- Linh vật **Orbi** (vệ tinh tròn đeo máy ảnh): vui (header, hero), ngủ trên mặt trăng (footer), bối rối và trôi lơ lửng (404).
-- Footer: email lớn, menu chia 2 cột, Orbi ngủ trên mặt trăng, nút **tên lửa** lên đầu trang.
+- Linh vật **Orbi** (vệ tinh tròn đeo máy ảnh): vui (header, hero), ngủ trên Mặt Trăng / sạc pin cạnh Mặt Trời (footer), bối rối và trôi lơ lửng (404).
+- Footer: email lớn, menu 3 cột × 2 dòng, "bầu trời của Orbi" (tối: Mặt Trăng thật, ảnh NASA dùng chung với hero; sáng: Mặt Trời vẽ bằng CSS), nút **tên lửa** lên đầu trang. Ba khối căn giữa theo chiều dọc, cách đều vạch trên và vạch dưới.
 - Lớp hạt nhiễu (grain) nhẹ trên toàn trang.
 
 ---
@@ -70,6 +70,7 @@ Thang cỡ chữ: `--fs-mono`, `--fs-sm`, `--fs-base`, `--fs-lg`, `--fs-h3`, `--
 
 ### Bố cục
 
+- Đầu trang (`PageHeader`, `ComingSoon`, trang Liên hệ): **căn giữa**, tiêu đề tối đa 24ch (`text-wrap: balance`), mô tả tối đa 68ch. Riêng trang Về tôi căn trái (`align="start"`) vì nền vũ trụ nằm bên phải.
 - Khung nội dung: class `.container` (max 1320px, lề `--gutter` = 16–48px).
 - Header cố định cao `--header-h` (68px). Section đầu trang cần `padding-top` cộng thêm khoảng này.
 - Khoảng cách dọc giữa các section: `--section-y`.
@@ -89,8 +90,8 @@ Thang cỡ chữ: `--fs-mono`, `--fs-sm`, `--fs-base`, `--fs-lg`, `--fs-h3`, `--
 | Nút `launch` | nảy lò xo khi rê chuột, bóng đổ dài ra, mũi tên nhích chéo |
 | Nút mạng xã hội | nảy lên, nghiêng, đổi màu cam |
 | Liên hệ | sóng tín hiệu lan ra quanh Orbi khi rê chuột vào email |
-| Footer | tên lửa phụt lửa khi rê chuột, phóng vút lên khi bấm |
-| Trang chờ | vòng tròn đứt nét quay chậm, chip "Đang lắp ráp" nhấp nháy |
+| Footer | tên lửa phụt lửa khi rê chuột, phóng vút lên khi bấm. **Tối:** Mặt Trăng tự quay, Orbi ngủ đung đưa trên đỉnh, sao lấp lánh, sao băng; rê chuột → Orbi thức dậy nhảy lên. **Sáng:** Mặt Trời có vết đen trôi, nhật hoa xoay, hạt năng lượng bay vào tấm pin Orbi (pin sáng nhịp); rê chuột → Orbi nhào lộn. Đổi giao diện: Mặt Trời lặn, Mặt Trăng mọc, Orbi bay sang |
+| Trang chờ | Orbi trong vòng tròn đứt nét quay chậm ở trên, chữ căn giữa bên dưới, chip "Đang lắp ráp" nhấp nháy; nút phụ (vd. Tải CV) truyền qua slot |
 | **Màn đếm ngược** (P3) | T-3 → 1, Orbi cưỡi tên lửa cất cánh; chỉ lần đầu mỗi phiên, bấm/gõ phím để bỏ qua, tự ẩn sau 3 giây nếu script lỗi |
 | **Bảng lật chữ** (P3) | hero: các nghề trong `site.yaml > roles` lật kiểu bảng giờ bay (ẩn dưới 900px) |
 | **Đồng hồ độ cao** (P3) | thanh bên phải: cuộn trang = ALT 0 → 408 km (ẩn dưới 1180px; ẩn ở trang Về tôi vì đã có số đo của nền vũ trụ) |
@@ -209,12 +210,12 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 
 | Nội dung | File |
 |---|---|
-| Tên, nghề nghiệp, câu giới thiệu, vị trí, menu, mạng xã hội, email | `src/data/site.yaml` (kiểm tra bằng zod trong `src/lib/site.ts`) |
+| Tên, nghề nghiệp, câu giới thiệu, vị trí, menu, mạng xã hội, email, file CV (nút tải ở trang Vũ trụ) | `src/data/site.yaml` (kiểm tra bằng zod trong `src/lib/site.ts`) |
 | Chữ cố định trên giao diện (nhãn MSN-xx, tiêu đề mục, nút, bảng tiến độ) | `src/i18n/ui.yaml`, `src/i18n/ui.en.yaml` (zod trong `src/lib/i18n.ts`) |
 | Bản tiếng Anh của tên nghề, câu giới thiệu, menu | `src/data/site.en.yaml` (chỉ các trường cần dịch) |
 | Dự án kỹ thuật | `src/content/projects/<ten-khong-dau>/index.md` + ảnh cùng thư mục |
 | Chuyến đi (kèm toạ độ cho địa cầu, album, video) | `src/content/journeys/<ten-khong-dau>/index.md` + ảnh cùng thư mục |
-| Trang Về tôi (timeline, kỹ năng, CV) | `src/content/pages/about.md` |
+| Trang Về tôi (timeline, kỹ năng) | `src/content/pages/about.md` |
 | Kênh YouTube, video nổi bật, ghim, ẩn, nhóm, bật/tắt Shorts | `src/data/videos.yaml` (Shorts nhận biết qua playlist tự động `UUSH…` của kênh) |
 | Màu, font, khoảng cách | `src/styles/global.css` |
 

@@ -1,12 +1,9 @@
 ---
 import { render } from 'astro:content';
-import { DownloadIcon } from 'lucide-react';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ComingSoon from '@/components/sections/ComingSoon.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
 import CosmosBackdrop from '@/components/sections/CosmosBackdrop.astro';
-import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { getPage } from '@/lib/content';
 import { t } from '@/lib/i18n';
 
@@ -20,13 +17,7 @@ const Content = page ? (await render(page)).Content : undefined;
     <ComingSoon code={t.about.code} title={t.about.title} intro={fallbackIntro} />
   ) : (
     <>
-      <PageHeader code={t.about.code} title={page.data.title} intro={page.data.intro}>
-        {page.data.cv && (
-          <a href={page.data.cv} class={cn(buttonVariants({ variant: 'launch', size: 'pill' }), 'about__cv')} download>
-            {t.about.cv} <DownloadIcon data-icon="inline-end" />
-          </a>
-        )}
-      </PageHeader>
+      <PageHeader code={t.about.code} title={page.data.title} intro={page.data.intro} align="start" />
 
       <!-- Nền vũ trụ: cuộn hết câu chuyện + timeline (data-cosmos-track) = camera lùi từ Hà Nội ra Dải Ngân Hà -->
       <CosmosBackdrop />
@@ -88,7 +79,6 @@ const Content = page ? (await render(page)).Content : undefined;
 </BaseLayout>
 
 <style>
-  .about__cv { margin-top: var(--space-8); }
   /* Câu chuyện mở đầu: khối giữa trang, căn giữa */
   .about__story { max-width: 60ch; margin-inline: auto; margin-top: var(--space-12); text-align: center; text-wrap: pretty; }
   .about__section { margin-top: var(--section-y); }

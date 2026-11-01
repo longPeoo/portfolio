@@ -5,6 +5,8 @@ import { buttonVariants } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import Orbi from '@/components/brand/Orbi.astro';
+// Ảnh Mặt Trăng NASA dùng chung với hero (~11 KB), chỉ tải ở giao diện tối
+import moonUrl from '@/assets/earth/moon.webp?url';
 
 const year = new Date().getFullYear();
 ---
@@ -40,14 +42,18 @@ const year = new Date().getFullYear();
       </ul>
     </nav>
 
-    <div class="foot__moon" aria-hidden="true">
-      <svg class="moon" viewBox="0 0 200 90">
-        <path d="M10 90 Q100 -10 190 90 Z" />
-        <circle cx="60" cy="62" r="7" class="crater" />
-        <circle cx="128" cy="52" r="5" class="crater" />
-        <circle cx="150" cy="74" r="4" class="crater" />
-      </svg>
-      <Orbi size={78} mood="sleep" class="foot__orbi" />
+    <!--
+      Bầu trời nhỏ của Orbi. Sáng: Mặt Trời, Orbi bay cạnh sạc pin (hạt năng lượng bay vào tấm pin), rê chuột thì nhào lộn.
+      Tối: Mặt Trăng thật tự quay, Orbi ngủ đung đưa trên đỉnh, sao lấp lánh, sao băng; rê chuột thì Orbi thức dậy nhảy lên.
+    -->
+    <div class="sky" aria-hidden="true" style={`--moon-map: url(${moonUrl})`}>
+      <span class="sky__stars"></span>
+      <span class="sky__meteor"></span>
+      <span class="sun"><span class="sun__corona"></span><span class="sun__disc"><span class="sun__surface"></span></span></span>
+      <span class="moon"><span class="moon__map"></span></span>
+      <span class="sky__beam"><i></i><i></i><i></i></span>
+      <span class="sky__orbi sky__orbi--sleep"><Orbi size={72} mood="sleep" /></span>
+      <span class="sky__orbi sky__orbi--awake"><span class="sky__bob"><Orbi size={72} /></span></span>
     </div>
   </div>
 
@@ -69,16 +75,17 @@ const year = new Date().getFullYear();
 <style>
   .foot {
     margin-top: var(--section-y);
-    padding-top: var(--space-16);
     border-top: 1px solid var(--line);
     background: var(--bg-sunken);
     overflow: hidden;
   }
+  /* Ba khối căn giữa theo chiều dọc, cách đều vạch trên và vạch dưới */
   .foot__grid {
     display: grid;
-    grid-template-columns: 1.6fr 1fr 1fr;
-    gap: var(--space-12);
-    align-items: end;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: var(--space-8) var(--space-16);
+    align-items: center;
+    padding-block: var(--space-12);
   }
   .foot__mail {
     display: inline-block;
@@ -93,27 +100,216 @@ const year = new Date().getFullYear();
     overflow-wrap: break-word;
   }
   .foot__mail:hover { background-size: 100% 2px; }
-  .foot__socials { display: flex; gap: 6px; list-style: none; padding: 0; margin-top: var(--space-6); }
+  .foot__socials { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin-top: var(--space-6); }
 
-  /* Menu chia 2 cột (điền theo cột) cho cân với khối email bên trái */
+  /* Menu 3 cột × 2 dòng (điền theo cột) */
   .foot__nav ul {
     list-style: none;
     padding: 0;
     margin-top: var(--space-3);
     display: grid;
-    grid-template-rows: repeat(3, auto);
+    grid-template-rows: repeat(2, auto);
     grid-auto-flow: column;
     grid-auto-columns: max-content;
-    gap: 6px var(--space-12);
+    gap: 6px var(--space-8);
   }
   .foot__nav a { text-decoration: none; }
   .foot__nav a:hover { color: var(--primary); }
 
-  .foot__moon { position: relative; justify-self: end; width: 200px; margin-bottom: -1px; }
-  .moon path { fill: var(--c-paper-2); stroke: var(--line); }
-  :global(.dark) .moon path { fill: #2a3058; }
-  .moon .crater { fill: var(--fg); opacity: 0.08; }
-  .foot__moon :global(.foot__orbi) { position: absolute; left: 62px; bottom: 58px; transform: rotate(-6deg); }
+  /* ---------- Bầu trời của Orbi (khung 220 × 200) ---------- */
+  .sky { position: relative; width: 220px; height: 200px; }
+  .sky > * { position: absolute; }
+
+  /* Mặt Trời: đĩa tối dần ở rìa, vết đen trôi theo vòng quay, nhật hoa xoay + phập phồng */
+  .sun {
+    left: 100px;
+    top: 10px;
+    width: 104px;
+    height: 104px;
+    transition: opacity var(--dur-slow) var(--ease-out), translate var(--dur-slow) var(--ease-out), scale var(--dur-slow) var(--ease-out);
+  }
+  .sun__corona {
+    position: absolute;
+    inset: -30px;
+    border-radius: 50%;
+    background: repeating-conic-gradient(color-mix(in oklab, var(--c-sun), transparent 30%) 0 4deg, transparent 4deg 15deg);
+    mask: radial-gradient(closest-side, transparent 62%, #000 66%, transparent);
+    animation: sky-spin 50s linear infinite, corona 5s ease-in-out infinite;
+  }
+  .sun__disc {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    background: radial-gradient(
+      circle,
+      color-mix(in oklab, var(--c-sun), white 60%) 0%,
+      color-mix(in oklab, var(--c-sun), white 25%) 38%,
+      var(--c-sun) 66%,
+      color-mix(in oklab, var(--c-sun), var(--c-signal) 60%) 100%
+    );
+    box-shadow:
+      0 0 0 1.5px color-mix(in oklab, var(--c-signal), transparent 55%),
+      0 0 46px 8px color-mix(in oklab, var(--c-sun), transparent 45%);
+    animation: sun-glow 5s ease-in-out infinite;
+  }
+  /* Dải bề mặt rộng gấp 4 lần, lặp 2 ô → trượt 50% là đúng một vòng, không giật */
+  .sun__surface {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 400%;
+    background:
+      radial-gradient(circle at 18% 38%, color-mix(in oklab, var(--c-signal), var(--c-ink) 40%) 0 3px, color-mix(in oklab, var(--c-signal), transparent 40%) 4px, transparent 7px),
+      radial-gradient(circle at 24% 46%, color-mix(in oklab, var(--c-signal), var(--c-ink) 40%) 0 2px, transparent 4px),
+      radial-gradient(circle at 70% 64%, color-mix(in oklab, var(--c-signal), var(--c-ink) 30%) 0 2.5px, color-mix(in oklab, var(--c-signal), transparent 50%) 3.5px, transparent 6px),
+      radial-gradient(ellipse 10% 18% at 44% 30%, color-mix(in oklab, var(--c-sun), white 55%), transparent),
+      radial-gradient(ellipse 8% 14% at 88% 72%, color-mix(in oklab, var(--c-sun), white 50%), transparent);
+    background-size: 50% 100%;
+    opacity: 0.85;
+    animation: sky-roll 40s linear infinite;
+  }
+  /* Rìa tối dần phủ lên vết đen để chúng mờ đi khi quay ra mép */
+  .sun__disc::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, transparent 55%, color-mix(in oklab, var(--c-signal), transparent 55%) 100%);
+  }
+
+  /* Mặt Trăng: ảnh NASA tự quay, bóng tối phía dưới phải + quầng sáng nhẹ */
+  .moon {
+    left: 46px;
+    top: 72px;
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: color-mix(in oklab, var(--c-paper), var(--c-space) 45%);
+    box-shadow: 0 0 40px 2px color-mix(in oklab, var(--c-paper), transparent 82%);
+    opacity: 0;
+    translate: 0 28px;
+    transition: opacity var(--dur-slow) var(--ease-out), translate var(--dur-slow) var(--ease-out);
+  }
+  .moon__map {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 400%;
+    background-repeat: repeat-x;
+    background-size: 50% 100%;
+    filter: brightness(1.2) contrast(1.05);
+    animation: sky-roll 90s linear infinite;
+  }
+  :global(.dark) .moon__map { background-image: var(--moon-map); }
+  .moon::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at 34% 30%,
+      transparent 0 42%,
+      color-mix(in oklab, var(--c-space), transparent 45%) 76%,
+      color-mix(in oklab, var(--c-space), transparent 8%) 100%
+    );
+  }
+
+  /* Sao lấp lánh + sao băng (chỉ ban đêm) */
+  .sky__stars {
+    left: 0;
+    top: 0;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: var(--c-paper);
+    box-shadow:
+      14px 28px var(--c-paper), 36px 112px var(--c-paper), 22px 168px var(--c-paper), 188px 36px var(--c-paper),
+      206px 98px var(--c-paper), 168px 8px var(--c-paper), 120px 22px var(--c-paper), 196px 176px var(--c-paper),
+      58px 64px var(--c-paper), 150px 58px var(--c-paper);
+    opacity: 0;
+    transition: opacity var(--dur-slow);
+  }
+  :global(.dark) .sky__stars { opacity: 0.8; animation: twinkle 3.2s ease-in-out infinite; }
+  .sky__meteor {
+    left: 150px;
+    top: 4px;
+    width: 64px;
+    height: 1.5px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--c-paper), transparent);
+    rotate: -35deg;
+    opacity: 0;
+  }
+  :global(.dark) .sky__meteor { animation: meteor 9s ease-in 2s infinite; }
+
+  /* Hạt năng lượng từ Mặt Trời bay vào tấm pin của Orbi (chỉ ban ngày) */
+  .sky__beam { left: 112px; top: 96px; transition: opacity var(--dur); }
+  .sky__beam i {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--c-sun);
+    box-shadow: 0 0 8px 2px color-mix(in oklab, var(--c-sun), transparent 40%);
+    opacity: 0;
+    animation: beam 2.4s ease-in infinite;
+  }
+  .sky__beam i:nth-child(2) { animation-delay: 0.8s; }
+  .sky__beam i:nth-child(3) { animation-delay: 1.6s; }
+  :global(.dark) .sky__beam { opacity: 0; }
+
+  /* Orbi: ban ngày thức (bay cạnh Mặt Trời), ban đêm ngủ trên Mặt Trăng */
+  .sky__orbi { transition: left var(--dur-slow) var(--ease-spring), top var(--dur-slow) var(--ease-spring), opacity var(--dur); }
+  .sky__orbi :global(svg) { display: block; }
+  .sky__orbi--awake { left: 12px; top: 116px; }
+  .sky__bob { display: block; animation: bob 4s ease-in-out infinite; }
+  .sky:hover .sky__orbi--awake { animation: flip 900ms var(--ease-spring); }
+  /* Đang sạc: tấm pin sáng lên theo nhịp hạt năng lượng */
+  :global(html:not(.dark)) .sky__orbi--awake :global(.o-solar) { animation: charge 0.8s ease-in-out infinite alternate; }
+
+  .sky__orbi--sleep { left: 74px; top: 14px; opacity: 0; transform-origin: 50% 100%; }
+  :global(.dark) .sky__orbi--sleep { opacity: 1; animation: rock 6s ease-in-out infinite; }
+  :global(.dark) .sky__orbi--awake { left: 74px; top: 14px; opacity: 0; }
+  /* Rê chuột ban đêm: Orbi thức dậy, nhảy lên */
+  :global(.dark) .sky:hover .sky__orbi--sleep { opacity: 0; }
+  :global(.dark) .sky:hover .sky__orbi--awake { opacity: 1; animation: hop 700ms var(--ease-spring); }
+
+  /* Đổi giao diện: Mặt Trời lặn xuống, Mặt Trăng mọc lên */
+  :global(.dark) .sun { opacity: 0; translate: 0 28px; scale: 0.85; }
+  :global(.dark) .moon { opacity: 1; translate: 0 0; }
+
+  @keyframes sky-spin { to { rotate: 360deg; } }
+  @keyframes sky-roll { to { transform: translateX(-50%); } }
+  @keyframes corona { 50% { scale: 1.08; opacity: 0.7; } }
+  @keyframes sun-glow { 50% { box-shadow: 0 0 0 1.5px color-mix(in oklab, var(--c-signal), transparent 55%), 0 0 60px 14px color-mix(in oklab, var(--c-sun), transparent 55%); } }
+  @keyframes twinkle { 50% { opacity: 0.35; } }
+  @keyframes meteor {
+    0% { opacity: 0; translate: 0 0; }
+    3% { opacity: 1; }
+    9% { opacity: 0; translate: -120px 84px; }
+    100% { opacity: 0; translate: -120px 84px; }
+  }
+  @keyframes beam {
+    0% { opacity: 0; translate: 0 0; scale: 1; }
+    20% { opacity: 1; }
+    90% { opacity: 1; scale: 0.6; }
+    100% { opacity: 0; translate: -40px 56px; scale: 0.4; }
+  }
+  @keyframes charge { to { fill: color-mix(in oklab, var(--c-aurora), white 45%); } }
+  @keyframes bob { 50% { transform: translateY(-8px) rotate(3deg); } }
+  @keyframes flip {
+    40% { translate: 0 -18px; }
+    to { rotate: 360deg; }
+  }
+  @keyframes rock {
+    0%, 100% { rotate: -5deg; }
+    50% { rotate: 5deg; }
+  }
+  @keyframes hop {
+    0% { translate: 0 0; }
+    45% { translate: 0 -22px; }
+    100% { translate: 0 0; }
+  }
 
   .foot__base {
     display: flex;
@@ -134,12 +330,15 @@ const year = new Date().getFullYear();
 
   @keyframes flicker { to { transform: scaleY(0.7); } }
 
-  @media (max-width: 760px) {
-    .foot__grid { grid-template-columns: 1fr 1fr; }
-    .foot__signal { grid-column: 1 / -1; }
-    .foot__nav ul { gap: 6px var(--space-8); }
-    .foot__nav { grid-column: 1 / -1; }
-    .foot__moon { grid-column: 2; }
+  /* Màn vừa: email + menu bên trái, bầu trời bên phải */
+  @media (max-width: 1100px) {
+    .foot__grid { grid-template-columns: minmax(0, 1fr) auto; }
+    .sky { grid-column: 2; grid-row: 1 / span 2; }
+  }
+  @media (max-width: 640px) {
+    .foot__grid { grid-template-columns: minmax(0, 1fr); }
+    .sky { grid-column: auto; grid-row: auto; justify-self: center; }
+    .foot__nav ul { gap: 6px var(--space-6); }
     .foot__base { flex-direction: column-reverse; align-items: flex-start; }
   }
 </style>
