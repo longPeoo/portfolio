@@ -62,7 +62,7 @@ function arcPoints(a: Vec3, b: Vec3, steps = 40): [Vec3, number][] {
  * Quả địa cầu các chuyến đi: Trái Đất thật (ảnh vệ tinh NASA, src/scripts/globe.ts), tự xoay chậm, kéo để xoay.
  * Đường bay nối các chuyến theo thứ tự thời gian. Rê chuột vào một nơi trong danh sách → địa cầu xoay và phóng tới đó.
  * Mỗi nơi có một ghim cờ (rê chuột hiện tên): chuyến có trang riêng thì bấm để mở; ghim mờ dần khi điểm quay ra sau địa cầu.
- * Phóng to: nút +/−, Ctrl/⌘ + cuộn (cuộn thường vẫn cuộn trang), chụm 2 ngón, bấm đúp.
+ * Phóng to: cuộn chuột trên địa cầu (vào đúng chỗ con trỏ), nút +/−, chụm 2 ngón, bấm đúp.
  * Ghim quá gần nhau gom thành cụm "+n"; bấm cụm → phóng tới đó.
  */
 export function MissionsGlobe({ points, flags, compact = false, labels }: MissionsGlobeProps) {
@@ -155,12 +155,34 @@ export function MissionsGlobe({ points, flags, compact = false, labels }: Missio
         }
         if (pointers.size === 0) drag = null
       }
-      // Ctrl/⌘ + cuộn (gồm cả thao tác chụm trên touchpad) → phóng to; cuộn thường để nguyên cho trang
+      // Cuộn chuột trên địa cầu → phóng to/thu nhỏ vào đúng chỗ con trỏ. Để trang không bị "kẹt":
+      // - trang vừa cuộn (< 300 ms, con trỏ chỉ lướt qua địa cầu) → cú cuộn vẫn thuộc về trang
+      // - đã thu nhỏ hết mà cuộn xuống / phóng hết cỡ mà cuộn lên → trang cuộn tiếp
+      // Ctrl/⌘ + cuộn (gồm thao tác chụm trên touchpad) luôn là phóng to.
+      let lastPageScroll = 0
+      const onPageScroll = () => (lastPageScroll = performance.now())
       const onWheel = (e: WheelEvent) => {
-        if (!e.ctrlKey && !e.metaKey) return
+        const pinchGesture = e.ctrlKey || e.metaKey
+        const dy = e.deltaY * (e.deltaMode === 1 ? 16 : 1)
+        if (!pinchGesture) {
+          if (performance.now() - lastPageScroll < 300) return
+          if ((dy > 0 && userZoom.current <= 1) || (dy < 0 && userZoom.current >= MAX_ZOOM)) return
+        }
         e.preventDefault()
-        setZoom(userZoom.current * Math.exp(-e.deltaY * 0.004))
+        e.stopPropagation() // không để cuộn mượt toàn trang (Lenis) cuộn theo
+        const from = userZoom.current
+        setZoom(from * Math.exp(-dy * (pinchGesture ? 0.01 : 0.0025)))
+        // Xoay một phần về phía con trỏ để điểm dưới con trỏ đứng yên khi phóng to (như bản đồ)
+        const r = canvas.getBoundingClientRect()
+        const hit = globe.pick((e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height)
+        const f = 1 - from / userZoom.current
+        if (hit && f > 0) {
+          target.current = null
+          lon += (shortest(lon, hit[0]) - lon) * f
+          lat = clampLat(lat + (hit[1] - lat) * f)
+        }
       }
+      window.addEventListener("scroll", onPageScroll, { passive: true })
       // Bấm đúp → phóng gấp đôi, đưa điểm vừa bấm vào giữa
       const onDblClick = (e: MouseEvent) => {
         const r = canvas.getBoundingClientRect()
@@ -305,6 +327,7 @@ export function MissionsGlobe({ points, flags, compact = false, labels }: Missio
         canvas.removeEventListener("pointercancel", onUp)
         canvas.removeEventListener("dblclick", onDblClick)
         stage.removeEventListener("wheel", onWheel)
+        window.removeEventListener("scroll", onPageScroll)
         stage.removeEventListener("pointerenter", onEnter)
         stage.removeEventListener("pointerleave", onLeave)
         globe.destroy()

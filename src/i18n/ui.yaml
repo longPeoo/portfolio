@@ -95,7 +95,7 @@ journeys:
   next: Chuyến tiếp theo
   stampMonth: T{n}
   globeLabel: Quả địa cầu đánh dấu {n} chuyến đi. Bấm vào ghim để mở chuyến đi.
-  globeHint: Kéo để xoay · chụm 2 ngón hoặc Ctrl + cuộn để phóng to
+  globeHint: Kéo để xoay · cuộn chuột hoặc chụm 2 ngón để phóng to
   flagsLabel: Những nước mình đã đặt chân tới
   flagsFrom: From
   flagsTo: to

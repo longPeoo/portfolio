@@ -110,7 +110,7 @@ journeys:
   next: Next mission
   stampMonth: M{n}
   globeLabel: Globe marking {n} journeys. Click a pin to open the journey.
-  globeHint: Drag to rotate · pinch or Ctrl + scroll to zoom
+  globeHint: Drag to rotate · scroll or pinch to zoom
   flagsLabel: Countries I've set foot in
   flagsFrom: From
   flagsTo: to
