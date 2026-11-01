@@ -1,5 +1,5 @@
-# Bản tiếng Anh của các trường cần dịch trong site.yaml (chuẩn bị cho song ngữ, chưa hiện trên web).
-# Trường không có ở đây (email, mạng xã hội, toạ độ…) dùng chung với site.yaml.
+name: LONGPEOO
+handle: longpeoo
 roles:
   - Space Systems Engineer
   - Travel Vlogger
@@ -9,6 +9,11 @@ tagline: On weekdays I work with satellites and orbits. On weekends I pack my ba
 description: Long — space technology engineer & travel vlogger. Engineering projects, journey logs and travel videos.
 location:
   city: Hanoi
+  code: HAN
+  timezone: Asia/Ho_Chi_Minh
+  lat: 21.03°N
+  lon: 105.85°E
+email: contact@longpeoo.io.vn
 nav:
   - label: About
     href: /about
@@ -20,3 +25,22 @@ nav:
     href: /vlogs
   - label: Photos
     href: /gallery
+socials:
+  - id: youtube
+    label: YouTube
+    url: https://www.youtube.com/@longpeoo
+  - id: instagram
+    label: Instagram
+    url: https://www.instagram.com/long.peoo/
+  - id: tiktok
+    label: TikTok
+    url: https://www.tiktok.com/@long.peooo
+  - id: facebook
+    label: Facebook
+    url: https://www.facebook.com/hlongpeoo/
+  - id: linkedin
+    label: LinkedIn
+    url: https://www.linkedin.com/in/ng-h-long1203
+  - id: github
+    label: GitHub
+    url: https://github.com/longPeoo
