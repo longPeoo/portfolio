@@ -1,31 +1,8 @@
-# ==================================================================
-#  VIDEO YOUTUBE
-#  Web tự lấy ~30 video mới nhất của kênh lúc build (mỗi 6 giờ build lại một lần).
-#  Cần: link kênh ở dưới + biến môi trường YOUTUBE_API_KEY (xem README.md).
-#  Chưa có API key: vẫn dùng được "featured" để hiện một video ở trang chủ.
-# ==================================================================
-
-# Link kênh, ví dụ: "https://www.youtube.com/@longpeoo"
-channelUrl: "https://www.youtube.com/@longpeoo"
-# (Tuỳ chọn) Channel ID dạng "UCxxxxxxxxxxxxxxxxxxxxxx" — điền nếu tự dò từ link không được
-channelId: "UCdwXxvE8B-nPkfMYicR2yvg"
-
-# Video lớn ở trang chủ: dán link video. Để trống = tự lấy video mới nhất
-featured: "https://www.youtube.com/watch?v=3q0T0lwIcPg"
-
-# Ghim lên đầu danh sách (dán link video, mỗi dòng một video)
-pinned: []
-
-# Ẩn khỏi website (vẫn còn trên YouTube)
+channelUrl: https://www.youtube.com/@longpeoo
+channelId: UCdwXxvE8B-nPkfMYicR2yvg
+featured: ''
+pinned:
+  - https://www.youtube.com/watch?v=3q0T0lwIcPg
 hidden: []
-
-# Có hiện YouTube Shorts không
 includeShorts: false
-
-# Nhóm video để lọc ở trang Video. Mỗi nhóm: tên + danh sách link video
 categories: []
-#  - name: "Việt Nam"
-#    videos:
-#      - "https://www.youtube.com/watch?v=xxxxxxxxxxx"
-#  - name: "Nước ngoài"
-#    videos: []
