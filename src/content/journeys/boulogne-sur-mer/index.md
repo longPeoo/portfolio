@@ -21,8 +21,8 @@ gallery:
     caption: Ở gần chỗ mình ở có cái pháo đài siêu to
     alt: Ở gần chỗ mình ở có cái pháo đài siêu to
   - src: boulogne_06.webp
-    caption: Thỉnh thoảng ngắm đường tàu vì bố mẹ, cũng không hiểu tại sao
-    alt: Thỉnh thoảng ngắm đường tàu vì bố mẹ, cũng không hiểu tại sao
+    caption: Thỉnh thoảng ngắm đường tàu vì nhớ bố mẹ, cũng không hiểu tại sao
+    alt: Thỉnh thoảng ngắm đường tàu vì nhớ bố mẹ, cũng không hiểu tại sao
   - src: boulogne_03.webp
     caption: Đi bộ hẳn 7km ra biển ngắm cối xay gió
     alt: Đi bộ hẳn 7km ra biển ngắm cối xay gió
