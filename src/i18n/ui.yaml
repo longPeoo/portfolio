@@ -97,8 +97,8 @@ journeys:
 videos:
   code: Phím 04 · Vlog
   title: '"Hành trang của mình là chiếc balo và một trái tim ham học hỏi"'
-  intro: Các vlog mới nhất từ kênh YouTube, tự cập nhật khi có vlog mới.
-  subscribe: Theo dõi kênh
+  intro: Đây là nơi mình sẽ lưu giữ lại những chiếc vlog mình đi lang thang khắp nơi. Chẳng phải vì gì cả, nhiều view thì thích còn không thì cũng không phải mục đích của mình, mình chỉ muốn sau này có cái ngồi lại để xem với gia đình, để cho thế hệ sau của mình thấy bố nó, ông nó, cụ nó đã sống một cuộc đời rực rỡ như nào (ít nhất là với mình hehe)
+  subscribe: Theo dõi kênh longpeoo
   all: Tất cả
   new: Vlog mới
   views: lượt xem
@@ -108,7 +108,7 @@ videos:
 gallery:
   code: Phím 05 · Bảo tàng tranh ảnh
   title: '"Một tấm ảnh nhỏ, cả bầu trời kí ức"'
-  intro: Những khung hình tôi thích nhất, từ phòng thí nghiệm đến những cung đường xa.
+  intro: Mỗi tấm ảnh đều tạo nên con người mình đến bây giờ, thứ mình lưu giữ không chỉ là tấm ảnh mà còn chính là những trải nghiệm, những mảnh tâm hồn, những mảnh kí ức tạo nên chính mình
   count: '{n} khung hình'
   open: Xem ảnh lớn
   prev: Ảnh trước
