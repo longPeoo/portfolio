@@ -47,12 +47,6 @@ home:
   photosCode: Lưu giữ · Những kỉ niệm vô giá
   photosTitle: 12k ảnh lộn xộn
   photosLink: Xem tất cả ảnh
-  statusCode: test
-  statusTitle: test
-  phases:
-    - code: P1
-      name: Nền móng & deploy
-      state: nominal
 about:
   code: Phím 01 · Đôi điều về mình
   title: Về tôi

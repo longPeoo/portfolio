@@ -28,7 +28,6 @@ Dễ thương, năng động nhưng vẫn nghiêm túc.
   - Trái Đất: WebGL (`src/scripts/earth.ts`), ảnh NASA, nghiêng 23,4°, tự quay, ghim cam ở Hà Nội, quầng khí quyển.
   - Giao diện sáng: **Mặt Trời** góc trên phải (vẽ bằng shader: rìa tối dần, hạt sáng, vết đen, nhật hoa; SVG chỉ là bản dự phòng) chiếu sáng Trái Đất. Giao diện tối: nửa đêm có đèn thành phố, **Mặt Trăng** sáng quay quanh, bị che khi đi ra sau.
   - Hành tinh lưới SVG là bản dự phòng (trước khi ảnh tải xong, hoặc máy không có WebGL).
-- Bảng tiến độ (P1–P6) với trạng thái Xong / Đang làm / Chờ (danh sách sửa trong CMS → Chữ trên giao diện → Trang chủ).
 - Linh vật **Orbi** (vệ tinh tròn đeo máy ảnh): vui (header, hero), ngủ trên Mặt Trăng / sạc pin cạnh Mặt Trời (footer), bối rối và trôi lơ lửng (404).
 - Footer: email lớn, menu 3 cột × 2 dòng, "bầu trời của Orbi" (tối: Mặt Trăng thật, ảnh NASA dùng chung với hero; sáng: Mặt Trời vẽ bằng CSS), nút **tên lửa** lên đầu trang. Ba khối căn giữa theo chiều dọc, cách đều vạch trên và vạch dưới; khoảng trống hai bên menu bằng nhau; nhãn "Kết trang" và "Điều hướng" thẳng hàng (subgrid). Dưới 1280px menu xuống dưới email.
 - Lớp hạt nhiễu (grain) nhẹ trên toàn trang.
@@ -105,7 +104,7 @@ Thang cỡ chữ: `--fs-mono`, `--fs-sm`, `--fs-base`, `--fs-lg`, `--fs-h3`, `--
 | Ảnh polaroid | dán băng keo, xoay nhẹ; rê chuột thì thẳng lại và nhấc lên. Lưới đọc trái → phải: 2 cột (< 480px) → 3 → 4 (≥ 768px) → 5 (≥ 1024px). Trang chủ tối đa 2 dòng đầy |
 | Vlog (`/vlogs`, đường dẫn cũ `/videos` chuyển hướng 301) | khung CRT có vạch quét, nhấp nháy khi rê chuột; nút play nảy |
 | Dải cờ | "From [cờ nhà] to [các nước đã đến]" (trang Hành trình, khối "Mình đã đến" ở trang chủ). Cờ nhà (`site.yaml > homeCountry`) to hơn, viền cam, quầng vàng phập phồng; rê chuột: cờ nảy lên, nghiêng, viền cam |
-| Địa cầu Missions | Trái Đất thật (WebGL, ảnh NASA dùng chung với hero: `src/scripts/globe.ts`), sáng: chiếu chính diện; tối: phía khuất có đèn thành phố. Tự xoay chậm (dừng khi giảm chuyển động), kéo để xoay (chuột: ngang + dọc, cảm ứng: chỉ ngang), rê vào tên chuyến đi → xoay tới đó; đường bay nối các chuyến có ngày theo thời gian; **ghim là cờ tròn** của nước đó, tên nơi chỉ hiện khi rê chuột/đang chọn (điểm gần nhau không chồng chữ); chuyến có trang riêng thì bấm ghim để mở (ẩn khi quay ra sau); rê chuột lên địa cầu thì ngừng quay. **Phóng to** tới ×6 (`MAX_ZOOM` trong `globe.ts`; ảnh Trái Đất 2048px nên phóng hơn sẽ mờ): cuộn chuột trên địa cầu (phóng vào đúng chỗ con trỏ; trang vừa cuộn < 300 ms hoặc đã chạm giới hạn ×1/×6 thì cú cuộn thuộc về trang, không "kẹt"), nút +/−/cả địa cầu, chụm 2 ngón, bấm đúp; khi phóng to bề mặt cắt theo "ống kính" tròn, ngừng tự quay, chạm một ngón xoay mọi hướng. Rê vào một nơi trong danh sách → phóng tới ×3. Ghim gần nhau < 22px gom thành cụm có số "+n", rê hiện tên các nơi, bấm → phóng ×2,5 vào giữa cụm. Danh sách bên cạnh (trang Hành trình) cao tối đa bằng địa cầu, tự cuộn bên trong (`data-lenis-prevent`) |
+| Địa cầu Missions | Trái Đất thật (WebGL, ảnh NASA dùng chung với hero: `src/scripts/globe.ts`), sáng: chiếu chính diện; tối: phía khuất có đèn thành phố. Tự xoay chậm (dừng khi giảm chuyển động), kéo để xoay (chuột: ngang + dọc, cảm ứng: chỉ ngang), rê vào tên chuyến đi → xoay tới đó; đường bay nối các chuyến có ngày theo thời gian; **ghim là cờ tròn** của nước đó, tên nơi chỉ hiện khi rê chuột/đang chọn (điểm gần nhau không chồng chữ); chuyến có trang riêng thì bấm ghim để mở (ẩn khi quay ra sau); rê chuột lên địa cầu thì ngừng quay. **Phóng to** tới ×8 (`MAX_ZOOM` trong `globe.ts`); phóng quá ×1.5 thì tải ảnh nét `day-8k.webp` (1,2 MB, máy tính) hoặc `day-4k.webp` (0,4 MB, điện thoại), hiện dần lên — không tải nếu người xem không phóng to: cuộn chuột trên địa cầu (phóng vào đúng chỗ con trỏ; trang vừa cuộn < 300 ms hoặc đã chạm giới hạn ×1/×6 thì cú cuộn thuộc về trang, không "kẹt"), nút +/−/cả địa cầu, chụm 2 ngón, bấm đúp; khi phóng to bề mặt cắt theo "ống kính" tròn, ngừng tự quay, chạm một ngón xoay mọi hướng. Rê vào một nơi trong danh sách → phóng tới ×3. Ghim gần nhau < 22px gom thành cụm có số "+n", rê hiện tên các nơi, bấm → phóng ×2,5 vào giữa cụm. Danh sách bên cạnh (trang Hành trình) cao tối đa bằng địa cầu, tự cuộn bên trong (`data-lenis-prevent`) |
 | Trứng phục sinh | gõ `launch` ở bất kỳ đâu → mưa sao băng |
 
 Quy tắc kỹ thuật:
@@ -142,7 +141,7 @@ Phong cách Mission Log được đưa vào component shadcn bằng **variant** 
 | `Button` | `social` + size `icon-lg` | nút icon mạng xã hội |
 | `Badge` | `telemetry`, `telemetry-solid` | chip nghề nghiệp ở hero |
 | `Badge` | `signal` | chip "Đang lắp ráp" |
-| `Badge` | `nominal`, `active`, `queued` | trạng thái trong Mission status |
+| `Badge` | `nominal`, `active`, `queued` | đèn trạng thái (`nominal` dùng ở thẻ kỹ năng trang Về tôi) |
 
 Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx`, rồi ghi vào bảng này.
 
@@ -247,9 +246,9 @@ src/
 │   ├── layout/      ← MissionBar, Footer, ThemeToggle, MusicToggle, MobileNav (island)
 │   ├── media/       ← island React: MissionsGlobe, PhotoGallery, VideoGrid, VideoPlayer
 │   └── sections/    ← Hero, HomeSections, PageHeader, SectionHead, ProjectCard, JourneyCard, CosmosBackdrop,
-│                       MissionStatus, ComingSoon, SocialList
+│                       FlagStrip, ComingSoon, SocialList
 ├── content/         ← projects/, journeys/, pages/ (Markdown + ảnh)
-├── assets/earth/    ← ảnh NASA cho Trái Đất hero (day, night, moon .webp)
+├── assets/earth/    ← ảnh NASA cho Trái Đất (day, night, moon .webp; day-8k/day-4k chỉ tải khi phóng to địa cầu Hành trình)
 ├── content.config.ts← schema nội dung
 ├── data/            ← site.yaml (+ site.en.yaml), videos.yaml, music.yaml
 ├── i18n/            ← ui.yaml (vi), ui.en.yaml (en): chữ trên giao diện

@@ -5,13 +5,17 @@
  * Toạ độ: vector thân địa cầu b = (cos φ sin λ, sin φ, cos φ cos λ) (λ kinh độ, φ vĩ độ).
  * Camera nhìn thẳng vào điểm (λc, φc): b = M·n với M = Ry(λc)·Rx(−φc), n là pháp tuyến phía người xem.
  * Phóng to (zoom): bán kính quả cầu = GLOBE_R × zoom; mọi thứ bị cắt trong vòng tròn nội tiếp khung (như ống kính).
+ * Ảnh nét (NASA Blue Marble 07/2004, đã chỉnh màu khớp day.webp): chỉ tải khi phóng to (loadDetail), hiện dần lên.
+ * Máy tính: 8192 px (1,2 MB); điện thoại / GPU yếu: 4096 px (0,4 MB) để không tốn quá nhiều bộ nhớ đồ hoạ.
  */
 import dayUrl from '@/assets/earth/day.webp?url';
 import nightUrl from '@/assets/earth/night.webp?url';
+import day8kUrl from '@/assets/earth/day-8k.webp?url';
+import day4kUrl from '@/assets/earth/day-4k.webp?url';
 
 /** Bán kính quả cầu so với nửa khung khi zoom = 1 (chừa chỗ cho quầng khí quyển) */
 export const GLOBE_R = 0.86;
-export const MAX_ZOOM = 6;
+export const MAX_ZOOM = 8;
 
 const VERT = `attribute vec2 p; void main(){ gl_Position = vec4(p, 0., 1.); }`;
 
@@ -22,7 +26,8 @@ uniform mat3 uRot;
 uniform vec3 uLight;
 uniform float uNight;
 uniform float uZoom;
-uniform sampler2D uDay, uNightTex;
+uniform float uHi;
+uniform sampler2D uDay, uNightTex, uDayHi;
 const float PI = 3.14159265;
 const vec3 ATMO = vec3(.35, .62, 1.);
 
@@ -40,6 +45,7 @@ void main() {
     vec3 b = uRot * n;
     vec2 uv = vec2(atan(b.x, b.z) / (2. * PI) + .5, .5 - asin(clamp(b.y, -1., 1.)) / PI);
     vec3 day = texture2D(uDay, uv).rgb;
+    if (uHi > 0.) day = mix(day, texture2D(uDayHi, uv).rgb, uHi);
     float d = dot(n, uLight);
     // Sáng: chiếu gần như chính diện để mọi điểm đến đều rõ. Tối: phía khuất sáng hiện đèn thành phố.
     vec3 col = day * mix(.42 + .7 * max(d, 0.), .12 + .9 * smoothstep(-.15, .6, d), uNight);
@@ -115,18 +121,23 @@ export async function createGlobe(canvas: HTMLCanvasElement) {
   gl.enableVertexAttribArray(loc);
   gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
 
-  images.forEach((img, i) => {
-    gl.activeTexture(gl.TEXTURE0 + i);
+  // Lọc dị hướng: bề mặt gần viền quả cầu (nhìn nghiêng) đỡ nhoè
+  const aniso = gl.getExtension('EXT_texture_filter_anisotropic');
+  const upload = (unit: number, img: TexImageSource) => {
+    gl.activeTexture(gl.TEXTURE0 + unit);
     gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img);
     gl.generateMipmap(gl.TEXTURE_2D);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-  });
+    if (aniso) gl.texParameterf(gl.TEXTURE_2D, aniso.TEXTURE_MAX_ANISOTROPY_EXT, Math.min(8, gl.getParameter(aniso.MAX_TEXTURE_MAX_ANISOTROPY_EXT)));
+  };
+  images.forEach((img, i) => upload(i, img));
   const u = (name: string) => gl.getUniformLocation(prog, name);
   gl.uniform1i(u('uDay'), 0);
   gl.uniform1i(u('uNightTex'), 1);
+  gl.uniform1i(u('uDayHi'), 2);
   // Ánh sáng từ phía trên bên trái người xem
   const L = [-0.45, 0.4, 0.8];
   const ll = Math.hypot(...L);
@@ -134,6 +145,10 @@ export async function createGlobe(canvas: HTMLCanvasElement) {
 
   let rot = rotation(0, 0);
   let zoom = 1;
+  /** Ảnh nét: 0 = chưa có, tăng dần lên 1 khi vừa tải xong (hiện dần, không giật) */
+  let hi = 0;
+  let hiReady = false;
+  let hiRequested = false;
 
   return {
     /** Vẽ một khung với góc nhìn hiện tại */
@@ -150,6 +165,8 @@ export async function createGlobe(canvas: HTMLCanvasElement) {
       gl.uniformMatrix3fv(u('uRot'), false, rot);
       gl.uniform1f(u('uNight'), view.night);
       gl.uniform1f(u('uZoom'), zoom);
+      if (hiReady && hi < 1) hi = Math.min(1, hi + 0.06);
+      gl.uniform1f(u('uHi'), hi);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     },
     /** Điểm trên địa cầu (đã nhân độ cao h) → toạ độ khung [0..1] + độ sâu (z > 0: mặt trước); r tính theo bán kính quả cầu */
@@ -160,6 +177,25 @@ export async function createGlobe(canvas: HTMLCanvasElement) {
       const n2 = rot[6] * v[0] + rot[7] * v[1] + rot[8] * v[2];
       const k = (h * GLOBE_R * zoom) / 2;
       return { x: 0.5 + n0 * k, y: 0.5 - n1 * k, z: n2, r: Math.hypot(n0, n1) * h };
+    },
+    /** Tải ảnh nét (gọi khi người xem bắt đầu phóng to; gọi nhiều lần cũng chỉ tải một lần) */
+    loadDetail() {
+      if (hiRequested) return;
+      hiRequested = true;
+      const maxTex = gl.getParameter(gl.MAX_TEXTURE_SIZE) as number;
+      const desktop = maxTex >= 16384 && !matchMedia('(pointer: coarse)').matches;
+      if (maxTex < 4096) return;
+      fetch(desktop ? day8kUrl : day4kUrl)
+        .then((r) => r.blob())
+        // Giải mã ảnh ngoài luồng chính để trang không khựng
+        .then((blob) => createImageBitmap(blob))
+        .then((bitmap) => {
+          if (gl.isContextLost()) return;
+          upload(2, bitmap);
+          bitmap.close();
+          hiReady = true;
+        })
+        .catch(() => {});
     },
     /** Điểm trên khung [0..1] → kinh độ, vĩ độ (radian) trên địa cầu; null nếu nằm ngoài quả cầu */
     pick(x: number, y: number): [number, number] | null {

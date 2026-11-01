@@ -300,6 +300,8 @@ export function MissionsGlobe({ points, flags, compact = false, labels }: Missio
         const wantZoom = t?.hold ? Math.max(userZoom.current, FOCUS_ZOOM) : userZoom.current
         zoom += (wantZoom - zoom) * (reduce ? 1 : 0.12)
         night += ((isDark() ? 1 : 0) - night) * (reduce ? 1 : 0.08)
+        // Bắt đầu phóng to → tải ảnh nét (chỉ một lần)
+        if (zoom > 1.5) globe.loadDetail()
         globe.draw({ lon, lat, night, zoom })
         drawArcs(time)
         syncPins()

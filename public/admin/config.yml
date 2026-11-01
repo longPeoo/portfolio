@@ -466,39 +466,6 @@ collections:
                 label: Nút xem tất cả ảnh
                 widget: string
                 i18n: true
-              - name: statusCode
-                label: Nhãn bảng tiến độ
-                widget: string
-                i18n: true
-              - name: statusTitle
-                label: Tiêu đề bảng tiến độ
-                widget: string
-                i18n: true
-              - name: phases
-                label: Các giai đoạn (bảng tiến độ)
-                widget: list
-                summary: "{{code}} · {{name}}"
-                fields:
-                  - name: code
-                    label: Mã
-                    widget: string
-                    i18n: true
-                  - name: name
-                    label: Tên
-                    widget: string
-                    i18n: true
-                  - name: state
-                    label: Trạng thái
-                    widget: select
-                    options:
-                      - label: Xong
-                        value: nominal
-                      - label: Đang làm
-                        value: active
-                      - label: Chờ
-                        value: queued
-                    i18n: true
-                i18n: true
             i18n: true
           - name: about
             label: Trang Về tôi

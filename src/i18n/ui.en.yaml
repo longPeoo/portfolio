@@ -47,27 +47,6 @@ home:
   photosCode: MSN-05 · Film roll
   photosTitle: Recent film roll
   photosLink: See all photos
-  statusCode: Mission status
-  statusTitle: This website is being assembled, stage by stage.
-  phases:
-    - code: P1
-      name: Foundation & deploy
-      state: nominal
-    - code: P2
-      name: Pages, content & CMS
-      state: nominal
-    - code: P3
-      name: Animation & mascot
-      state: nominal
-    - code: P4
-      name: YouTube, photos, map
-      state: nominal
-    - code: P5
-      name: SEO & performance — launch
-      state: nominal
-    - code: P6
-      name: Real content & bilingual
-      state: active
 about:
   code: MSN-01 · About
   title: About me
