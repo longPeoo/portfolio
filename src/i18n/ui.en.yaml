@@ -75,9 +75,17 @@ about:
   trajectoryTitle: Stage by stage
   skillsCode: Subsystems
   skillsTitle: Skills
-  flightCode: Telemetry · Flight
-  flightPad: On the launch pad
-  flightOrbit: Orbit reached
+  cosmosCode: Zoom · Cosmos
+  cosmosHint: Scroll to zoom out
+  cosmosEarth: Earth
+  cosmosMoon: Earth and Moon
+  cosmosInner: Inner planets
+  cosmosSolar: Solar System
+  cosmosStars: Nearby stars
+  cosmosGalaxy: Milky Way
+  cosmosSun: Sun
+  cosmosMoonName: Moon
+  cosmosHere: You are here
 space:
   code: MSN-02 · Payloads
   title: Engineering

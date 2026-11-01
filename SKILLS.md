@@ -91,11 +91,11 @@ Thang cỡ chữ: `--fs-mono`, `--fs-sm`, `--fs-base`, `--fs-lg`, `--fs-h3`, `--
 | Trang chờ | vòng tròn đứt nét quay chậm, chip "Đang lắp ráp" nhấp nháy |
 | **Màn đếm ngược** (P3) | T-3 → 1, Orbi cưỡi tên lửa cất cánh; chỉ lần đầu mỗi phiên, bấm/gõ phím để bỏ qua, tự ẩn sau 3 giây nếu script lỗi |
 | **Bảng lật chữ** (P3) | hero: các nghề trong `site.yaml > roles` lật kiểu bảng giờ bay (ẩn dưới 900px) |
-| **Đồng hồ độ cao** (P3) | thanh bên phải: cuộn trang = ALT 0 → 408 km (ẩn dưới 1180px; ẩn ở trang Về tôi vì đã có bảng đo xa) |
+| **Đồng hồ độ cao** (P3) | thanh bên phải: cuộn trang = ALT 0 → 408 km (ẩn dưới 1180px; ẩn ở trang Về tôi vì cột phải đã có bảng thu phóng vũ trụ) |
 | **Cuộn mượt** (P3) | Lenis (chỉ chuột/touchpad; tắt khi đang mở menu/lightbox) |
 | **Hiện dần khi cuộn** (P3) | phần tử có `data-reveal` (chỉ áp cho khối dưới màn hình đầu) |
 | **Quỹ đạo phóng** (P3) | trang Về tôi: `data-trajectory` tự vẽ theo cuộn, `data-stage` bật ra; `data-gauge` thanh kỹ năng đầy dần |
-| **Bảng đo xa chuyến bay** | trang Về tôi, cột phải (≥ 1100px), dính theo khi cuộn (`FlightPanel.astro` + `initFlight()` trong `motion.ts`): tên lửa N tầng = N mốc timeline, qua mỗi mốc tách một tầng; Trái Đất cong dần, trời tối dần, số ALT/VEL; mốc cuối → vào quỹ đạo, Orbi bung ra. Giảm chuyển động: tên lửa nhảy theo từng mốc |
+| **Thu phóng vũ trụ** | trang Về tôi, cột phải (≥ 1100px), dính theo khi cuộn (`CosmosPanel.astro` + `src/scripts/cosmos.ts`, tải động từ `initCosmos()` trong `motion.ts`): cuộn timeline = camera lùi dần theo thang đo thật, 6 bậc L0–L5: Trái Đất (ghim Hà Nội, ngày/đêm) → Trái Đất–Mặt Trăng → hành tinh đá → Hệ Mặt Trời (Kuiper, Oort, Voyager 1) → sao lân cận → Dải Ngân Hà ("Bạn ở đây"). Canvas 2D, dựng Ngân Hà chia nhiều lượt nhỏ (không có tác vụ > 50ms). Giảm chuyển động: nhảy thẳng tới bậc của mốc, hình đứng yên |
 | Thẻ dự án | rê chuột: lưới bản vẽ kỹ thuật, 4 góc ngắm, đèn trạng thái sáng |
 | Thẻ chuyến đi | rê chuột: con dấu hộ chiếu đóng "cộp"; trang chi tiết: con dấu đóng một lần khi mở |
 | Ảnh polaroid | dán băng keo, xoay nhẹ; rê chuột thì thẳng lại và nhấc lên |
@@ -177,7 +177,7 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
   | `ThemeToggle` | **không hydrate** | render tĩnh, click gắn bằng script thuần trong `MissionBar.astro` |
 
   **Không dùng `client:load`** cho component chỉ cần một sự kiện click: render tĩnh rồi gắn sự kiện bằng `<script>`.
-- **Ngân sách JS:** JS tải ngay ở trang chủ (desktop) ≤ 30 KB gzip (hiện khoảng 13 KB). Kiểm tra sau mỗi lần thêm thư viện.
+- **Ngân sách JS:** JS tải ngay ở trang chủ (desktop) ≤ 30 KB gzip (hiện khoảng 15 KB). Kiểm tra sau mỗi lần thêm thư viện.
 - `asChild` của Radix **không nhận** phần tử viết trong file `.astro`. Muốn `asChild` với `<a>`, viết component bằng `.tsx`.
 - Icon React (lucide) đặt trong file `.astro`: muốn style bằng `<style>` scoped thì phải dùng `:global(.ten-class)`.
 - Icon thương hiệu (YouTube, Instagram…) render thành chuỗi SVG lúc build bằng `brandIconSvg()` trong `src/lib/site.ts`, để không đẩy cả bộ icon xuống trình duyệt.
@@ -220,6 +220,9 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 - `draft: true` = chỉ hiện khi `npm run dev`. Các bài mẫu "Ví dụ: …" đều là draft, xoá khi có nội dung thật.
 - Trang chưa có nội dung tự hiện `ComingSoon`; khối trang chủ chưa có dữ liệu thì tự ẩn.
 - Ảnh luôn đi qua `astro:assets` (`<Image>` hoặc `toGalleryPhotos()` trong `src/lib/photos.ts`) để tự nén WebP và tạo nhiều kích thước.
+- **Ảnh gốc lưu trong repo**, cạnh bài viết. CMS tự đổi ảnh tải lên sang WebP, cạnh dài ≤ 2560px, chất lượng 85, đồng thời xoá EXIF/GPS (`media_libraries` trong `config.yml`).
+  Không nhúng ảnh từ Google Drive/Photos (không phải CDN, link hay hỏng, Astro không tối ưu được). Video để trên YouTube.
+  Khi repo vượt khoảng 1 GB thì chuyển album lớn sang kho ảnh ngoài (Cloudflare R2 hoặc Cloudinary), hỏi chủ dự án trước.
 - Video lấy bằng **YouTube Data API v3** lúc build (`src/lib/youtube.ts`, biến môi trường `YOUTUBE_API_KEY`). Không đọc trang YouTube trái phép.
 
 ---
@@ -233,7 +236,7 @@ src/
 │   ├── brand/       ← Orbi (linh vật, SVG thuần)
 │   ├── layout/      ← MissionBar, Footer, ThemeToggle, MobileNav (island)
 │   ├── media/       ← island React: MissionsGlobe, PhotoGallery, VideoGrid, VideoPlayer
-│   └── sections/    ← Hero, HomeSections, PageHeader, SectionHead, ProjectCard, JourneyCard, FlightPanel,
+│   └── sections/    ← Hero, HomeSections, PageHeader, SectionHead, ProjectCard, JourneyCard, CosmosPanel,
 │                       MissionStatus, ComingSoon, SocialList
 ├── content/         ← projects/, journeys/, pages/ (Markdown + ảnh)
 ├── assets/earth/    ← ảnh NASA cho Trái Đất hero (day, night, moon .webp)
@@ -243,7 +246,7 @@ src/
 ├── layouts/BaseLayout.astro  ← SEO, JSON-LD, theme, preloader, altimeter, header/footer
 ├── lib/             ← site.ts, i18n.ts, content.ts, photos.ts, youtube.ts, utils.ts (cn, cleanPath)
 ├── pages/           ← mỗi file = một URL ([slug].astro = trang chi tiết)
-├── scripts/         ← motion.ts (chuyển động toàn trang), earth.ts (Trái Đất WebGL ở hero)
+├── scripts/         ← motion.ts (chuyển động toàn trang), earth.ts (Trái Đất WebGL ở hero), cosmos.ts (thu phóng vũ trụ ở Về tôi)
 └── styles/global.css
 public/admin/        ← Sveltia CMS
 .github/workflows/refresh.yml ← build lại mỗi 6 giờ (video mới)

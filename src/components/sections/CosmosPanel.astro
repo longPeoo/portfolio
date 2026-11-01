@@ -1,0 +1,114 @@
+---
+/**
+ * Bảng "Thu phóng · Vũ trụ" ở cột phải trang Về tôi (chỉ hiện trên màn hình ≥ 1100px).
+ * Dính theo khi cuộn: cuộn timeline = camera lùi dần từ Hà Nội ra Trái Đất, Mặt Trăng, Hệ Mặt Trời, Dải Ngân Hà
+ * (thang đo thật, kiểu "Powers of Ten"). Mỗi mốc timeline sáng một vạch.
+ * Vẽ bằng canvas 2D: src/scripts/cosmos.ts, chỉ tải động từ initCosmos() trong src/scripts/motion.ts.
+ */
+import { site } from '@/lib/site';
+import { t } from '@/lib/i18n';
+
+interface Props {
+  /** Số mốc trong timeline */
+  stages: number;
+}
+const { stages } = Astro.props;
+const a = t.about;
+const labels = {
+  levels: [a.cosmosEarth, a.cosmosMoon, a.cosmosInner, a.cosmosSolar, a.cosmosStars, a.cosmosGalaxy],
+  earth: a.cosmosEarth,
+  moon: a.cosmosMoonName,
+  sun: a.cosmosSun,
+  here: a.cosmosHere,
+  city: site.location.city,
+};
+---
+
+<aside
+  class="cosmos"
+  data-cosmos
+  aria-hidden="true"
+  data-labels={JSON.stringify(labels)}
+  data-lat={site.location.lat}
+  data-lon={site.location.lon}
+>
+  <div class="cosmos__panel">
+    <p class="mono cosmos__code"><i></i>{a.cosmosCode}</p>
+
+    <div class="cosmos__screen">
+      <canvas data-cosmos-canvas></canvas>
+      <p class="mono cosmos__level"><span data-cosmos-lv>L0</span><span data-cosmos-level>{a.cosmosEarth}</span></p>
+    </div>
+
+    <ol class="cosmos__ticks">
+      {Array.from({ length: stages }, () => <li data-cosmos-tick></li>)}
+    </ol>
+
+    <dl class="cosmos__readout mono">
+      <div><dt>T+</dt><dd data-cosmos-t>00</dd></div>
+      <div><dt>FOV</dt><dd><span data-cosmos-fov>21.000</span> <small data-cosmos-unit>km</small></dd></div>
+      <div><dt>ZOOM</dt><dd>×10<sup data-cosmos-zoom>0</sup></dd></div>
+    </dl>
+    <p class="cosmos__event">
+      <span class="mono cosmos__year" data-cosmos-year>T-00</span>
+      <span data-cosmos-title data-hint={a.cosmosHint}>{a.cosmosHint}</span>
+    </p>
+  </div>
+</aside>
+
+<style>
+  .cosmos { display: none; }
+  @media (min-width: 1100px) {
+    .cosmos { display: block; position: sticky; top: calc(var(--header-h) + var(--space-6)); align-self: start; }
+  }
+  .cosmos__panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--bg-elev);
+  }
+  .cosmos__code { display: flex; align-items: center; gap: 8px; color: var(--fg-muted); font-size: 0.6875rem; }
+  .cosmos__code i { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); animation: cosmos-led 1.4s steps(2) infinite; }
+
+  /* Màn hình luôn là vũ trụ tối (như kính viễn vọng) ở cả hai giao diện */
+  .cosmos__screen {
+    position: relative;
+    height: min(calc(100svh - var(--header-h) - 300px), 460px);
+    min-height: 260px;
+    border-radius: var(--r);
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 46%, color-mix(in oklab, var(--c-aurora-deep) 35%, var(--c-space)) 0 22%, var(--c-space) 23%);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c-paper) 12%, transparent);
+  }
+  .cosmos__screen canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .cosmos__level {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+    display: flex;
+    gap: 8px;
+    margin: 0;
+    font-size: 0.625rem;
+    color: var(--c-paper);
+  }
+  .cosmos__level span:first-child { color: var(--c-signal); }
+
+  .cosmos__ticks { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
+  .cosmos__ticks li { flex: 1; height: 4px; border-radius: var(--r-pill); background: var(--bg-sunken); transition: background var(--dur) var(--ease-out); }
+  .cosmos__ticks li.is-done { background: var(--primary); }
+
+  .cosmos__readout { display: grid; grid-template-columns: 0.7fr 1.4fr 0.9fr; gap: var(--space-2); margin: 0; }
+  .cosmos__readout div { padding: var(--space-2) var(--space-3); border: 1px solid var(--line); border-radius: var(--r-sm); min-width: 0; }
+  .cosmos__readout dt { color: var(--fg-muted); font-size: 0.625rem; }
+  .cosmos__readout dd { margin: 0; font-size: 1rem; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cosmos__readout small { color: var(--fg-muted); font-size: 0.625rem; text-transform: none; }
+  .cosmos__readout sup { font-size: 0.625rem; color: var(--signal-ink); }
+  .cosmos__event { display: flex; flex-direction: column; gap: 2px; min-height: 3.2em; }
+  .cosmos__year { color: var(--signal-ink); font-size: 0.6875rem; }
+  [data-cosmos-title] { font-family: var(--font-display); font-weight: 750; font-stretch: 112%; font-size: 1.125rem; line-height: 1.25; }
+
+  @keyframes cosmos-led { 50% { opacity: 0.25; } }
+</style>

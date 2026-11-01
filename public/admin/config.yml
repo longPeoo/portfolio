@@ -26,6 +26,20 @@ display_url: https://longpeoo.io.vn
 media_folder: public/uploads
 public_folder: /uploads
 
+# Ảnh tải lên qua CMS được nén ngay trên trình duyệt, trước khi commit lên GitHub:
+# đổi sang WebP, cạnh dài tối đa 2560px (ảnh bìa lớn nhất trên web là 2400px), chất lượng 85.
+# Ảnh điện thoại 5–10 MB → còn khoảng 0,4–1 MB. Ảnh được vẽ lại nên mất luôn EXIF (gồm toạ độ GPS nơi chụp).
+# Lúc build, Astro còn cắt tiếp ra nhiều cỡ nhỏ hơn cho người xem.
+media_libraries:
+  default:
+    config:
+      transformations:
+        raster_image:
+          format: webp
+          quality: 85
+          width: 2560
+          height: 2560
+
 # Tạo đường dẫn không dấu từ tiêu đề tiếng Việt: "Hà Giang" → "ha-giang"
 slug:
   encoding: ascii
@@ -497,16 +511,48 @@ collections:
                 label: Tiêu đề mục kỹ năng
                 widget: string
                 i18n: true
-              - name: flightCode
-                label: Nhãn bảng đo xa chuyến bay
+              - name: cosmosCode
+                label: Nhãn bảng thu phóng vũ trụ
                 widget: string
                 i18n: true
-              - name: flightPad
-                label: "Bảng đo xa: trước khi phóng"
+              - name: cosmosHint
+                label: "Bảng thu phóng: trước mốc đầu tiên"
                 widget: string
                 i18n: true
-              - name: flightOrbit
-                label: "Bảng đo xa: khi tới mốc cuối"
+              - name: cosmosEarth
+                label: "Thu phóng: Trái Đất"
+                widget: string
+                i18n: true
+              - name: cosmosMoon
+                label: "Thu phóng: Trái Đất và Mặt Trăng"
+                widget: string
+                i18n: true
+              - name: cosmosInner
+                label: "Thu phóng: các hành tinh đá"
+                widget: string
+                i18n: true
+              - name: cosmosSolar
+                label: "Thu phóng: Hệ Mặt Trời"
+                widget: string
+                i18n: true
+              - name: cosmosStars
+                label: "Thu phóng: các ngôi sao lân cận"
+                widget: string
+                i18n: true
+              - name: cosmosGalaxy
+                label: "Thu phóng: Dải Ngân Hà"
+                widget: string
+                i18n: true
+              - name: cosmosSun
+                label: "Thu phóng: tên Mặt Trời"
+                widget: string
+                i18n: true
+              - name: cosmosMoonName
+                label: "Thu phóng: tên Mặt Trăng"
+                widget: string
+                i18n: true
+              - name: cosmosHere
+                label: "Thu phóng: nhãn vị trí của bạn"
                 widget: string
                 i18n: true
             i18n: true

@@ -75,9 +75,17 @@ about:
   trajectoryTitle: Từng tầng một
   skillsCode: Kỹ năng
   skillsTitle: Các phân hệ
-  flightCode: Đo xa · Chuyến bay
-  flightPad: Trên bệ phóng
-  flightOrbit: Đã vào quỹ đạo
+  cosmosCode: Thu phóng · Vũ trụ
+  cosmosHint: Cuộn để bay ra xa
+  cosmosEarth: Trái Đất
+  cosmosMoon: Trái Đất và Mặt Trăng
+  cosmosInner: Các hành tinh đá
+  cosmosSolar: Hệ Mặt Trời
+  cosmosStars: Các ngôi sao lân cận
+  cosmosGalaxy: Dải Ngân Hà
+  cosmosSun: Mặt Trời
+  cosmosMoonName: Mặt Trăng
+  cosmosHere: Bạn ở đây
 space:
   code: MSN-02 · Dự án
   title: Kỹ thuật

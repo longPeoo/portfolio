@@ -35,7 +35,7 @@ const schema = z.object({
   ] as const).extend({
     phases: z.array(z.object({ code: s, name: s, state: z.enum(['nominal', 'active', 'queued']) })),
   }),
-  about: group(['code', 'title', 'intro', 'cv', 'trajectoryCode', 'trajectoryTitle', 'skillsCode', 'skillsTitle', 'flightCode', 'flightPad', 'flightOrbit'] as const),
+  about: group(['code', 'title', 'intro', 'cv', 'trajectoryCode', 'trajectoryTitle', 'skillsCode', 'skillsTitle', 'cosmosCode', 'cosmosHint', 'cosmosEarth', 'cosmosMoon', 'cosmosInner', 'cosmosSolar', 'cosmosStars', 'cosmosGalaxy', 'cosmosSun', 'cosmosMoonName', 'cosmosHere'] as const),
   space: group(['code', 'title', 'intro', 'back', 'payload', 'role', 'time', 'systems'] as const),
   journeys: group(['code', 'title', 'intro', 'stats', 'back', 'log', 'video', 'albumCode', 'albumTitle', 'next', 'stampMonth', 'globeLabel', 'globeHint'] as const),
   videos: group(['code', 'title', 'intro', 'subscribe', 'all', 'new', 'views', 'play', 'openYoutube', 'close'] as const),

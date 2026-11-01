@@ -4,7 +4,7 @@ import { DownloadIcon } from 'lucide-react';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ComingSoon from '@/components/sections/ComingSoon.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
-import FlightPanel from '@/components/sections/FlightPanel.astro';
+import CosmosPanel from '@/components/sections/CosmosPanel.astro';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { getPage } from '@/lib/content';
@@ -28,35 +28,35 @@ const Content = page ? (await render(page)).Content : undefined;
         )}
       </PageHeader>
 
-      <!-- Màn hình rộng: cột trái kể chuyện + timeline, cột phải bảng đo xa chuyến bay dính theo khi cuộn -->
+      <!-- Màn hình rộng: cột trái kể chuyện + timeline, cột phải thu phóng vũ trụ dính theo khi cuộn -->
       <div class="container about__layout">
-      <div class="about__main">
-      <section class="about__story prose prose-lg">
-        <Content />
-      </section>
+        <div class="about__main">
+          <section class="about__story prose prose-lg">
+            <Content />
+          </section>
 
-      {page.data.timeline.length > 0 && (
-        <section class="about__section" aria-labelledby="trajectory-title">
-          <p class="mono muted">{t.about.trajectoryCode}</p>
-          <h2 id="trajectory-title">{t.about.trajectoryTitle}</h2>
-          <!-- Đường quỹ đạo tự vẽ khi cuộn; mỗi mốc là một lần "tách tầng" -->
-          <div class="trajectory" data-trajectory>
-            <span class="trajectory__line" aria-hidden="true"><span data-trajectory-line></span></span>
-            <ol>
-              {page.data.timeline.map((m, i) => (
-                <li class="stage" data-stage data-year={m.year} data-title={m.title}>
-                  <span class="stage__dot" aria-hidden="true"></span>
-                  <p class="mono stage__year">T+{String(i).padStart(2, '0')} · {m.year}</p>
-                  <h3>{m.title}</h3>
-                  <p class="muted">{m.text}</p>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
-      )}
-      </div>
-      {page.data.timeline.length > 0 && <FlightPanel stages={page.data.timeline.length} />}
+          {page.data.timeline.length > 0 && (
+            <section class="about__section" aria-labelledby="trajectory-title">
+              <p class="mono muted">{t.about.trajectoryCode}</p>
+              <h2 id="trajectory-title">{t.about.trajectoryTitle}</h2>
+              <!-- Đường quỹ đạo tự vẽ khi cuộn; mỗi mốc là một lần "tách tầng" -->
+              <div class="trajectory" data-trajectory>
+                <span class="trajectory__line" aria-hidden="true"><span data-trajectory-line></span></span>
+                <ol>
+                  {page.data.timeline.map((m, i) => (
+                    <li class="stage" data-stage data-year={m.year} data-title={m.title}>
+                      <span class="stage__dot" aria-hidden="true"></span>
+                      <p class="mono stage__year">T+{String(i).padStart(2, '0')} · {m.year}</p>
+                      <h3>{m.title}</h3>
+                      <p class="muted">{m.text}</p>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </section>
+          )}
+        </div>
+        {page.data.timeline.length > 0 && <CosmosPanel stages={page.data.timeline.length} />}
       </div>
 
       {page.data.subsystems.length > 0 && (

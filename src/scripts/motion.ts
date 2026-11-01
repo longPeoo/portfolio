@@ -68,6 +68,7 @@ const FLAP_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ ·-';
 let flapTimer: number | undefined;
 function initSplitFlap() {
   window.clearInterval(flapTimer);
+  cosmosAbort?.abort();
   const board = document.querySelector<HTMLElement>('[data-flap]');
   if (!board) return;
   const words: string[] = JSON.parse(board.dataset.flap ?? '[]').map((w: string) => w.toUpperCase());
@@ -119,9 +120,9 @@ function initAltimeter() {
     const max = document.documentElement.scrollHeight - window.innerHeight;
     const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
     el.style.setProperty('--alt', String(p));
-    // Trang Về tôi đã có bảng đo xa riêng → ẩn đồng hồ chung để không có hai số ALT khác nhau
-    const flight = document.querySelector<HTMLElement>('[data-flight]');
-    el.toggleAttribute('data-hidden', max < window.innerHeight * 0.6 || (!!flight && flight.offsetParent !== null));
+    // Trang Về tôi đã có bảng thu phóng vũ trụ ở cột phải → ẩn đồng hồ chung cho đỡ chật
+    const cosmos = document.querySelector<HTMLElement>('[data-cosmos]');
+    el.toggleAttribute('data-hidden', max < window.innerHeight * 0.6 || (!!cosmos && cosmos.offsetParent !== null));
     if (readout) readout.textContent = String(Math.round(p * 408)).padStart(3, '0');
   };
   update();
@@ -130,81 +131,26 @@ function initAltimeter() {
 }
 
 /* ------------------------------------------------------------------
-   4b. Bảng đo xa chuyến bay (trang Về tôi, FlightPanel.astro)
-   Tiến độ = vị trí cuộn trong timeline; mốc nào đi qua giữa màn hình thì tách một tầng tên lửa.
+   4b. Thu phóng vũ trụ (trang Về tôi, CosmosPanel.astro)
+   Chỉ tải cosmos.ts khi màn hình đủ rộng để hiện bảng (≥ 1100px).
    ------------------------------------------------------------------ */
-let flightAbort: AbortController | undefined;
-function initFlight() {
-  flightAbort?.abort();
-  const panel = document.querySelector<HTMLElement>('[data-flight]');
+let cosmosAbort: AbortController | undefined;
+function initCosmos() {
+  cosmosAbort?.abort();
+  const panel = document.querySelector<HTMLElement>('[data-cosmos]');
   const timeline = document.querySelector<HTMLElement>('[data-trajectory]');
   if (!panel || !timeline) return;
-  const stages = Array.from(timeline.querySelectorAll<HTMLElement>('[data-stage]'));
-  const path = panel.querySelector<SVGPathElement>('[data-flight-path]');
-  const rocket = panel.querySelector<SVGGElement>('[data-flight-rocket]');
-  const flame = panel.querySelector<SVGGElement>('[data-flight-flame]');
-  const payload = panel.querySelector<SVGGElement>('[data-flight-payload]');
-  const parts = Array.from(panel.querySelectorAll<SVGGElement>('[data-flight-stage]'));
-  const out = (k: string) => panel.querySelector<HTMLElement>(`[data-flight-${k}]`);
-  const [tEl, altEl, velEl, yearEl, titleEl] = ['t', 'alt', 'vel', 'year', 'title'].map(out);
-  if (!path || !rocket || !stages.length) return;
-
-  const length = path.getTotalLength();
-  const stageH = parts[0] ? (parts[0].querySelector('rect')?.height.baseVal.value ?? 16) + 1.5 : 16;
-  let last = '';
-
-  const update = () => {
-    const vh = window.innerHeight;
-    const box = timeline.getBoundingClientRect();
-    // 0 khi timeline chạm 70% màn hình, 1 khi đáy timeline lên tới giữa màn hình
-    const raw = Math.min(1, Math.max(0, (vh * 0.7 - box.top) / (box.height - vh * 0.2)));
-    // Mốc đang hoạt động: mốc cuối cùng đã đi qua 55% chiều cao màn hình
-    let active = -1;
-    stages.forEach((s, i) => s.getBoundingClientRect().top < vh * 0.55 && (active = i));
-    const orbit = raw >= 0.995;
-    // Giảm chuyển động: tên lửa nhảy theo từng mốc thay vì trôi liên tục
-    const p = reduce() ? (orbit ? 1 : Math.max(0, active) / stages.length) : raw;
-
-    const key = `${p.toFixed(3)}|${active}|${orbit}`;
-    if (key === last) return;
-    last = key;
-
-    panel.style.setProperty('--p', p.toFixed(4));
-    const at = path.getPointAtLength(p * length);
-    const ahead = path.getPointAtLength(Math.min(length, p * length + 2));
-    const behind = path.getPointAtLength(Math.max(0, p * length - 2));
-    const angle = (Math.atan2(ahead.y - behind.y, ahead.x - behind.x) * 180) / Math.PI + 90;
-    rocket.setAttribute('transform', `translate(${at.x.toFixed(1)} ${at.y.toFixed(1)}) rotate(${(p === 0 ? 0 : angle).toFixed(1)})`);
-
-    // Tách tầng: mốc thứ i (i ≥ 1) bỏ tầng i-1; vào quỹ đạo thì bỏ hết
-    const dropped = orbit ? parts.length : Math.max(0, active);
-    parts.forEach((g, i) => g.classList.toggle('is-dropped', i < dropped));
-    flame?.setAttribute('transform', `translate(0 ${-dropped * stageH})`);
-    flame?.setAttribute('opacity', p > 0 && !orbit ? '1' : '0');
-    payload?.classList.toggle('is-deployed', orbit);
-
-    const eased = 1 - (1 - p) ** 2;
-    if (tEl) tEl.textContent = String(Math.max(0, active)).padStart(2, '0');
-    if (altEl) altEl.textContent = String(Math.round(eased * 408)).padStart(3, '0');
-    if (velEl) velEl.textContent = (eased * 7.66).toFixed(2);
-    const s = stages[active];
-    if (yearEl) yearEl.textContent = orbit ? 'ORBIT' : s ? `T+${String(active).padStart(2, '0')} · ${s.dataset.year}` : 'T-00';
-    if (titleEl) titleEl.textContent = orbit ? (titleEl.dataset.orbit ?? '') : s ? (s.dataset.title ?? '') : (titleEl.dataset.pad ?? '');
-  };
-
-  flightAbort = new AbortController();
-  let ticking = false;
-  const onScroll = () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      ticking = false;
-      update();
+  const abort = (cosmosAbort = new AbortController());
+  const wide = matchMedia('(min-width: 1100px)');
+  const start = () => {
+    wide.removeEventListener('change', onChange);
+    import('./cosmos').then(({ mountCosmos }) => {
+      if (!abort.signal.aborted) mountCosmos(panel, timeline, abort.signal);
     });
   };
-  update();
-  window.addEventListener('scroll', onScroll, { passive: true, signal: flightAbort.signal });
-  window.addEventListener('resize', onScroll, { passive: true, signal: flightAbort.signal });
+  const onChange = () => wide.matches && start();
+  if (wide.matches) start();
+  else wide.addEventListener('change', onChange, { signal: abort.signal });
 }
 
 /* ------------------------------------------------------------------
@@ -281,6 +227,7 @@ function onSecretKey(e: KeyboardEvent) {
 document.addEventListener('astro:before-swap', () => {
   gsapLib?.ScrollTrigger.getAll().forEach((t) => t.kill());
   window.clearInterval(flapTimer);
+  cosmosAbort?.abort();
 });
 
 document.addEventListener('astro:page-load', async () => {
@@ -288,7 +235,7 @@ document.addEventListener('astro:page-load', async () => {
   initPreloader();
   initSplitFlap();
   initAltimeter();
-  initFlight();
+  initCosmos();
   lenis?.resize(); // trang mới có chiều cao khác
   await initScrollEffects();
   gsapLib?.ScrollTrigger.refresh();
