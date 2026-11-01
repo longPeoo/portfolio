@@ -1,6 +1,6 @@
 ---
 title: Longpeoo
-intro: Xin chào mọi người, mình là Long, mọi người hay gọi là longpeoo - một cậu nhóc lang thang khắp đó đây. Mình hiện tại là một kỹ sư công nghệ Vũ trụ (đây là niềm đam mê cả đời của mình), nhưng tâm hồn mình cũng được nuôi lớn bởi những khung cảnh hùng vĩ, bởi những màu xanh tươi mát của cây cối, bởi những màu xanh ngọc biếc của mặt hồ. Nên nếu mọi người có thời gian thì đi cùng mình nhé.
+intro: Xin chào mọi người, mình là Long, mọi người hay gọi là longpeoo - một cậu nhóc lang thang khắp đó đây. Mình hiện tại là một kỹ sư công nghệ Vũ trụ (đây là niềm đam mê cả đời của mình), nhưng tâm hồn mình cũng được nuôi lớn bởi những khung cảnh hùng vĩ, bởi những màu xanh tươi mát của cây cối, bởi những màu xanh ngọc biếc của mặt hồ. Nên nếu mọi người có thời gian thì đi cùng mình nhé, mọi người ấn phím số 03 Hành trình, 04 Vlog, và 05 Ảnh để đi cùng mình. Số 02 Vũ trụ để hiểu thêm về các dự án mình đã tham gia, và nếu mọi người muốn hợp tác thì cứ ấn đủ các số để hiểu thêm về con người mình trước khi gửi tín hiệu cho mình ở nút Liên hệ nha.
 timeline:
   - year: Tuổi thơ
     title: Một cậu nhóc luôn mơ mộng bên ngoài Vũ trụ
@@ -16,10 +16,10 @@ timeline:
     text: 'Từ cậu nhóc mông lung và vô định, cậu nhóc ý dần tìm thấy hướng đi cho cuộc đời mình. Ngày ấy mình hiểu thêm về ngành, mình bắt đầu ứng dụng được vào cho nhu cầu của loài người, của xã hội. Mình tự nhủ mình nhất định phải theo ngành này và bùm mình quyết định học lên Thạc sĩ ngành Khoa học Vũ trụ: Công nghệ Vệ tinh, Quan sát Trái Đất và Vật lý Thiên văn.'
   - year: '2023'
     title: Đam mê
-    text: Và bùm sau 2 năm, cậu nhóc 23 tuổi năm ấy ẵm cho mình 2 bằng Thạc sĩ về ngành Công nghệ và Khoa học Vũ trụ. Cũng là lúc mình quyết định theo con đường Quan sát Trái Đất, để có thể ứng dụng nhiều nhất cho Tổ quốc, cho Việt Nam thân iu và hơn hết là cho cả nhân loại.
+    text: Và ý trời đã sắp đặt, nghề chọn người thì sau gần 2 năm, cậu nhóc 23 tuổi năm ấy ẵm cho mình 2 bằng Thạc sĩ về ngành Công nghệ và Khoa học Vũ trụ, một bằng của Việt Nam và một bằng của Pháp. Cũng là lúc mình quyết định theo con đường Quan sát Trái Đất, để có thể ứng dụng nhiều nhất cho Tổ quốc, cho Việt Nam thân iu và hơn hết là cho cả nhân loại.
   - year: '2023'
     title: Ngọn lửa nhiệt huyết
-    text: Sau khi sang Pháp nửa năm, mình làm về môi trường Biển, mình quyết định về Việt Nam thay vì nhận Tiến sĩ ở bên Pháp. Và rồi mình cũng tìm được cho mình một bến đỗ ở tập đoàn Vegastar, nay mình ở bên công ty con tên Vegacosmos chuyên làm về Địa không gian, Công nghệ Vệ tinh và Quan sát Trái Đất. Cứ gọi mình tạm là Kỹ sư Công nghệ Vũ trụ đi nghe cho oách!
+    text: Sau khi sang Pháp nửa năm, mình làm về môi trường Biển, mình quyết định về Việt Nam thay vì nhận làm NCS Tiến sĩ ở bên Pháp. Và rồi mình cũng tìm được cho mình một bến đỗ ở tập đoàn Vegastar, nay mình ở bên công ty con tên Vegacosmos chuyên làm về Địa không gian, Công nghệ Vệ tinh và Quan sát Trái Đất. Cứ gọi mình tạm là Kỹ sư Công nghệ Vũ trụ đi nghe cho oách!
   - year: '2025'
     title: Con đường theo đuổi tri thức
     text: Đến năm này là mình đã quyết định mình sẽ sống chết với ngành rồi kkk nên mình quyết định nâng cao cái học vị của mình. Nên là giờ các bạn đang thấy một NCS Tiến sĩ đang loay hoay với con đường mình đã chọn. Mình chọn theo Địa lý, Tài nguyên và Môi trường để có thể ứng dụng Công nghệ Vũ trụ vào với Địa lý, để theo dõi, giám sát, bảo vệ và gìn giữ Tài nguyên cũng như Môi trường của Tổ quốc mến thương.
