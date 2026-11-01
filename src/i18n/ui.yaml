@@ -130,15 +130,15 @@ gallery:
   next: Ảnh sau
   seeJourney: Xem chuyến đi
 contact:
-  code: Thông tin · Gửi tín hiệu ngay cho longpeoo
-  title: Gửi một tín hiệu.
-  titleEm: Tôi luôn bắt sóng.
-  intro: 'Hợp tác dự án kỹ thuật, tài trợ video, gợi ý điểm đến, hay đơn giản là muốn nói chuyện về vũ trụ: cứ gửi email cho tôi nhé.'
+  code: Thông tin · Gửi tín hiệu ngay cho Longpeoo
+  title: Gửi một tín hiệu ngay
+  titleEm: Mình luôn bắt sóng.
+  intro: Hợp tác dự án kỹ thuật, hợp tác nghiên cứu và phát triển hay các nhãn hàng muốn order hoặc chỉ đơn giản muốn nói chuyện, muốn bàn luận nhiều hơn về ngành Khoa học và Công nghệ Vũ trụ thì gửi ngay cho mình một cái mail nhé.
   metaTitle: Liên hệ
   metaDescription: Liên hệ hợp tác, tài trợ hoặc chỉ để chào {name}.
 notFound:
   metaTitle: Lạc vào vũ trụ
   code: Lỗi 404 · Mất tín hiệu
-  title: Houston, chúng ta có vấn đề.
-  text: Trang bạn tìm đã trôi ra khỏi quỹ đạo, hoặc chưa từng được phóng lên.
-  back: Quay về trạm phóng
+  title: Ối có vấn đề rồi, đợi Longpeoo giải quyết nhé
+  text: Trang bạn tìm đã trôi ra khỏi quỹ đạo, hoặc chưa từng có trong kế hoạch của Longpeoo.
+  back: Quay về Trái Đất nhé
