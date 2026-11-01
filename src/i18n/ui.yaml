@@ -40,32 +40,17 @@ home:
   videoAll: Tất cả vlog
   projectsCode: MSN-02 · Dự án
   projectsTitle: Dự án kỹ thuật
-  journeysCode: MSN-03 · Hành trình
+  journeysCode: Trái Đất · Mục tiêu phủ kín bản đồ
   journeysTitle: Những nơi mình đã đến
-  photosCode: MSN-05 · Cuộn phim
+  photosCode: Lưu giữ · Những kỉ niệm vô giá
   photosTitle: Cuộn phim gần đây
   photosLink: Xem tất cả ảnh
-  statusCode: Tiến độ
-  statusTitle: Website đang được lắp ráp, từng tầng một.
+  statusCode: test
+  statusTitle: test
   phases:
     - code: P1
       name: Nền móng & deploy
       state: nominal
-    - code: P2
-      name: Trang, nội dung & CMS
-      state: nominal
-    - code: P3
-      name: Animation & mascot
-      state: nominal
-    - code: P4
-      name: YouTube, ảnh, bản đồ
-      state: nominal
-    - code: P5
-      name: SEO & tối ưu — launch
-      state: nominal
-    - code: P6
-      name: Nội dung thật & song ngữ
-      state: active
 about:
   code: MSN-01 · Về tôi
   title: Về tôi
