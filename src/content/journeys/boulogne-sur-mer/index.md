@@ -1,22 +1,22 @@
 ---
 title: Một mình tại trời Âu
 summary: Vào thời điểm chân ướt chân ráo, mình may mắn được sang Pháp để thực tập cho luận án Thạc sĩ tại một  một chiếc tỉnh bé tí hon ngay sát bờ biển (à nhìn sang được cả bờ nước Anh luôn vui lắm hehe).
-date: 2023-04-16
-endDate: 2023-08-30
+date: 2023-04-18
+endDate: 2023-08-14
 place: Boulogne Sur Mer
 countryCode: FR
 country: Pháp
 lat: 50.7264
 lng: 1.6147
 cover: boulogne_00.webp
-coverAlt: "Con phố nhà mình ở, hai dãy nhà nhuộm cam trong nắng chiều"
+coverAlt: Con phố nhà mình ở, hai dãy nhà nhuộm cam trong nắng chiều
 gallery:
   - src: boulogne_05.webp
+    caption: Đây là con phố mình ở nè đẹp chưa
     alt: Đây là con phố mình ở nè đẹp chưa
-    caption: ''
   - src: boulogne_04.webp
+    caption: Công viên cách nhà đúng 10 bước chân, hôm nào đi làm về cũng ra đây chạy mấy vòng
     alt: Công viên cách nhà đúng 10 bước chân, hôm nào đi làm về cũng ra đây chạy mấy vòng
-    caption: ''
 youtube: ''
 tags: []
 draft: false
