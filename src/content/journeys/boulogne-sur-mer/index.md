@@ -24,4 +24,8 @@ draft: false
 
 Tại đây từ một cậu nhóc đang tập tành nuôi chí lớn, mình được thử sức với chính ngành nghề của mình, mình làm việc cho một viện nghiên cứu trực thuộc chính phủ Pháp, để nghiên cứu về "Ocean color" nhưng thôi cái này để sau nhé! Đến với nước Pháp mơ mộng thì đương nhiên rồi, một người con xa xứ buồn chứ, nhớ nhà, nhớ bạn bè, nhưng mình vẫn tận hưởng cuộc sống, có thời gian rảnh là mình sẽ tót sang nước khác chơi.
 
-Chỗ mình ở gần biển nên chill lắm, ngày ngày đi bộ ra ngắm biển, thỉnh thoảng mình còn đi bộ từ chỗ làm về. Oh khá là nhớ cuộc sống bên đấy, nhưng mà vẫn yêu Việt Nam nên là phải về phụng sự Tổ quốc, phụng sự bà con iu dấu chứ nhỉ
+Chỗ mình ở gần biển nên chill lắm, ngày ngày đi bộ ra ngắm biển, thỉnh thoảng mình còn đi bộ từ chỗ làm về. Oh khá là nhớ cuộc sống bên đấy, nhưng mà vẫn yêu Việt Nam nên là phải về phụng sự Tổ quốc, phụng sự bà con iu dấu chứ nhỉ.
+
+Đây là nơi ở cũng như là nơi mình công tác với công việc là một thực tập sinh, một nhà nghiên cứu, biết làm thế nào để trở thành một nhà khoa học. Cũng là nơi chứng kiến những nỗi nhớ nhà vô bờ bến, cũng là nơi nuôi nấng tâm hồn mình. Mình thích cuộc sống nhẹ nhàng ở đây, gần biển, mọi thứ đều tuyệt vời chỉ là mình không quen với cuộc sống của tư bản thôi. 
+
+Dù sao cũng rất là biết ơn.
