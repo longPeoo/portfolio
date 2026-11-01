@@ -120,9 +120,9 @@ function initAltimeter() {
     const max = document.documentElement.scrollHeight - window.innerHeight;
     const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
     el.style.setProperty('--alt', String(p));
-    // Trang Về tôi đã có bảng thu phóng vũ trụ ở cột phải → ẩn đồng hồ chung cho đỡ chật
-    const cosmos = document.querySelector<HTMLElement>('[data-cosmos]');
-    el.toggleAttribute('data-hidden', max < window.innerHeight * 0.6 || (!!cosmos && cosmos.offsetParent !== null));
+    // Trang Về tôi đã có nền vũ trụ kèm số đo riêng → ẩn đồng hồ chung
+    const cosmos = !!document.querySelector('[data-cosmos]');
+    el.toggleAttribute('data-hidden', max < window.innerHeight * 0.6 || cosmos);
     if (readout) readout.textContent = String(Math.round(p * 408)).padStart(3, '0');
   };
   update();
@@ -131,26 +131,18 @@ function initAltimeter() {
 }
 
 /* ------------------------------------------------------------------
-   4b. Thu phóng vũ trụ (trang Về tôi, CosmosPanel.astro)
-   Chỉ tải cosmos.ts khi màn hình đủ rộng để hiện bảng (≥ 1100px).
+   4b. Nền vũ trụ (trang Về tôi, CosmosBackdrop.astro): tải cosmos.ts khi trang có [data-cosmos]
    ------------------------------------------------------------------ */
 let cosmosAbort: AbortController | undefined;
 function initCosmos() {
   cosmosAbort?.abort();
-  const panel = document.querySelector<HTMLElement>('[data-cosmos]');
-  const timeline = document.querySelector<HTMLElement>('[data-trajectory]');
-  if (!panel || !timeline) return;
+  const root = document.querySelector<HTMLElement>('[data-cosmos]');
+  const track = document.querySelector<HTMLElement>('[data-cosmos-track]');
+  if (!root || !track) return;
   const abort = (cosmosAbort = new AbortController());
-  const wide = matchMedia('(min-width: 1100px)');
-  const start = () => {
-    wide.removeEventListener('change', onChange);
-    import('./cosmos').then(({ mountCosmos }) => {
-      if (!abort.signal.aborted) mountCosmos(panel, timeline, abort.signal);
-    });
-  };
-  const onChange = () => wide.matches && start();
-  if (wide.matches) start();
-  else wide.addEventListener('change', onChange, { signal: abort.signal });
+  import('./cosmos').then(({ mountCosmos }) => {
+    if (!abort.signal.aborted) mountCosmos(root, track, abort.signal);
+  });
 }
 
 /* ------------------------------------------------------------------

@@ -4,7 +4,7 @@ import { DownloadIcon } from 'lucide-react';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ComingSoon from '@/components/sections/ComingSoon.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
-import CosmosPanel from '@/components/sections/CosmosPanel.astro';
+import CosmosBackdrop from '@/components/sections/CosmosBackdrop.astro';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { getPage } from '@/lib/content';
@@ -28,9 +28,10 @@ const Content = page ? (await render(page)).Content : undefined;
         )}
       </PageHeader>
 
-      <!-- Màn hình rộng: cột trái kể chuyện + timeline, cột phải thu phóng vũ trụ dính theo khi cuộn -->
-      <div class="container about__layout">
-        <div class="about__main">
+      <!-- Nền vũ trụ: cuộn hết câu chuyện + timeline (data-cosmos-track) = camera lùi từ Hà Nội ra Dải Ngân Hà -->
+      <CosmosBackdrop />
+      <div class="container">
+        <div data-cosmos-track>
           <section class="about__story prose prose-lg">
             <Content />
           </section>
@@ -56,7 +57,6 @@ const Content = page ? (await render(page)).Content : undefined;
             </section>
           )}
         </div>
-        {page.data.timeline.length > 0 && <CosmosPanel stages={page.data.timeline.length} />}
       </div>
 
       {page.data.subsystems.length > 0 && (
@@ -87,8 +87,6 @@ const Content = page ? (await render(page)).Content : undefined;
 
 <style>
   .about__cv { margin-top: var(--space-8); }
-  .about__layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-16); }
-  @media (min-width: 1100px) { .about__layout { grid-template-columns: minmax(0, 68ch) minmax(300px, 400px); justify-content: space-between; } }
   .about__story { max-width: 68ch; }
   .about__section { margin-top: var(--section-y); }
   .about__section h2 { font-size: var(--fs-h2); margin-block: var(--space-3) var(--space-12); }

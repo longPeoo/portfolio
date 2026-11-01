@@ -1,0 +1,81 @@
+---
+/**
+ * Nền vũ trụ của trang Về tôi: canvas cố định phủ kín màn hình, nằm sau mọi nội dung (z-index -1).
+ * Cuộn trang = camera lùi dần từ Hà Nội ra Trái Đất, Mặt Trăng, Hệ Mặt Trời, Dải Ngân Hà (thang đo thật, kiểu "Powers of Ten").
+ * Vẽ bằng src/scripts/cosmos.ts, tải động từ initCosmos() trong src/scripts/motion.ts.
+ * Footer có nền riêng nên tự che nền này khi cuộn tới cuối trang.
+ */
+import { site } from '@/lib/site';
+import { t } from '@/lib/i18n';
+
+const a = t.about;
+const labels = {
+  levels: [a.cosmosEarth, a.cosmosMoon, a.cosmosInner, a.cosmosSolar, a.cosmosStars, a.cosmosGalaxy],
+  earth: a.cosmosEarth,
+  moon: a.cosmosMoonName,
+  sun: a.cosmosSun,
+  here: a.cosmosHere,
+  city: site.location.city,
+};
+---
+
+<div class="cosmos" data-cosmos aria-hidden="true" data-labels={JSON.stringify(labels)} data-lat={site.location.lat} data-lon={site.location.lon}>
+  <canvas data-cosmos-canvas></canvas>
+  <div class="cosmos__hud mono">
+    <p class="cosmos__code"><i></i>{a.cosmosCode}</p>
+    <p><span class="cosmos__lv" data-cosmos-lv>L0</span> · <span data-cosmos-level>{a.cosmosEarth}</span></p>
+    <p>FOV <span data-cosmos-fov>–</span> <span class="cosmos__unit" data-cosmos-unit>km</span> · ZOOM ×10<sup data-cosmos-zoom>0</sup></p>
+    <p class="cosmos__hint" data-cosmos-hint>↓ {a.cosmosHint}</p>
+  </div>
+</div>
+
+<style>
+  .cosmos {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .cosmos canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  /* Lớp nền mờ sau cột chữ: chữ luôn đọc được dù phía sau là sao hay Ngân Hà */
+  .cosmos::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: color-mix(in oklab, var(--bg) 72%, transparent);
+  }
+  @media (min-width: 1100px) {
+    .cosmos::after {
+      background: linear-gradient(
+        90deg,
+        color-mix(in oklab, var(--bg) 88%, transparent) 0 calc(50% - 120px),
+        transparent calc(50% + 160px)
+      );
+    }
+  }
+
+  .cosmos__hud {
+    position: absolute;
+    right: var(--gutter);
+    bottom: var(--space-6);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    font-size: 0.625rem;
+    color: var(--fg-muted);
+    text-align: right;
+  }
+  .cosmos__hud p { margin: 0; }
+  .cosmos__code { display: flex; align-items: center; gap: 8px; }
+  .cosmos__code i { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); animation: cosmos-led 1.4s steps(2) infinite; }
+  .cosmos__lv, .cosmos__hud sup { color: var(--signal-ink); }
+  .cosmos__hud span { color: var(--fg); }
+  .cosmos__hud .cosmos__unit { color: var(--fg-muted); text-transform: none; }
+  .cosmos__hint { color: var(--signal-ink); transition: opacity var(--dur) var(--ease-out); }
+  .cosmos__hint[hidden] { display: block; opacity: 0; }
+  @media (max-width: 640px) { .cosmos__hud { display: none; } }
+
+  @keyframes cosmos-led { 50% { opacity: 0.25; } }
+</style>
