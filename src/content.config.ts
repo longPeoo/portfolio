@@ -6,8 +6,11 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { countryName } from '@/lib/flags';
 
 const link = z.object({ label: z.string(), url: z.string() });
+/** CMS lưu ô trống thành '' → coi như chưa điền */
+const blank = (v: unknown) => (v === '' || v === null ? undefined : v);
 
 const projects = defineCollection({
   // <tên>/index.md = tiếng Việt; index.en.md (bản dịch từ CMS, P6) không nạp vào đây
@@ -29,29 +32,39 @@ const projects = defineCollection({
     }),
 });
 
+/**
+ * Chuyến đi. Tối thiểu chỉ cần place + countryCode + lat/lng → hiện ghim và cờ trên địa cầu.
+ * Có ảnh bìa (cover) → thêm thẻ ở trang Hành trình và trang riêng /journeys/<thư-mục>.
+ */
 const journeys = defineCollection({
   loader: glob({ pattern: '*/index.md', base: './src/content/journeys', generateId: ({ entry }) => entry.split('/')[0] }),
   schema: ({ image }) =>
-    z.object({
-      title: z.string(),
-      summary: z.string(),
-      date: z.coerce.date(),
-      endDate: z.coerce.date().optional(),
-      place: z.string(),
-      country: z.string(),
-      /** Toạ độ để chấm lên quả địa cầu (tra trên Google Maps: chuột phải → copy toạ độ) */
-      lat: z.number().min(-90).max(90),
-      lng: z.number().min(-180).max(180),
-      cover: image(),
-      coverAlt: z.string(),
-      gallery: z
-        .array(z.object({ src: image(), alt: z.string(), caption: z.string().optional() }))
-        .default([]),
-      /** Link hoặc ID video YouTube kể về chuyến đi */
-      youtube: z.string().optional(),
-      tags: z.array(z.string()).default([]),
-      draft: z.boolean().default(false),
-    }),
+    z
+      .object({
+        /** Để trống = dùng tên địa điểm */
+        title: z.string().default(''),
+        summary: z.string().default(''),
+        date: z.preprocess(blank, z.coerce.date().optional()),
+        endDate: z.preprocess(blank, z.coerce.date().optional()),
+        place: z.string(),
+        /** Mã quốc gia ISO 2 chữ (VN, FR, JP…) → cờ + tên nước tự động */
+        countryCode: z.string().trim().toUpperCase().regex(/^[A-Z]{2}$/, 'Mã quốc gia gồm 2 chữ cái, ví dụ VN, FR, JP'),
+        /** Tên nước hiển thị; để trống = tự lấy theo mã (FR → Pháp) */
+        country: z.string().default(''),
+        /** Toạ độ để chấm lên quả địa cầu (tra trên Google Maps: chuột phải → copy toạ độ) */
+        lat: z.number().min(-90).max(90),
+        lng: z.number().min(-180).max(180),
+        cover: z.preprocess(blank, image().optional()),
+        coverAlt: z.string().default(''),
+        gallery: z
+          .array(z.object({ src: image(), alt: z.string(), caption: z.string().optional() }))
+          .default([]),
+        /** Link hoặc ID video YouTube kể về chuyến đi */
+        youtube: z.string().optional(),
+        tags: z.array(z.string()).default([]),
+        draft: z.boolean().default(false),
+      })
+      .transform((d) => ({ ...d, title: d.title.trim() || d.place, country: d.country.trim() || countryName(d.countryCode) })),
 });
 
 const pages = defineCollection({

@@ -4,9 +4,10 @@ summary: Vào thời điểm chân ướt chân ráo, mình may mắn được s
 date: 2023-04-16
 endDate: 2023-08-30
 place: Boulogne Sur Mer
+countryCode: FR
 country: Pháp
-lat: 47.058247
-lng: 2.627377
+lat: 50.7264
+lng: 1.6147
 cover: IMG_4774.webp
 coverAlt: Trông cũng ngoan ngoãn hiền lành, chụp với tháp sắt nè
 gallery:

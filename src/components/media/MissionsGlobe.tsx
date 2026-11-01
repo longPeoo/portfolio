@@ -7,13 +7,21 @@ export interface GlobePoint {
   id: string
   title: string
   place: string
+  country: string
+  /** Mã quốc gia ISO 2 chữ → khoá trong flags */
+  code: string
   lat: number
   lng: number
-  date: string
+  /** Chưa có ngày thì không nối đường bay */
+  date?: string
+  /** Chỉ có khi chuyến đi đã có trang riêng (có ảnh bìa) */
+  href?: string
 }
 
 interface MissionsGlobeProps {
   points: GlobePoint[]
+  /** SVG cờ theo mã quốc gia (render lúc build, src/lib/flags.ts) */
+  flags: Record<string, string>
   /** Bản gọn cho trang chủ: chỉ hiện 4 chuyến gần nhất trong danh sách */
   compact?: boolean
   /** Chữ lấy từ src/i18n: mô tả cho trình đọc màn hình + gợi ý thao tác */
@@ -46,13 +54,13 @@ function arcPoints(a: Vec3, b: Vec3, steps = 40): [Vec3, number][] {
 /**
  * Quả địa cầu các chuyến đi: Trái Đất thật (ảnh vệ tinh NASA, src/scripts/globe.ts), tự xoay chậm, kéo để xoay.
  * Đường bay nối các chuyến theo thứ tự thời gian. Rê chuột vào một chuyến trong danh sách → địa cầu xoay tới đó.
- * Mỗi chuyến có một ghim nổi: bấm để mở trang chuyến đi; ghim mờ dần khi điểm quay ra sau địa cầu.
+ * Mỗi nơi có một ghim cờ (rê chuột hiện tên): chuyến có trang riêng thì bấm để mở; ghim mờ dần khi điểm quay ra sau địa cầu.
  */
-export function MissionsGlobe({ points, compact = false, labels }: MissionsGlobeProps) {
+export function MissionsGlobe({ points, flags, compact = false, labels }: MissionsGlobeProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const arcRef = useRef<HTMLCanvasElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
-  const pinRefs = useRef<(HTMLAnchorElement | null)[]>([])
+  const pinRefs = useRef<(HTMLElement | null)[]>([])
   const target = useRef<[number, number] | null>(null)
   const [ready, setReady] = useState(false)
   const [active, setActive] = useState<string | null>(null)
@@ -72,7 +80,10 @@ export function MissionsGlobe({ points, compact = false, labels }: MissionsGlobe
       const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches
       const isDark = () => document.documentElement.classList.contains("dark")
       const vecs = points.map((p) => toVec(p.lat, p.lng))
-      const chronological = points.map((p, i) => ({ p, v: vecs[i] })).sort((a, b) => a.p.date.localeCompare(b.p.date))
+      const chronological = points
+        .map((p, i) => ({ p, v: vecs[i] }))
+        .filter((c) => c.p.date)
+        .sort((a, b) => a.p.date!.localeCompare(b.p.date!))
       const arcs = chronological.slice(1).map((c, i) => arcPoints(chronological[i].v, c.v))
       const ctx = arcCanvas.getContext("2d")
       const signal = getComputedStyle(stage).getPropertyValue("--primary").trim() || "#ff6a3d"
@@ -212,42 +223,56 @@ export function MissionsGlobe({ points, compact = false, labels }: MissionsGlobe
         />
         <canvas ref={arcRef} className={cn("missions-globe__arcs", ready && "is-ready")} aria-hidden="true" />
         {/* Trùng với danh sách bên cạnh nên ẩn khỏi bàn phím/trình đọc màn hình */}
-        {points.map((p, i) => (
-          <a
-            key={p.id}
-            ref={(el) => {
-              pinRefs.current[i] = el
-            }}
-            href={`/journeys/${p.id}`}
-            className={cn("missions-globe__pin", ready && "is-ready")}
-            data-active={active === p.id || undefined}
-            tabIndex={-1}
-            aria-hidden="true"
-            onMouseEnter={() => setActive(p.id)}
-            onMouseLeave={() => setActive(null)}
-          >
-            {p.place}
-          </a>
-        ))}
+        {points.map((p, i) => {
+          const Pin = p.href ? "a" : "span"
+          return (
+            <Pin
+              key={p.id}
+              ref={(el: HTMLElement | null) => {
+                pinRefs.current[i] = el
+              }}
+              href={p.href}
+              className={cn("missions-globe__pin", ready && "is-ready")}
+              data-active={active === p.id || undefined}
+              tabIndex={-1}
+              aria-hidden="true"
+              onMouseEnter={() => setActive(p.id)}
+              onMouseLeave={() => setActive(null)}
+            >
+              <span className="missions-globe__flag" dangerouslySetInnerHTML={{ __html: flags[p.code] ?? "" }} />
+              <span className="missions-globe__label">{p.place}</span>
+            </Pin>
+          )
+        })}
         <p className="mono missions-globe__hint">{labels.hint}</p>
       </div>
-      <ol className="missions-globe__list">
-        {listed.map((p, i) => (
-          <li key={p.id}>
-            <a
-              href={`/journeys/${p.id}`}
-              data-active={active === p.id || undefined}
-              onMouseEnter={() => focus(p)}
-              onMouseLeave={() => focus(null)}
-              onFocus={() => focus(p)}
-              onBlur={() => focus(null)}
-            >
-              <span className="mono">M-{String(points.length - i).padStart(2, "0")}</span>
-              <span className="missions-globe__place">{p.place}</span>
-              <span className="missions-globe__title">{p.title}</span>
-            </a>
-          </li>
-        ))}
+      {/* data-lenis-prevent: danh sách dài tự cuộn bên trong, không bị cuộn mượt toàn trang (Lenis) chiếm */}
+      <ol className="missions-globe__list" data-lenis-prevent>
+        {listed.map((p, i) => {
+          // Chuyến có trang riêng: link; chưa có: nút chỉ xoay địa cầu tới đó
+          const Item = p.href ? "a" : "button"
+          return (
+            <li key={p.id}>
+              <Item
+                href={p.href}
+                type={p.href ? undefined : "button"}
+                data-active={active === p.id || undefined}
+                onMouseEnter={() => focus(p)}
+                onMouseLeave={() => focus(null)}
+                onFocus={() => focus(p)}
+                onBlur={() => focus(null)}
+              >
+                <span className="mono">M-{String(points.length - i).padStart(2, "0")}</span>
+                <span className="missions-globe__place">
+                  <span className="missions-globe__flag" dangerouslySetInnerHTML={{ __html: flags[p.code] ?? "" }} />
+                  {p.place}
+                </span>
+                {/* Dòng phụ: tiêu đề chuyến đi; chưa đặt tiêu đề thì ghi tên nước (bỏ qua nếu trùng tên nơi, vd. Singapore) */}
+                <span className="missions-globe__title">{p.title !== p.place ? p.title : p.country !== p.place ? p.country : ""}</span>
+              </Item>
+            </li>
+          )
+        })}
       </ol>
     </div>
   )

@@ -2,3 +2,4 @@
 /engineering    /space    301
 /engineering/*  /space/:splat  301
 /videos         /vlogs   301
+/journeys/mot-minh-tai-troi-au  /journeys/boulogne-sur-mer  301

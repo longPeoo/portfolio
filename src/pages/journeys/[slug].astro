@@ -11,20 +11,23 @@ import { PhotoGallery } from '@/components/media/PhotoGallery';
 import JourneyCard from '@/components/sections/JourneyCard.astro';
 import { cn } from '@/lib/utils';
 import { t, fmt } from '@/lib/i18n';
-import { getJourneys, formatMonth, formatRange } from '@/lib/content';
+import { getJourneys, hasStory, missionNumber, formatMonth, formatRange } from '@/lib/content';
+import { flagSvg } from '@/lib/flags';
 import { toGalleryPhotos } from '@/lib/photos';
 import { youtubeId } from '@/lib/youtube';
 
+// Chỉ chuyến đã có ảnh bìa mới có trang riêng; chuyến chỉ có toạ độ thì chỉ là ghim trên địa cầu
 export async function getStaticPaths() {
-  const journeys = await getJourneys();
-  return journeys.map((journey, i) => ({
+  const all = await getJourneys();
+  const stories = all.filter(hasStory);
+  return stories.map((journey, i) => ({
     params: { slug: journey.id },
-    props: { journey, number: journeys.length - i, next: journeys[i + 1] ?? journeys[0] },
+    props: { journey, number: missionNumber(all, journey.id), next: stories[i + 1] ?? stories[0] },
   }));
 }
 
 const { journey, number, next } = Astro.props;
-const { title, summary, place, country, lat, lng, date, endDate, cover, coverAlt, gallery, youtube, tags } = journey.data;
+const { title, summary, place, country, countryCode, lat, lng, date, endDate, cover, coverAlt, gallery, youtube, tags } = journey.data;
 const { Content } = await render(journey);
 const videoId = youtubeId(youtube);
 const photos = await toGalleryPhotos(gallery);
@@ -35,7 +38,7 @@ const article = {
   '@type': 'Article',
   headline: title,
   description: summary,
-  datePublished: date.toISOString(),
+  datePublished: date?.toISOString(),
   image: new URL(og, Astro.site).href,
   contentLocation: { '@type': 'Place', name: `${place}, ${country}`, geo: { '@type': 'GeoCoordinates', latitude: lat, longitude: lng } },
   url: new URL(`/journeys/${journey.id}`, Astro.site).href,
@@ -50,15 +53,16 @@ const article = {
       </a>
       <div class="trip__title">
         <div>
-          <p class="mono muted">M-{String(number).padStart(2, '0')} · {t.journeys.log} · {coord} · {formatRange(date, endDate)}</p>
+          <p class="mono muted">M-{String(number).padStart(2, '0')} · {t.journeys.log} · {coord}{date && ` · ${formatRange(date, endDate)}`}</p>
           <h1>{title}</h1>
           <p class="trip__lead">{summary}</p>
         </div>
         <!-- Con dấu hộ chiếu đóng "cộp" một lần khi mở trang -->
         <div class="trip__stamp" aria-hidden="true">
+          <Fragment set:html={flagSvg(countryCode)} />
           <span class="mono">{country}</span>
           <strong>{place}</strong>
-          <span class="mono">{formatMonth(date)}</span>
+          {date && <span class="mono">{formatMonth(date)}</span>}
         </div>
       </div>
       {tags.length > 0 && <div class="trip__tags">{tags.map((t) => <Badge variant="telemetry">{t}</Badge>)}</div>}
@@ -125,6 +129,7 @@ const article = {
   }
   .trip__stamp strong { font-family: var(--font-display); font-size: 1.35rem; font-stretch: 112%; line-height: 1.05; padding-inline: 14px; }
   .trip__stamp .mono { font-size: 0.625rem; }
+  .trip__stamp :global(.flag) { font-size: 1.75rem; margin-bottom: 4px; }
   @keyframes stamp-in {
     0% { opacity: 0; scale: 2.2; rotate: 8deg; }
     55% { opacity: 1; scale: 0.9; rotate: -14deg; }

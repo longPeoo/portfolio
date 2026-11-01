@@ -111,6 +111,7 @@ journeys:
   stampMonth: M{n}
   globeLabel: Globe marking {n} journeys. Click a pin to open the journey.
   globeHint: Drag to rotate · click a pin to open
+  flagsLabel: Countries I've set foot in
 videos:
   code: MSN-04 · Transmissions
   title: Vlogs

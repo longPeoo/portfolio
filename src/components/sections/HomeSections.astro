@@ -11,8 +11,10 @@ import { MissionsGlobe } from '@/components/media/MissionsGlobe';
 import { PhotoGallery } from '@/components/media/PhotoGallery';
 import ProjectCard from './ProjectCard.astro';
 import SectionHead from './SectionHead.astro';
+import FlagStrip from './FlagStrip.astro';
 import { cn } from '@/lib/utils';
-import { getProjects, getJourneys, getPhotos } from '@/lib/content';
+import { getProjects, getJourneys, getPhotos, toGlobe } from '@/lib/content';
+import { uniqueCountries } from '@/lib/flags';
 import { getFeaturedVideo } from '@/lib/youtube';
 import { toGalleryPhotos } from '@/lib/photos';
 import { t, fmt, intl } from '@/lib/i18n';
@@ -25,7 +27,8 @@ const allProjects = await getProjects();
 const featured = (allProjects.filter((p) => p.data.featured).length ? allProjects.filter((p) => p.data.featured) : allProjects).slice(0, 2);
 
 const journeys = await getJourneys();
-const points = journeys.map((j) => ({ id: j.id, title: j.data.title, place: j.data.place, lat: j.data.lat, lng: j.data.lng, date: j.data.date.toISOString() }));
+const { points, flags } = toGlobe(journeys);
+const countries = uniqueCountries(journeys.map((j) => j.data));
 
 const globeLabels = { label: fmt(t.journeys.globeLabel, { n: points.length }), hint: t.journeys.globeHint };
 
@@ -62,7 +65,8 @@ const photos = await toGalleryPhotos(
 {points.length > 0 && (
   <section class="home-sec container" aria-label={t.home.journeysTitle}>
     <SectionHead code={t.home.journeysCode} title={t.home.journeysTitle} href="/journeys" />
-    <MissionsGlobe client:visible points={points} labels={globeLabels} compact />
+    <FlagStrip countries={countries} class="home-flags" />
+    <MissionsGlobe client:visible points={points} flags={flags} labels={globeLabels} compact />
   </section>
 )}
 
@@ -75,6 +79,7 @@ const photos = await toGalleryPhotos(
 
 <style>
   .home-sec { margin-top: var(--section-y); }
+  .home-sec :global(.home-flags) { margin-bottom: var(--space-8); }
   .transmission { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: var(--space-12); align-items: center; }
   .transmission__text { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4); }
   .transmission h2 { font-size: var(--fs-h2); }

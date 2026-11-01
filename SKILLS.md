@@ -104,7 +104,8 @@ Thang cỡ chữ: `--fs-mono`, `--fs-sm`, `--fs-base`, `--fs-lg`, `--fs-h3`, `--
 | Thẻ chuyến đi | rê chuột: con dấu hộ chiếu đóng "cộp"; trang chi tiết: con dấu đóng một lần khi mở |
 | Ảnh polaroid | dán băng keo, xoay nhẹ; rê chuột thì thẳng lại và nhấc lên. Lưới đọc trái → phải: 2 cột (< 480px) → 3 → 4 (≥ 768px) → 5 (≥ 1024px). Trang chủ tối đa 2 dòng đầy |
 | Vlog (`/vlogs`, đường dẫn cũ `/videos` chuyển hướng 301) | khung CRT có vạch quét, nhấp nháy khi rê chuột; nút play nảy |
-| Địa cầu Missions | Trái Đất thật (WebGL, ảnh NASA dùng chung với hero: `src/scripts/globe.ts`), sáng: chiếu chính diện; tối: phía khuất có đèn thành phố. Tự xoay chậm (dừng khi giảm chuyển động), kéo để xoay (chuột: ngang + dọc, cảm ứng: chỉ ngang), rê vào tên chuyến đi → xoay tới đó; đường bay nối các chuyến theo thời gian; **ghim bấm được** trên từng điểm → mở trang chuyến đi (ẩn khi quay ra sau); rê chuột lên địa cầu thì ngừng quay |
+| Dải cờ | cờ tròn các nước đã đến (trang Hành trình, khối "Mình đã đến" ở trang chủ); rê chuột: cờ nảy lên, nghiêng, viền cam |
+| Địa cầu Missions | Trái Đất thật (WebGL, ảnh NASA dùng chung với hero: `src/scripts/globe.ts`), sáng: chiếu chính diện; tối: phía khuất có đèn thành phố. Tự xoay chậm (dừng khi giảm chuyển động), kéo để xoay (chuột: ngang + dọc, cảm ứng: chỉ ngang), rê vào tên chuyến đi → xoay tới đó; đường bay nối các chuyến có ngày theo thời gian; **ghim là cờ tròn** của nước đó, tên nơi chỉ hiện khi rê chuột/đang chọn (điểm gần nhau không chồng chữ); chuyến có trang riêng thì bấm ghim để mở (ẩn khi quay ra sau); rê chuột lên địa cầu thì ngừng quay. Danh sách bên cạnh (trang Hành trình) cao tối đa bằng địa cầu, tự cuộn bên trong (`data-lenis-prevent`) |
 | Trứng phục sinh | gõ `launch` ở bất kỳ đâu → mưa sao băng |
 
 Quy tắc kỹ thuật:
@@ -216,7 +217,7 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 | Chữ cố định trên giao diện (nhãn MSN-xx, tiêu đề mục, nút, bảng tiến độ) | `src/i18n/ui.yaml`, `src/i18n/ui.en.yaml` (zod trong `src/lib/i18n.ts`) |
 | Bản tiếng Anh của tên nghề, câu giới thiệu, menu | `src/data/site.en.yaml` (chỉ các trường cần dịch) |
 | Dự án kỹ thuật | `src/content/projects/<ten-khong-dau>/index.md` + ảnh cùng thư mục |
-| Chuyến đi (kèm toạ độ cho địa cầu, album, video) | `src/content/journeys/<ten-khong-dau>/index.md` + ảnh cùng thư mục |
+| Chuyến đi (kèm toạ độ cho địa cầu, album, video) | `src/content/journeys/<ten-khong-dau>/index.md` + ảnh cùng thư mục. Tối thiểu: `place`, `countryCode` (ISO 2 chữ → cờ tròn `circle-flags` + tên nước tự động qua `Intl.DisplayNames`, `src/lib/flags.ts`), `lat`, `lng` → chỉ là ghim + cờ trên địa cầu. Có `cover` → thêm thẻ, trang riêng, ảnh ở trang Ảnh (`getStories()` trong `content.ts`) |
 | Trang Về tôi (timeline, kỹ năng) | `src/content/pages/about.md` |
 | Nhạc nền (2–3 bài, phát lần lượt) | `src/data/music.yaml` (zod trong `src/lib/music.ts`), file nhạc ở `public/music/`. CMS: Cài đặt → Nhạc nền |
 | Kênh YouTube, video nổi bật, ghim, ẩn, nhóm, bật/tắt Shorts | `src/data/videos.yaml` (Shorts nhận biết qua playlist tự động `UUSH…` của kênh) |

@@ -74,16 +74,17 @@ collections:
     sortable_fields: [ date, title ]
     summary: "{{title}} — {{place}} ({{date}})"
     fields:
-      - { name: title, label: Tiêu đề, widget: string, i18n: true }
-      - { name: summary, label: Tóm tắt (1–2 câu), widget: text, i18n: true }
-      - { name: date, label: Ngày bắt đầu, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false, i18n: duplicate }
+      - { name: title, label: Tiêu đề, widget: string, required: false, hint: "Để trống = dùng tên địa điểm", i18n: true }
+      - { name: summary, label: Tóm tắt (1–2 câu), widget: text, required: false, i18n: true }
+      - { name: date, label: Ngày bắt đầu, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false, required: false, hint: "Để trống = xếp cuối danh sách", i18n: duplicate }
       - { name: endDate, label: Ngày kết thúc, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false, required: false, i18n: duplicate }
       - { name: place, label: Địa điểm, widget: string, hint: "Ví dụ: Hà Giang", i18n: true }
-      - { name: country, label: Quốc gia, widget: string, default: "Việt Nam", i18n: true }
+      - { name: countryCode, label: Mã quốc gia (2 chữ), widget: string, default: VN, pattern: ['^[A-Za-z]{2}$', 'Nhập đúng 2 chữ cái, ví dụ VN, FR, JP'], hint: "Dùng để hiện cờ và tên nước. Ví dụ: VN Việt Nam, FR Pháp, JP Nhật Bản, CH Thụy Sĩ, IT Ý, IN Ấn Độ, US Mỹ, GB Anh", i18n: duplicate }
+      - { name: country, label: Tên quốc gia (tuỳ chọn), widget: string, required: false, hint: "Để trống = tự lấy theo mã (FR → Pháp). Chỉ điền khi muốn gọi khác, ví dụ Ý thay cho Italy", i18n: true }
       - { name: lat, label: Vĩ độ, widget: number, value_type: float, hint: "Google Maps → chuột phải vào điểm → số đầu tiên", i18n: duplicate }
       - { name: lng, label: Kinh độ, widget: number, value_type: float, hint: "Số thứ hai", i18n: duplicate }
-      - { name: cover, label: Ảnh bìa, widget: image, i18n: duplicate }
-      - { name: coverAlt, label: Mô tả ảnh bìa, widget: string, hint: "Mô tả ngắn cho người khiếm thị và Google", i18n: true }
+      - { name: cover, label: Ảnh bìa, widget: image, required: false, hint: "Chưa có ảnh bìa = chỉ hiện ghim và cờ trên địa cầu. Có ảnh bìa = có thêm thẻ và trang riêng", i18n: duplicate }
+      - { name: coverAlt, label: Mô tả ảnh bìa, widget: string, required: false, hint: "Mô tả ngắn cho người khiếm thị và Google", i18n: true }
       - name: gallery
         label: Album ảnh
         widget: list
@@ -673,6 +674,10 @@ collections:
                 i18n: true
               - name: globeHint
                 label: Gợi ý dưới địa cầu
+                widget: string
+                i18n: true
+              - name: flagsLabel
+                label: Tên dải cờ (cho trình đọc màn hình)
                 widget: string
                 i18n: true
             i18n: true

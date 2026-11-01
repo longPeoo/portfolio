@@ -3,18 +3,18 @@
  * Thẻ chuyến đi ("mission"): ảnh bìa + con dấu hộ chiếu.
  * Rê chuột: con dấu đóng "cộp" xuống (xoay thẳng, phóng to rồi nảy về).
  */
-import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
-import { formatRange } from '@/lib/content';
+import { formatRange, type Story } from '@/lib/content';
+import { flagSvg } from '@/lib/flags';
 import { t, fmt } from '@/lib/i18n';
 
 interface Props {
-  journey: CollectionEntry<'journeys'>;
+  journey: Story;
   size?: 'default' | 'compact';
 }
 
 const { journey, size = 'default' } = Astro.props;
-const { title, summary, place, country, date, endDate, cover, coverAlt } = journey.data;
+const { title, summary, place, country, countryCode, date, endDate, cover, coverAlt } = journey.data;
 const stampId = `stamp-${journey.id}`;
 ---
 
@@ -26,12 +26,18 @@ const stampId = `stamp-${journey.id}`;
       <circle cx="60" cy="60" r="56" class="s-ring" />
       <circle cx="60" cy="60" r="31" class="s-ring s-ring--inner" />
       <text class="s-arc"><textPath href={`#${stampId}`}>{place.toUpperCase()} ★ {country.toUpperCase()} ★</textPath></text>
-      <text x="60" y="58" class="s-year" text-anchor="middle">{date.getFullYear()}</text>
-      <text x="60" y="74" class="s-month" text-anchor="middle">{fmt(t.journeys.stampMonth, { n: date.getMonth() + 1 })}</text>
+      {date ? (
+        <>
+          <text x="60" y="58" class="s-year" text-anchor="middle">{date.getFullYear()}</text>
+          <text x="60" y="74" class="s-month" text-anchor="middle">{fmt(t.journeys.stampMonth, { n: date.getMonth() + 1 })}</text>
+        </>
+      ) : (
+        <text x="60" y="68" class="s-year" text-anchor="middle">★</text>
+      )}
     </svg>
   </div>
   <div class="jcard__body">
-    <p class="mono muted">{place}, {country} · {formatRange(date, endDate)}</p>
+    <p class="mono muted jcard__meta"><Fragment set:html={flagSvg(countryCode)} />{place}, {country}{date && ` · ${formatRange(date, endDate)}`}</p>
     <h3>{title}</h3>
     {size === 'default' && <p class="jcard__sum">{summary}</p>}
   </div>
@@ -74,6 +80,8 @@ const stampId = `stamp-${journey.id}`;
   }
 
   .jcard__body { display: flex; flex-direction: column; gap: var(--space-2); }
+  .jcard__meta { display: flex; align-items: center; gap: 0.5em; }
+  .jcard__meta :global(.flag) { flex: none; font-size: 1.15rem; }
   h3 { font-size: var(--fs-h3); transition: color var(--dur-fast); }
   .jcard--compact h3 { font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem); }
   .jcard:hover h3 { color: var(--primary); }

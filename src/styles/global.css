@@ -271,6 +271,8 @@ body::before {
     text-transform: uppercase;
   }
   .muted { color: var(--fg-muted); }
+  /* Cờ tròn (flagSvg() trong src/lib/flags.ts): cỡ theo font-size, cắt tròn bằng clip-path */
+  .flag { display: inline-block; width: 1em; height: 1em; flex: none; clip-path: circle(50%); vertical-align: -0.15em; }
 }
 
 /* ---------- Menu mobile (shadcn Sheet) mở dạng vòng tròn từ nút menu ---------- */
@@ -439,49 +441,52 @@ body::before {
   .missions-globe__arcs { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity 1s var(--ease-out); }
   .missions-globe__arcs.is-ready { opacity: 1; }
 
-  /* Ghim bấm được trên địa cầu: --v = 1 khi điểm ở mặt trước, 0 khi quay ra sau (MissionsGlobe.tsx đặt biến) */
+  /*
+    Ghim cờ trên địa cầu, tâm cờ nằm đúng điểm. --v = 1 khi điểm ở mặt trước, 0 khi quay ra sau (MissionsGlobe.tsx đặt biến).
+    Tên nơi chỉ hiện khi rê chuột / đang chọn, để nhiều điểm gần nhau (Thụy Sĩ, Ý…) không chồng chữ lên nhau.
+  */
   .missions-globe__pin {
     position: absolute;
     left: 50%;
     top: 50%;
     z-index: 1;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 10px 4px 8px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--bg-elev), 0 0 0 3.5px var(--fg), 0 3px 0 2px var(--fg);
+    text-decoration: none;
+    translate: -50% -50%;
+    scale: 0;
+    opacity: 0;
+    transition: scale var(--dur) var(--ease-spring), opacity var(--dur-fast), box-shadow var(--dur-fast);
+  }
+  .missions-globe__pin.is-ready { scale: var(--v, 0); opacity: var(--v, 0); }
+  .missions-globe__pin .flag { font-size: 1.125rem; }
+  a.missions-globe__pin { cursor: pointer; }
+  .missions-globe__pin:hover,
+  .missions-globe__pin[data-active] { z-index: 2; box-shadow: 0 0 0 2px var(--bg-elev), 0 0 0 4px var(--primary), 0 3px 0 3px var(--primary); }
+  .missions-globe__label {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 10px);
+    padding: 3px 9px;
     border: 1.5px solid var(--fg);
     border-radius: var(--r-pill);
-    background: var(--bg-elev);
+    background: var(--primary);
+    color: var(--primary-foreground);
     box-shadow: 0 2px 0 var(--fg);
     font-family: var(--font-mono);
     font-size: 0.6875rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    text-decoration: none;
     white-space: nowrap;
-    translate: -50% calc(-100% - 10px);
-    transform-origin: 50% calc(100% + 10px);
-    scale: 0;
+    translate: -50% 4px;
     opacity: 0;
-    transition: scale var(--dur) var(--ease-spring), opacity var(--dur-fast), background-color var(--dur-fast), color var(--dur-fast);
+    pointer-events: none;
+    transition: opacity var(--dur-fast), translate var(--dur) var(--ease-spring);
   }
-  .missions-globe__pin.is-ready { scale: var(--v, 0); opacity: var(--v, 0); }
-  .missions-globe__pin::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--primary); }
-  /* chân ghim chỉ xuống đúng điểm trên địa cầu */
-  .missions-globe__pin::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 100%;
-    width: 1.5px;
-    height: 10px;
-    background: var(--fg);
-    translate: -50% 2px;
-  }
-  .missions-globe__pin:hover,
-  .missions-globe__pin[data-active] { z-index: 2; background: var(--primary); color: var(--primary-foreground); }
-  .missions-globe__pin:hover::before,
-  .missions-globe__pin[data-active]::before { background: var(--primary-foreground); }
+  .missions-globe__pin:hover .missions-globe__label,
+  .missions-globe__pin[data-active] .missions-globe__label { opacity: 1; translate: -50% 0; }
   .missions-globe__hint {
     position: absolute;
     left: 50%;
@@ -493,20 +498,31 @@ body::before {
     white-space: nowrap;
     pointer-events: none;
   }
+  /* Danh sách dài (trang Hành trình) tự cuộn bên trong, cao tối đa bằng địa cầu */
   .missions-globe__list { list-style: none; padding: 0; border-top: 1px solid var(--line); }
-  .missions-globe__list a {
+  .missions-globe:not(.missions-globe--compact) .missions-globe__list {
+    max-height: min(600px, 75svh);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    border-bottom: 1px solid var(--line);
+  }
+  .missions-globe__list :is(a, button) {
     display: grid;
     grid-template-columns: 3.5rem 1fr;
     gap: 2px var(--space-4);
+    width: 100%;
     padding: var(--space-4) var(--space-2);
     border-bottom: 1px solid var(--line);
+    text-align: start;
     text-decoration: none;
     transition: background-color var(--dur-fast), padding var(--dur) var(--ease-spring);
   }
-  .missions-globe__list a:hover,
-  .missions-globe__list a[data-active] { background: var(--bg-sunken); padding-left: var(--space-4); }
+  .missions-globe:not(.missions-globe--compact) .missions-globe__list li:last-child > * { border-bottom: 0; }
+  .missions-globe__list :is(a, button):hover,
+  .missions-globe__list [data-active] { background: var(--bg-sunken); padding-left: var(--space-4); }
   .missions-globe__list .mono { grid-row: span 2; align-self: center; color: var(--primary); }
-  .missions-globe__place { font-family: var(--font-display); font-weight: 750; font-stretch: 112%; font-size: 1.25rem; }
+  .missions-globe__place { display: flex; align-items: center; gap: 0.45em; font-family: var(--font-display); font-weight: 750; font-stretch: 112%; font-size: 1.25rem; }
+  .missions-globe__place .flag { flex: none; font-size: 1.1rem; }
   .missions-globe__title { color: var(--fg-muted); font-size: var(--fs-sm); }
   @media (max-width: 860px) {
     .missions-globe { grid-template-columns: 1fr; gap: var(--space-8); }

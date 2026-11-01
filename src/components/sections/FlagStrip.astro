@@ -1,0 +1,33 @@
+---
+/** Dải cờ các nước đã đến (trang Hành trình, khối "Mình đã đến" ở trang chủ). Rê chuột: cờ nảy lên, nghiêng, hiện tên nước. */
+import { flagSvg } from '@/lib/flags';
+import { t } from '@/lib/i18n';
+
+interface Props {
+  countries: { code: string; name: string }[];
+  class?: string;
+}
+const { countries, class: className } = Astro.props;
+---
+
+{countries.length > 0 && (
+  <ul class:list={['flags', className]} aria-label={t.journeys.flagsLabel}>
+    {countries.map((c) => (
+      <li title={c.name}>
+        <Fragment set:html={flagSvg(c.code, c.name)} />
+      </li>
+    ))}
+  </ul>
+)}
+
+<style>
+  .flags { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; list-style: none; padding: 0; }
+  .flags li {
+    display: grid;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--line);
+    transition: translate var(--dur) var(--ease-spring), rotate var(--dur) var(--ease-spring), box-shadow var(--dur-fast);
+  }
+  .flags li:hover { translate: 0 -4px; rotate: -10deg; box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--primary); }
+  .flags :global(.flag) { font-size: clamp(1.625rem, 1.4rem + 0.6vw, 2rem); }
+</style>

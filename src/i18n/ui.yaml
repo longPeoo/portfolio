@@ -96,6 +96,7 @@ journeys:
   stampMonth: T{n}
   globeLabel: Quả địa cầu đánh dấu {n} chuyến đi. Bấm vào ghim để mở chuyến đi.
   globeHint: Kéo để xoay · bấm ghim để mở
+  flagsLabel: Những nước mình đã đặt chân tới
 videos:
   code: Phím 04 · Vlog
   title: '"Hành trang của mình là chiếc balo và một trái tim ham học hỏi"'
