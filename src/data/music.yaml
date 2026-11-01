@@ -1,5 +1,8 @@
-# Nhạc nền: nút loa cạnh nút đổi giao diện sáng/tối. Danh sách trống = ẩn nút.
-# Sửa trong CMS: Cài đặt → Nhạc nền. File nhạc nằm ở public/music/ (mp3 hoặc m4a, nên ≤ 5 MB mỗi bài).
-# Chỉ dùng nhạc bạn có quyền sử dụng (nhạc tự làm, nhạc miễn phí bản quyền có giấy phép rõ ràng).
-volume: 0.5
-tracks: []
+volume: 0.1
+tracks:
+  - title: Twisty Roads
+    artist: Sight of Wonders
+    file: /music/ES_Twisty Roads - Sight of Wonders.mp3
+  - title: Crusaders
+    artist: Adriel Fair
+    file: /music/1.1. ES_Crusaders - Adriel Fair.mp3
