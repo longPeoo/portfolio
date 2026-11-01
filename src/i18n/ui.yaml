@@ -52,7 +52,7 @@ home:
       name: Nền móng & deploy
       state: nominal
 about:
-  code: Giới thiệu · Đôi điều về mình
+  code: Phím 01 · Đôi điều về mình
   title: Về tôi
   intro: Câu chuyện từ một đứa trẻ hay ngước nhìn trời đêm đến kỹ sư công nghệ vũ trụ, và vì sao tôi vẫn luôn xách ba lô lên đường.
   cv: Tải CV
@@ -72,7 +72,7 @@ about:
   cosmosMoonName: Mặt Trăng
   cosmosHere: Bạn ở đây
 space:
-  code: MSN-02 · Dự án
+  code: Phím 02 · Dự án
   title: Kỹ thuật
   intro: Các dự án, nghiên cứu và hệ thống tôi từng tham gia trong lĩnh vực công nghệ vũ trụ.
   back: Tất cả dự án
@@ -81,8 +81,8 @@ space:
   time: Thời gian
   systems: Hệ thống
 journeys:
-  code: MSN-03 · Hành trình
-  title: Hành trình
+  code: Phím 03 · Hành trình
+  title: “Cuộc hành trình vạn dặm khởi đầu từ một bước chân”
   intro: Mỗi chuyến hành trình với mình đều là một bài học để nhớ, bởi chúng ta đến với thế giới này với nhiệm vụ chính là trải nghiệm tất cả mọi thứ trên đời mà. Từ việc chưa tốt cho đến việc tốt, từ chưa vui cho đến vui, từ chưa hạnh phúc cho đến hạnh phúc. Sống sao cho khỏi ân hận, xót xa khi nhìn lại.
   stats: '{n} chuyến đi · {c} quốc gia'
   back: Tất cả hành trình
@@ -95,8 +95,8 @@ journeys:
   globeLabel: Quả địa cầu đánh dấu {n} chuyến đi. Bấm vào ghim để mở chuyến đi.
   globeHint: Kéo để xoay · bấm ghim để mở
 videos:
-  code: MSN-04 · Vlog
-  title: Vlog
+  code: Phím 04 · Vlog
+  title: '"Hành trang của mình là chiếc balo và một trái tim ham học hỏi"'
   intro: Các vlog mới nhất từ kênh YouTube, tự cập nhật khi có vlog mới.
   subscribe: Theo dõi kênh
   all: Tất cả
@@ -106,8 +106,8 @@ videos:
   openYoutube: Mở trên YouTube
   close: Đóng video
 gallery:
-  code: MSN-05 · Cuộn phim
-  title: Ảnh
+  code: Phím 05 · Bảo tàng tranh ảnh
+  title: '"Một tấm ảnh nhỏ, cả bầu trời kí ức"'
   intro: Những khung hình tôi thích nhất, từ phòng thí nghiệm đến những cung đường xa.
   count: '{n} khung hình'
   open: Xem ảnh lớn
