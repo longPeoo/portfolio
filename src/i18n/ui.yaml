@@ -23,14 +23,14 @@ chrome:
   openMenu: Mở menu
   closeMenu: Đóng menu
   theme: Đổi giao diện sáng/tối
-  footerCode: MSN-99 · Gửi tín hiệu
+  footerCode: Kết trang · Gửi tín hiệu
   footerNav: Điều hướng
-  footerTagline: Xây ở Trái Đất, phát từ quỹ đạo
-  toTop: Lên đầu trang
+  footerTagline: Sinh ra là người Trái Đất, tâm hồn nằm ngoài Vũ trụ.
+  toTop: Bay lên đầu trang
 home:
-  heroCode: MSN-00 · Bệ phóng
-  heroNow: LONGPEOO LÀ ▸
-  hello: Hé ca lô, mình là
+  heroCode: Hi · Chúc mọi người một ngày tốt lành
+  heroNow: 'LONGPEOO LÀ :'
+  hello: Hé ca lô cả nhà, mình là
   rolesLabel: Nghề nghiệp
   ctaJourneys: Xem hành trình
   ctaYoutube: Kênh YouTube
@@ -41,7 +41,7 @@ home:
   projectsCode: MSN-02 · Dự án
   projectsTitle: Dự án kỹ thuật
   journeysCode: MSN-03 · Hành trình
-  journeysTitle: Những nơi tôi đã đến
+  journeysTitle: Những nơi mình đã đến
   photosCode: MSN-05 · Cuộn phim
   photosTitle: Cuộn phim gần đây
   photosLink: Xem tất cả ảnh
