@@ -110,8 +110,13 @@ journeys:
   next: Next mission
   stampMonth: M{n}
   globeLabel: Globe marking {n} journeys. Click a pin to open the journey.
-  globeHint: Drag to rotate · click a pin to open
+  globeHint: Drag to rotate · pinch or Ctrl + scroll to zoom
   flagsLabel: Countries I've set foot in
+  flagsFrom: From
+  flagsTo: to
+  zoomIn: Zoom in
+  zoomOut: Zoom out
+  zoomReset: Show the whole globe
 videos:
   code: MSN-04 · Transmissions
   title: Vlogs

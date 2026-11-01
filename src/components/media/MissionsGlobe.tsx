@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react"
+import { GlobeIcon, MinusIcon, PlusIcon } from "lucide-react"
 
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { createGlobe, toVec, GLOBE_R, type Vec3 } from "@/scripts/globe"
+import { createGlobe, toVec, GLOBE_R, MAX_ZOOM, type Vec3 } from "@/scripts/globe"
 
 export interface GlobePoint {
   id: string
@@ -24,12 +26,17 @@ interface MissionsGlobeProps {
   flags: Record<string, string>
   /** Bản gọn cho trang chủ: chỉ hiện 4 chuyến gần nhất trong danh sách */
   compact?: boolean
-  /** Chữ lấy từ src/i18n: mô tả cho trình đọc màn hình + gợi ý thao tác */
-  labels: { label: string; hint: string }
+  /** Chữ lấy từ src/i18n: mô tả cho trình đọc màn hình, gợi ý thao tác, nút phóng to/thu nhỏ */
+  labels: { label: string; hint: string; zoomIn: string; zoomOut: string; zoomReset: string }
 }
 
 const toRad = (deg: number) => (deg * Math.PI) / 180
-const clampLat = (lat: number) => Math.max(-0.9, Math.min(0.9, lat))
+const clampLat = (lat: number) => Math.max(-1.2, Math.min(1.2, lat))
+const clampZoom = (z: number) => Math.max(1, Math.min(MAX_ZOOM, z))
+/** Rê vào một nơi trong danh sách → phóng tới ít nhất mức này (đủ tách các nước ở châu Âu) */
+const FOCUS_ZOOM = 3
+/** Hai ghim gần hơn khoảng này (px) thì gom thành một cụm "+n" */
+const CLUSTER_PX = 22
 /** Quãng xoay ngắn nhất giữa hai góc */
 const shortest = (from: number, to: number) => {
   const d = (to - from) % (2 * Math.PI)
@@ -53,19 +60,33 @@ function arcPoints(a: Vec3, b: Vec3, steps = 40): [Vec3, number][] {
 
 /**
  * Quả địa cầu các chuyến đi: Trái Đất thật (ảnh vệ tinh NASA, src/scripts/globe.ts), tự xoay chậm, kéo để xoay.
- * Đường bay nối các chuyến theo thứ tự thời gian. Rê chuột vào một chuyến trong danh sách → địa cầu xoay tới đó.
+ * Đường bay nối các chuyến theo thứ tự thời gian. Rê chuột vào một nơi trong danh sách → địa cầu xoay và phóng tới đó.
  * Mỗi nơi có một ghim cờ (rê chuột hiện tên): chuyến có trang riêng thì bấm để mở; ghim mờ dần khi điểm quay ra sau địa cầu.
+ * Phóng to: nút +/−, Ctrl/⌘ + cuộn (cuộn thường vẫn cuộn trang), chụm 2 ngón, bấm đúp.
+ * Ghim quá gần nhau gom thành cụm "+n"; bấm cụm → phóng tới đó.
  */
 export function MissionsGlobe({ points, flags, compact = false, labels }: MissionsGlobeProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const arcRef = useRef<HTMLCanvasElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
+  const readoutRef = useRef<HTMLSpanElement>(null)
   const pinRefs = useRef<(HTMLElement | null)[]>([])
-  const target = useRef<[number, number] | null>(null)
+  /** Điểm cần xoay tới. hold: giữ khi đang rê vào danh sách; không hold: bay tới rồi thả (bấm cụm, bấm đúp) */
+  const target = useRef<{ lon: number; lat: number; hold: boolean } | null>(null)
+  /** Mức phóng người xem chọn; vòng lặp vẽ tiến dần tới mức này */
+  const userZoom = useRef(1)
+  /** Các ghim trong cụm mà mỗi ghim đang đại diện (bấm cụm thì phóng tới giữa cụm) */
+  const clusters = useRef<number[][]>([])
   const [ready, setReady] = useState(false)
   const [active, setActive] = useState<string | null>(null)
+  const [zoomLevel, setZoomLevel] = useState(1)
 
   const listed = compact ? points.slice(0, 4) : points
+
+  const setZoom = (z: number) => {
+    userZoom.current = clampZoom(z)
+    setZoomLevel(userZoom.current)
+  }
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -91,28 +112,68 @@ export function MissionsGlobe({ points, flags, compact = false, labels }: Missio
       // Bắt đầu nhìn vào chuyến gần nhất, hơi nghiêng để thấy cả bán cầu Bắc
       let lon = points[0] ? toRad(points[0].lng) : toRad(105)
       let lat = points[0] ? clampLat(toRad(points[0].lat) * 0.7) : 0.3
+      let zoom = 1
       let night = isDark() ? 1 : 0
 
-      // Kéo để xoay (chuột: cả ngang và dọc; cảm ứng: chỉ ngang, để vẫn cuộn trang được)
-      let drag: { x: number; y: number; mouse: boolean } | null = null
+      // Kéo để xoay. Chuột: cả ngang và dọc. Cảm ứng: chỉ ngang (để vẫn cuộn trang được), trừ khi đang phóng to.
+      // Hai ngón: chụm để phóng to/thu nhỏ.
+      const pointers = new Map<number, { x: number; y: number }>()
+      let drag: { x: number; y: number; free: boolean } | null = null
+      let pinch: { dist: number; zoom: number } | null = null
+      const pinchDist = () => {
+        const [a, b] = [...pointers.values()]
+        return Math.hypot(a.x - b.x, a.y - b.y)
+      }
       const onDown = (e: PointerEvent) => {
-        drag = { x: e.clientX, y: e.clientY, mouse: e.pointerType === "mouse" }
-        target.current = null
+        pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
         canvas.setPointerCapture(e.pointerId)
+        target.current = null
+        if (pointers.size === 2) {
+          drag = null
+          pinch = { dist: pinchDist(), zoom: userZoom.current }
+        } else drag = { x: e.clientX, y: e.clientY, free: e.pointerType === "mouse" || zoom > 1.05 }
       }
       const onMove = (e: PointerEvent) => {
+        if (!pointers.has(e.pointerId)) return
+        pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+        if (pinch && pointers.size === 2) {
+          userZoom.current = clampZoom((pinch.zoom * pinchDist()) / pinch.dist)
+          return
+        }
         if (!drag) return
-        const perPx = 2 / (canvas.clientWidth * GLOBE_R)
+        const perPx = 2 / (canvas.clientWidth * GLOBE_R * zoom)
         lon -= (e.clientX - drag.x) * perPx
-        if (drag.mouse) lat = clampLat(lat + (e.clientY - drag.y) * perPx)
+        if (drag.free) lat = clampLat(lat + (e.clientY - drag.y) * perPx)
         drag.x = e.clientX
         drag.y = e.clientY
       }
-      const onUp = () => (drag = null)
+      const onUp = (e: PointerEvent) => {
+        pointers.delete(e.pointerId)
+        if (pinch && pointers.size < 2) {
+          pinch = null
+          setZoom(userZoom.current)
+        }
+        if (pointers.size === 0) drag = null
+      }
+      // Ctrl/⌘ + cuộn (gồm cả thao tác chụm trên touchpad) → phóng to; cuộn thường để nguyên cho trang
+      const onWheel = (e: WheelEvent) => {
+        if (!e.ctrlKey && !e.metaKey) return
+        e.preventDefault()
+        setZoom(userZoom.current * Math.exp(-e.deltaY * 0.004))
+      }
+      // Bấm đúp → phóng gấp đôi, đưa điểm vừa bấm vào giữa
+      const onDblClick = (e: MouseEvent) => {
+        const r = canvas.getBoundingClientRect()
+        const hit = globe.pick((e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height)
+        if (hit) target.current = { lon: hit[0], lat: clampLat(hit[1]), hold: false }
+        setZoom(userZoom.current * 2)
+      }
       canvas.addEventListener("pointerdown", onDown)
       canvas.addEventListener("pointermove", onMove)
       canvas.addEventListener("pointerup", onUp)
       canvas.addEventListener("pointercancel", onUp)
+      canvas.addEventListener("dblclick", onDblClick)
+      stage.addEventListener("wheel", onWheel, { passive: false })
 
       // Rê chuột lên địa cầu → ngừng tự quay để ghim đứng yên, dễ bấm
       let hovering = false
@@ -128,6 +189,11 @@ export function MissionsGlobe({ points, flags, compact = false, labels }: Missio
         if (arcCanvas.width !== Math.round(w * dpr)) arcCanvas.width = arcCanvas.height = Math.round(w * dpr)
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
         ctx.clearRect(0, 0, w, w)
+        // Cắt theo "ống kính" tròn như quả cầu khi phóng to
+        ctx.save()
+        ctx.beginPath()
+        ctx.arc(w / 2, w / 2, w / 2, 0, 2 * Math.PI)
+        ctx.clip()
         ctx.strokeStyle = signal
         ctx.lineWidth = 1.6
         ctx.lineCap = "round"
@@ -147,35 +213,78 @@ export function MissionsGlobe({ points, flags, compact = false, labels }: Missio
           }
           ctx.stroke()
         }
+        ctx.restore()
       }
 
+      // Ghim: ẩn khi ở mặt sau hoặc ra ngoài ống kính. Ghim quá gần nhau gom thành cụm;
+      // ghim đang chọn luôn đứng đầu cụm, rồi tới chuyến có trang riêng.
       const syncPins = () => {
+        const size = canvas.clientWidth
+        const screen = vecs.map((v) => globe.project(v))
+        const shown = screen.map((s) => (Math.hypot(s.x - 0.5, s.y - 0.5) < 0.49 ? Math.max(0, Math.min(1, s.z / 0.18)) : 0))
+        const activeIdx = pinRefs.current.findIndex((el) => el?.hasAttribute("data-active"))
+        const order = points
+          .map((_, i) => i)
+          .filter((i) => shown[i] > 0.02)
+          .sort(
+            (a, b) =>
+              Number(b === activeIdx) - Number(a === activeIdx) || Number(!!points[b].href) - Number(!!points[a].href) || a - b,
+          )
+        const groups = new Map<number, number[]>()
+        for (const i of order) {
+          const head = [...groups.keys()].find(
+            (h) => Math.hypot((screen[h].x - screen[i].x) * size, (screen[h].y - screen[i].y) * size) < CLUSTER_PX,
+          )
+          if (head === undefined) groups.set(i, [i])
+          else groups.get(head)!.push(i)
+        }
+        clusters.current = points.map((_, i) => groups.get(i) ?? [i])
         pinRefs.current.forEach((pin, i) => {
           if (!pin) return
-          const s = globe.project(vecs[i])
+          const s = screen[i]
           pin.style.left = `${s.x * 100}%`
           pin.style.top = `${s.y * 100}%`
-          const v = Math.max(0, Math.min(1, s.z / 0.18))
+          const group = groups.get(i)
+          const v = group ? shown[i] : 0
           pin.style.setProperty("--v", v.toFixed(3))
           pin.style.visibility = v > 0.02 ? "" : "hidden"
+          const extra = group ? group.length - 1 : 0
+          if (extra) pin.setAttribute("data-count", String(extra))
+          else pin.removeAttribute("data-count")
+          // Tên các nơi khác trong cụm, nối sau tên ghim đầu cụm
+          const more = pin.querySelector(".missions-globe__more")
+          const names = group ? group.slice(1, 3).map((j) => points[j].place) : []
+          const text = extra ? ` · ${names.join(" · ")}${extra > 2 ? ` +${extra - 2}` : ""}` : ""
+          if (more && more.textContent !== text) more.textContent = text
         })
       }
 
       // Vòng lặp vẽ — chỉ chạy khi địa cầu đang trong màn hình
       let raf = 0
       let visible = true
+      let readout = ""
       const loop = (time: number) => {
-        if (target.current) {
-          const k = reduce ? 1 : 0.08
-          lon += (shortest(lon, target.current[0]) - lon) * k
-          lat += (target.current[1] - lat) * k
-        } else if (!drag && !hovering && !reduce) {
-          lon -= 0.0022 // Trái Đất quay về phía đông: bề mặt trôi sang phải
+        const t = target.current
+        const k = reduce ? 1 : 0.08
+        if (t) {
+          const nextLon = lon + (shortest(lon, t.lon) - lon) * k
+          lat += (t.lat - lat) * k
+          // Bay tới rồi thả: tới nơi thì người xem lại tự do kéo/xoay
+          if (!t.hold && Math.abs(nextLon - lon) < 1e-4 && Math.abs(t.lat - lat) < 1e-4) target.current = null
+          lon = nextLon
+        } else if (!drag && !hovering && !reduce && zoom < 1.05) {
+          lon -= 0.0022 // Trái Đất quay về phía đông: bề mặt trôi sang phải (dừng khi đang phóng to)
         }
+        const wantZoom = t?.hold ? Math.max(userZoom.current, FOCUS_ZOOM) : userZoom.current
+        zoom += (wantZoom - zoom) * (reduce ? 1 : 0.12)
         night += ((isDark() ? 1 : 0) - night) * (reduce ? 1 : 0.08)
-        globe.draw({ lon, lat, night })
+        globe.draw({ lon, lat, night, zoom })
         drawArcs(time)
         syncPins()
+        // Đang phóng to: chạm một ngón cũng xoay được theo mọi hướng (không cuộn trang khi chạm vào địa cầu)
+        canvas.style.touchAction = zoom > 1.05 ? "none" : ""
+        const text = `×${zoom.toFixed(1)}`
+        if (readoutRef.current && text !== readout) readoutRef.current.textContent = readout = text
         if (visible) raf = requestAnimationFrame(loop)
       }
       raf = requestAnimationFrame(loop)
@@ -194,6 +303,8 @@ export function MissionsGlobe({ points, flags, compact = false, labels }: Missio
         canvas.removeEventListener("pointermove", onMove)
         canvas.removeEventListener("pointerup", onUp)
         canvas.removeEventListener("pointercancel", onUp)
+        canvas.removeEventListener("dblclick", onDblClick)
+        stage.removeEventListener("wheel", onWheel)
         stage.removeEventListener("pointerenter", onEnter)
         stage.removeEventListener("pointerleave", onLeave)
         globe.destroy()
@@ -209,12 +320,28 @@ export function MissionsGlobe({ points, flags, compact = false, labels }: Missio
 
   const focus = (p: GlobePoint | null) => {
     setActive(p?.id ?? null)
-    target.current = p ? [toRad(p.lng), clampLat(toRad(p.lat))] : null
+    target.current = p ? { lon: toRad(p.lng), lat: clampLat(toRad(p.lat)), hold: true } : null
+  }
+
+  /** Bấm vào cụm ghim: phóng tới giữa cụm. Đã phóng hết cỡ (vd. Rome và Vatican sát nhau) thì mở trang như ghim thường. */
+  const openCluster = (e: React.MouseEvent, i: number) => {
+    const group = clusters.current[i] ?? [i]
+    if (group.length < 2 || userZoom.current >= MAX_ZOOM) return
+    e.preventDefault()
+    const v = group.reduce<Vec3>(
+      (acc, j) => {
+        const u = toVec(points[j].lat, points[j].lng)
+        return [acc[0] + u[0], acc[1] + u[1], acc[2] + u[2]]
+      },
+      [0, 0, 0],
+    )
+    target.current = { lon: Math.atan2(v[0], v[2]), lat: clampLat(Math.atan2(v[1], Math.hypot(v[0], v[2]))), hold: false }
+    setZoom(userZoom.current * 2.5)
   }
 
   return (
     <div className={cn("missions-globe", compact && "missions-globe--compact")}>
-      <div className="missions-globe__stage" ref={stageRef}>
+      <div className="missions-globe__stage" ref={stageRef} data-zoomed={zoomLevel > 1.05 || undefined}>
         <canvas
           ref={canvasRef}
           className={cn("missions-globe__canvas", ready && "is-ready")}
@@ -238,12 +365,56 @@ export function MissionsGlobe({ points, flags, compact = false, labels }: Missio
               aria-hidden="true"
               onMouseEnter={() => setActive(p.id)}
               onMouseLeave={() => setActive(null)}
+              onClick={(e: React.MouseEvent) => openCluster(e, i)}
             >
               <span className="missions-globe__flag" dangerouslySetInnerHTML={{ __html: flags[p.code] ?? "" }} />
-              <span className="missions-globe__label">{p.place}</span>
+              <span className="missions-globe__label">
+                {p.place}
+                <span className="missions-globe__more" />
+              </span>
             </Pin>
           )
         })}
+        {ready && (
+          <div className="missions-globe__zoom">
+            <Button
+              variant="outline"
+              size="icon-sm"
+              className="rounded-full"
+              onClick={() => setZoom(userZoom.current * 1.6)}
+              disabled={zoomLevel >= MAX_ZOOM}
+              aria-label={labels.zoomIn}
+              title={labels.zoomIn}
+            >
+              <PlusIcon />
+            </Button>
+            <span className="mono missions-globe__readout" ref={readoutRef} aria-hidden="true">
+              ×1.0
+            </span>
+            <Button
+              variant="outline"
+              size="icon-sm"
+              className="rounded-full"
+              onClick={() => setZoom(userZoom.current / 1.6)}
+              disabled={zoomLevel <= 1}
+              aria-label={labels.zoomOut}
+              title={labels.zoomOut}
+            >
+              <MinusIcon />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon-sm"
+              className="rounded-full"
+              onClick={() => setZoom(1)}
+              disabled={zoomLevel <= 1}
+              aria-label={labels.zoomReset}
+              title={labels.zoomReset}
+            >
+              <GlobeIcon />
+            </Button>
+          </div>
+        )}
         <p className="mono missions-globe__hint">{labels.hint}</p>
       </div>
       {/* data-lenis-prevent: danh sách dài tự cuộn bên trong, không bị cuộn mượt toàn trang (Lenis) chiếm */}

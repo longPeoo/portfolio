@@ -26,7 +26,7 @@ const countries = uniqueCountries(journeys.map((j) => j.data));
         <FlagStrip countries={countries} class="journeys-flags" />
       </PageHeader>
       <section class="container globe-wrap">
-        <MissionsGlobe client:visible points={points} flags={flags} labels={{ label: fmt(t.journeys.globeLabel, { n: points.length }), hint: t.journeys.globeHint }} />
+        <MissionsGlobe client:visible points={points} flags={flags} labels={{ label: fmt(t.journeys.globeLabel, { n: points.length }), hint: t.journeys.globeHint, zoomIn: t.journeys.zoomIn, zoomOut: t.journeys.zoomOut, zoomReset: t.journeys.zoomReset }} />
       </section>
       {stories.length > 0 && (
         <section class="container grid">

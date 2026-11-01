@@ -4,12 +4,14 @@
  *
  * Toạ độ: vector thân địa cầu b = (cos φ sin λ, sin φ, cos φ cos λ) (λ kinh độ, φ vĩ độ).
  * Camera nhìn thẳng vào điểm (λc, φc): b = M·n với M = Ry(λc)·Rx(−φc), n là pháp tuyến phía người xem.
+ * Phóng to (zoom): bán kính quả cầu = GLOBE_R × zoom; mọi thứ bị cắt trong vòng tròn nội tiếp khung (như ống kính).
  */
 import dayUrl from '@/assets/earth/day.webp?url';
 import nightUrl from '@/assets/earth/night.webp?url';
 
-/** Bán kính quả cầu so với nửa khung (chừa chỗ cho quầng khí quyển) */
+/** Bán kính quả cầu so với nửa khung khi zoom = 1 (chừa chỗ cho quầng khí quyển) */
 export const GLOBE_R = 0.86;
+export const MAX_ZOOM = 6;
 
 const VERT = `attribute vec2 p; void main(){ gl_Position = vec4(p, 0., 1.); }`;
 
@@ -19,17 +21,18 @@ uniform vec2 uRes;
 uniform mat3 uRot;
 uniform vec3 uLight;
 uniform float uNight;
+uniform float uZoom;
 uniform sampler2D uDay, uNightTex;
 const float PI = 3.14159265;
-const float R = ${GLOBE_R};
 const vec3 ATMO = vec3(.35, .62, 1.);
 
 void main() {
+  float R = ${GLOBE_R} * uZoom;
   vec2 q = (gl_FragCoord.xy / uRes) * 2. - 1.;
   float r = length(q) / R;
   float aa = 2.5 / (uRes.x * R);
   // Quầng khí quyển bên ngoài
-  // (tắt hẳn trước mép canvas ở r = 1/R ≈ 1.16, nếu không sẽ lộ một ô vuông mờ quanh địa cầu)
+  // (tắt hẳn ở r = 1.15, trong vòng tròn nội tiếp khung khi zoom = 1, nếu không sẽ lộ một ô vuông mờ quanh địa cầu)
   float halo = exp(-max(r - 1., 0.) * 16.) * .55 * smoothstep(1. - aa, 1. + aa, r) * (1. - smoothstep(1.05, 1.15, r));
   vec4 o = vec4(ATMO * halo, halo);
   if (r < 1. + aa) {
@@ -45,7 +48,8 @@ void main() {
     float a = 1. - smoothstep(1. - aa, 1. + aa, r);
     o = vec4(col * a, a) + o * (1. - a);
   }
-  gl_FragColor = o;
+  // Ống kính tròn: khi phóng to, bề mặt bị cắt theo vòng tròn nội tiếp khung (không lộ góc vuông)
+  gl_FragColor = o * (1. - smoothstep(1. - 3. / uRes.x, 1., length(q)));
 }`;
 
 const loadImage = (src: string) =>
@@ -82,6 +86,8 @@ export interface GlobeView {
   lat: number;
   /** 0 = giao diện sáng, 1 = tối (chuyển mượt) */
   night: number;
+  /** 1 = cả quả cầu trong khung, tối đa MAX_ZOOM */
+  zoom?: number;
 }
 
 export async function createGlobe(canvas: HTMLCanvasElement) {
@@ -127,6 +133,7 @@ export async function createGlobe(canvas: HTMLCanvasElement) {
   gl.uniform3f(u('uLight'), L[0] / ll, L[1] / ll, L[2] / ll);
 
   let rot = rotation(0, 0);
+  let zoom = 1;
 
   return {
     /** Vẽ một khung với góc nhìn hiện tại */
@@ -138,18 +145,34 @@ export async function createGlobe(canvas: HTMLCanvasElement) {
         gl.viewport(0, 0, size, size);
       }
       rot = rotation(view.lon, view.lat);
+      zoom = view.zoom ?? 1;
       gl.uniform2f(u('uRes'), canvas.width, canvas.height);
       gl.uniformMatrix3fv(u('uRot'), false, rot);
       gl.uniform1f(u('uNight'), view.night);
+      gl.uniform1f(u('uZoom'), zoom);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     },
-    /** Điểm trên địa cầu (đã nhân độ cao h) → toạ độ khung [0..1] + độ sâu (z > 0: mặt trước) */
+    /** Điểm trên địa cầu (đã nhân độ cao h) → toạ độ khung [0..1] + độ sâu (z > 0: mặt trước); r tính theo bán kính quả cầu */
     project(v: Vec3, h = 1) {
       // n = Mᵀ·b (M trực giao)
       const n0 = rot[0] * v[0] + rot[1] * v[1] + rot[2] * v[2];
       const n1 = rot[3] * v[0] + rot[4] * v[1] + rot[5] * v[2];
       const n2 = rot[6] * v[0] + rot[7] * v[1] + rot[8] * v[2];
-      return { x: 0.5 + (n0 * h * GLOBE_R) / 2, y: 0.5 - (n1 * h * GLOBE_R) / 2, z: n2, r: Math.hypot(n0, n1) * h };
+      const k = (h * GLOBE_R * zoom) / 2;
+      return { x: 0.5 + n0 * k, y: 0.5 - n1 * k, z: n2, r: Math.hypot(n0, n1) * h };
+    },
+    /** Điểm trên khung [0..1] → kinh độ, vĩ độ (radian) trên địa cầu; null nếu nằm ngoài quả cầu */
+    pick(x: number, y: number): [number, number] | null {
+      const k = GLOBE_R * zoom;
+      const n0 = (x * 2 - 1) / k, n1 = (1 - y * 2) / k;
+      const rr = n0 * n0 + n1 * n1;
+      if (rr > 1) return null;
+      const n2 = Math.sqrt(1 - rr);
+      // b = M·n
+      const bx = rot[0] * n0 + rot[3] * n1 + rot[6] * n2;
+      const by = rot[1] * n0 + rot[4] * n1 + rot[7] * n2;
+      const bz = rot[2] * n0 + rot[5] * n1 + rot[8] * n2;
+      return [Math.atan2(bx, bz), Math.asin(Math.max(-1, Math.min(1, by)))];
     },
     destroy() {
       gl.getExtension('WEBGL_lose_context')?.loseContext();

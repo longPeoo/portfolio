@@ -1,6 +1,10 @@
 ---
-/** Dải cờ các nước đã đến (trang Hành trình, khối "Mình đã đến" ở trang chủ). Rê chuột: cờ nảy lên, nghiêng, hiện tên nước. */
-import { flagSvg } from '@/lib/flags';
+/**
+ * Dải cờ các nước đã đến: "From [cờ nhà] to [các nước còn lại]" (trang Hành trình, khối "Mình đã đến" ở trang chủ).
+ * Cờ nhà (site.yaml > homeCountry) to hơn, viền cam phát sáng. Rê chuột: cờ nảy lên, nghiêng, hiện tên nước.
+ */
+import { flagSvg, countryName } from '@/lib/flags';
+import { site } from '@/lib/site';
 import { t } from '@/lib/i18n';
 
 interface Props {
@@ -8,21 +12,32 @@ interface Props {
   class?: string;
 }
 const { countries, class: className } = Astro.props;
+const home = site.homeCountry;
+const homeName = countries.find((c) => c.code === home)?.name ?? countryName(home);
+const abroad = countries.filter((c) => c.code !== home);
 ---
 
-{countries.length > 0 && (
-  <ul class:list={['flags', className]} aria-label={t.journeys.flagsLabel}>
-    {countries.map((c) => (
-      <li title={c.name}>
-        <Fragment set:html={flagSvg(c.code, c.name)} />
-      </li>
-    ))}
-  </ul>
+{abroad.length > 0 && (
+  <div class:list={['flags', className]} role="group" aria-label={t.journeys.flagsLabel}>
+    <span class="mono flags__word">{t.journeys.flagsFrom}</span>
+    <span class="flags__home" title={homeName}><Fragment set:html={flagSvg(home, homeName)} /></span>
+    <span class="mono flags__word">{t.journeys.flagsTo}</span>
+    <ul>
+      {abroad.map((c) => (
+        <li title={c.name}>
+          <Fragment set:html={flagSvg(c.code, c.name)} />
+        </li>
+      ))}
+    </ul>
+  </div>
 )}
 
 <style>
-  .flags { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; list-style: none; padding: 0; }
-  .flags li {
+  .flags { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 14px; }
+  .flags ul { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; list-style: none; padding: 0; }
+  .flags__word { color: var(--fg-muted); font-size: 0.75rem; }
+  .flags li,
+  .flags__home {
     display: grid;
     border-radius: 50%;
     box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--line);
@@ -30,4 +45,16 @@ const { countries, class: className } = Astro.props;
   }
   .flags li:hover { translate: 0 -4px; rotate: -10deg; box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--primary); }
   .flags :global(.flag) { font-size: clamp(1.625rem, 1.4rem + 0.6vw, 2rem); }
+
+  /* Cờ nhà: to hơn, viền cam đậm, quầng vàng sáng phập phồng */
+  .flags__home {
+    margin-inline: 4px;
+    box-shadow: 0 0 0 2.5px var(--bg), 0 0 0 5.5px var(--primary), 0 0 20px 6px color-mix(in oklab, var(--c-sun), transparent 45%);
+    animation: home-glow 2.8s ease-in-out infinite;
+  }
+  .flags__home :global(.flag) { font-size: clamp(2.25rem, 1.9rem + 0.9vw, 2.75rem); }
+  .flags__home:hover { translate: 0 -4px; rotate: 8deg; }
+  @keyframes home-glow {
+    50% { box-shadow: 0 0 0 2.5px var(--bg), 0 0 0 5.5px var(--primary), 0 0 30px 10px color-mix(in oklab, var(--c-sun), transparent 25%); }
+  }
 </style>

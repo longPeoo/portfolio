@@ -30,6 +30,8 @@ const schema = z.object({
     lon: z.string(),
   }),
   email: z.string(),
+  /** Mã nước nhà (ISO 2 chữ): cờ "From" ở dải cờ các nước đã đến */
+  homeCountry: z.string().trim().toUpperCase().regex(/^[A-Z]{2}$/).default('VN'),
   /** File CV (nút tải ở trang Vũ trụ); CMS lưu '' khi để trống */
   cv: z.string().default(''),
   nav: z.array(z.object({ label: z.string(), href: z.string() })),

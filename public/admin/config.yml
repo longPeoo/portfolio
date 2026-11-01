@@ -197,6 +197,7 @@ collections:
               - { name: lon, label: Kinh độ hiển thị, widget: string, i18n: duplicate }
             i18n: true
           - { name: email, label: Email, widget: string, i18n: duplicate }
+          - { name: homeCountry, label: Mã nước nhà (cờ "From" ở dải cờ), widget: string, default: VN, pattern: ['^[A-Za-z]{2}$', 'Nhập đúng 2 chữ cái, ví dụ VN'], i18n: duplicate }
           - { name: cv, label: File CV (nút tải ở trang Vũ trụ), widget: file, required: false, i18n: duplicate }
           - name: nav
             label: Menu
@@ -678,6 +679,26 @@ collections:
                 i18n: true
               - name: flagsLabel
                 label: Tên dải cờ (cho trình đọc màn hình)
+                widget: string
+                i18n: true
+              - name: flagsFrom
+                label: Chữ trước cờ Việt Nam (From)
+                widget: string
+                i18n: true
+              - name: flagsTo
+                label: Chữ trước các cờ còn lại (to)
+                widget: string
+                i18n: true
+              - name: zoomIn
+                label: Nút phóng to địa cầu
+                widget: string
+                i18n: true
+              - name: zoomOut
+                label: Nút thu nhỏ địa cầu
+                widget: string
+                i18n: true
+              - name: zoomReset
+                label: Nút xem cả địa cầu
                 widget: string
                 i18n: true
             i18n: true

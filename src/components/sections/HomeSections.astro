@@ -30,7 +30,8 @@ const journeys = await getJourneys();
 const { points, flags } = toGlobe(journeys);
 const countries = uniqueCountries(journeys.map((j) => j.data));
 
-const globeLabels = { label: fmt(t.journeys.globeLabel, { n: points.length }), hint: t.journeys.globeHint };
+const { zoomIn, zoomOut, zoomReset } = t.journeys;
+const globeLabels = { label: fmt(t.journeys.globeLabel, { n: points.length }), hint: t.journeys.globeHint, zoomIn, zoomOut, zoomReset };
 
 const photos = await toGalleryPhotos(
   (await getPhotos()).slice(0, 10).map((p) => ({ src: p.src, alt: p.alt, caption: p.caption, href: `/journeys/${p.journey.id}` })),
