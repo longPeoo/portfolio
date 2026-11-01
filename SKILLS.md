@@ -30,7 +30,7 @@ Dễ thương, năng động nhưng vẫn nghiêm túc.
   - Hành tinh lưới SVG là bản dự phòng (trước khi ảnh tải xong, hoặc máy không có WebGL).
 - Bảng tiến độ (P1–P6) với trạng thái Xong / Đang làm / Chờ (danh sách sửa trong CMS → Chữ trên giao diện → Trang chủ).
 - Linh vật **Orbi** (vệ tinh tròn đeo máy ảnh): vui (header, hero), ngủ trên Mặt Trăng / sạc pin cạnh Mặt Trời (footer), bối rối và trôi lơ lửng (404).
-- Footer: email lớn, menu 3 cột × 2 dòng, "bầu trời của Orbi" (tối: Mặt Trăng thật, ảnh NASA dùng chung với hero; sáng: Mặt Trời vẽ bằng CSS), nút **tên lửa** lên đầu trang. Ba khối căn giữa theo chiều dọc, cách đều vạch trên và vạch dưới.
+- Footer: email lớn, menu 3 cột × 2 dòng, "bầu trời của Orbi" (tối: Mặt Trăng thật, ảnh NASA dùng chung với hero; sáng: Mặt Trời vẽ bằng CSS), nút **tên lửa** lên đầu trang. Ba khối căn giữa theo chiều dọc, cách đều vạch trên và vạch dưới; khoảng trống hai bên menu bằng nhau; nhãn "Kết trang" và "Điều hướng" thẳng hàng (subgrid). Dưới 1280px menu xuống dưới email.
 - Lớp hạt nhiễu (grain) nhẹ trên toàn trang.
 
 ---
