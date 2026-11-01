@@ -1,5 +1,5 @@
 ---
-title: Về tôi
+title: Longpeoo
 intro: Xin chào mọi người, mình là Long, mọi người hay gọi là longpeoo - một cậu nhóc lang thang khắp đó đây. Mình hiện tại là một kỹ sư công nghệ Vũ trụ (đây là niềm đam mê cả đời của mình), nhưng tâm hồn mình cũng được nuôi lớn bởi những khung cảnh hùng vĩ, bởi những màu xanh tươi mát của cây cối, bởi những màu xanh ngọc biếc của mặt hồ. Nên nếu mọi người có thời gian thì đi cùng mình nhé.
 timeline:
   - year: Tuổi thơ
