@@ -120,6 +120,8 @@ async function fetchVideos(): Promise<Video[]> {
   if (!config.channelUrl && !config.channelId) return [];
   try {
     if (API_KEY) return await fromApi();
+    // RSS hay bị YouTube chặn khi gọi từ máy chủ build (Cloudflare, GitHub Actions) → trang Vlog trống
+    if (process.env.CI) console.warn('[youtube] Thiếu biến môi trường YOUTUBE_API_KEY lúc build, thử RSS (dễ bị chặn). Xem SKILLS.md mục 9.');
     return await fromRss();
   } catch (err) {
     console.warn(`[youtube] Không lấy được danh sách video: ${(err as Error).message}`);

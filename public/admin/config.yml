@@ -655,7 +655,7 @@ collections:
                 i18n: true
             i18n: true
           - name: videos
-            label: Trang Video
+            label: Trang Vlog
             widget: object
             collapsed: true
             fields:

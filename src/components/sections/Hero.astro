@@ -38,7 +38,7 @@ const stars = [
           {t.home.ctaJourneys} <ArrowUpRightIcon data-icon="inline-end" />
         </a>
         <a
-          href={youtube?.url ?? '/videos'}
+          href={youtube?.url ?? '/vlogs'}
           target={youtube ? '_blank' : undefined}
           rel={youtube ? 'noopener noreferrer' : undefined}
           class={cn(buttonVariants({ variant: 'launch-outline', size: 'pill' }))}
@@ -106,13 +106,13 @@ const stars = [
 </section>
 
 <style>
+  /* Cao theo nội dung (khối quỹ đạo đã co theo chiều cao màn hình): phần kế tiếp ló lên ở mép dưới, gợi ý cuộn */
   .hero {
     position: relative;
-    min-height: 100svh;
     display: flex;
     align-items: center;
-    padding-top: calc(var(--header-h) + var(--space-8));
-    padding-bottom: var(--space-16);
+    padding-top: calc(var(--header-h) + var(--space-6));
+    padding-bottom: var(--space-8);
     overflow: hidden;
   }
   .hero__inner {
@@ -158,7 +158,16 @@ const stars = [
   .hero__cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: var(--space-8); }
 
   /* Quỹ đạo nằm cùng hàng và chồng nhẹ lên phần chữ — bố cục kiểu tạp chí */
-  .hero__orbit { position: relative; grid-column: 6 / -1; grid-row: 2; margin-right: calc(var(--gutter) * -1); }
+  /* Khối quỹ đạo vuông: giới hạn theo chiều cao màn hình để cả hero (chữ + nút) luôn nằm gọn trong màn hình đầu */
+  .hero__orbit {
+    position: relative;
+    grid-column: 6 / -1;
+    grid-row: 2;
+    justify-self: end;
+    width: min(100% + var(--gutter), 100svh - var(--header-h) - 240px);
+    min-width: min(100%, 420px);
+    margin-right: calc(var(--gutter) * -1);
+  }
   .orbit { position: relative; display: block; width: 100%; height: auto; overflow: visible; }
   .earth { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1.2s var(--ease-out); }
   .has-earth .earth { opacity: 1; }
@@ -206,7 +215,6 @@ const stars = [
   }
 
   @media (max-width: 900px) {
-    .hero { min-height: auto; }
     .hero__text { grid-column: 1 / -1; grid-row: 3; }
     .hero__orbit {
       grid-column: 1 / -1;

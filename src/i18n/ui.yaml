@@ -110,12 +110,12 @@ journeys:
   globeLabel: Quả địa cầu đánh dấu {n} chuyến đi. Bấm vào ghim để mở chuyến đi.
   globeHint: Kéo để xoay · bấm ghim để mở
 videos:
-  code: MSN-04 · Video
-  title: Video
-  intro: Các video mới nhất từ kênh YouTube, tự cập nhật khi có video mới.
+  code: MSN-04 · Vlog
+  title: Vlog
+  intro: Các vlog mới nhất từ kênh YouTube, tự cập nhật khi có vlog mới.
   subscribe: Theo dõi kênh
   all: Tất cả
-  new: Video mới
+  new: Vlog mới
   views: lượt xem
   play: Phát video
   openYoutube: Mở trên YouTube

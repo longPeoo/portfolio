@@ -73,6 +73,8 @@ Thang cỡ chữ: `--fs-mono`, `--fs-sm`, `--fs-base`, `--fs-lg`, `--fs-h3`, `--
 - Khung nội dung: class `.container` (max 1320px, lề `--gutter` = 16–48px).
 - Header cố định cao `--header-h` (68px). Section đầu trang cần `padding-top` cộng thêm khoảng này.
 - Khoảng cách dọc giữa các section: `--section-y`.
+- Hero trang chủ: khối quỹ đạo giới hạn theo chiều cao màn hình (`100svh − header − 240px`), hero cao theo nội dung: chữ và nút luôn nằm trong màn hình đầu, phần kế tiếp ló lên ở mép dưới.
+- Lưới thẻ có nhiều phần (nhãn, tiêu đề, thanh đo…) dùng **CSS subgrid** (`grid-template-rows: subgrid`) để các thẻ cùng hàng thẳng hàng dù tiêu đề dài ngắn khác nhau (xem `.subsystem` ở `about.astro`).
 
 ---
 
@@ -98,8 +100,8 @@ Thang cỡ chữ: `--fs-mono`, `--fs-sm`, `--fs-base`, `--fs-lg`, `--fs-h3`, `--
 | **Nền vũ trụ** | trang Về tôi: canvas cố định phủ kín màn hình, nằm sau nội dung (`CosmosBackdrop.astro` + `src/scripts/cosmos.ts`, tải động từ `initCosmos()` trong `motion.ts`). Cuộn hết câu chuyện + timeline (`data-cosmos-track`) = camera lùi theo thang đo thật, 6 bậc L0–L5: Trái Đất (ghim Hà Nội, ngày/đêm) → Trái Đất–Mặt Trăng → hành tinh đá → Hệ Mặt Trời (Kuiper, Oort, Voyager 1) → sao lân cận → Dải Ngân Hà ("Bạn ở đây"). Tối: vũ trụ thật; sáng: bản đồ sao in mực trên giấy. Lớp nền mờ sau cột chữ để chữ luôn đọc được; số đo L/FOV/ZOOM ở góc dưới phải. Không có tác vụ > 50ms (dựng Ngân Hà chia nhiều lượt). Giảm chuyển động: nhảy thẳng tới từng bậc, hình đứng yên |
 | Thẻ dự án | rê chuột: lưới bản vẽ kỹ thuật, 4 góc ngắm, đèn trạng thái sáng |
 | Thẻ chuyến đi | rê chuột: con dấu hộ chiếu đóng "cộp"; trang chi tiết: con dấu đóng một lần khi mở |
-| Ảnh polaroid | dán băng keo, xoay nhẹ; rê chuột thì thẳng lại và nhấc lên |
-| Video | khung CRT có vạch quét, nhấp nháy khi rê chuột; nút play nảy |
+| Ảnh polaroid | dán băng keo, xoay nhẹ; rê chuột thì thẳng lại và nhấc lên. Lưới đọc trái → phải: 2 cột (< 480px) → 3 → 4 (≥ 768px) → 5 (≥ 1024px). Trang chủ tối đa 2 dòng đầy |
+| Vlog (`/vlogs`, đường dẫn cũ `/videos` chuyển hướng 301) | khung CRT có vạch quét, nhấp nháy khi rê chuột; nút play nảy |
 | Địa cầu Missions | tự xoay chậm, kéo để xoay, rê vào tên chuyến đi → xoay tới đó; đường bay nối các chuyến theo thời gian; **ghim bấm được** trên từng điểm → mở trang chuyến đi (ẩn khi quay ra sau); rê chuột lên địa cầu thì ngừng quay |
 | Trứng phục sinh | gõ `launch` ở bất kỳ đâu → mưa sao băng |
 
@@ -293,7 +295,8 @@ Rồi chụp màn hình (sáng/tối, desktop/mobile), so với thiết kế ở
 ## 9. Deploy
 
 - Push lên nhánh `main` (kể cả commit do CMS tạo) → Cloudflare Workers tự build (`npm run build`) và phát thư mục `dist/` (`wrangler.jsonc`, tên worker `portfolio`).
-- Biến môi trường `YOUTUBE_API_KEY` phải có ở: Cloudflare (Worker → Settings → Build → Variables), GitHub Secrets (cho `refresh.yml`) và file `.env` trên máy.
+- Biến môi trường `YOUTUBE_API_KEY` phải có ở: Cloudflare (Worker → Settings → **Build** → Variables and secrets; *không phải* mục Variables lúc chạy), GitHub Secrets (cho `refresh.yml`) và file `.env` trên máy.
+  Thiếu key thì web thử RSS, nhưng YouTube hay chặn RSS từ máy chủ build → trang Vlog trống, log build có dòng `[youtube] Thiếu biến môi trường YOUTUBE_API_KEY`.
 - `refresh.yml` build và deploy lại mỗi 6 giờ (cần secret `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`). Thiếu secret thì workflow tự bỏ qua.
 - Node 24 (file `.node-version`). Trên máy dùng `fnm use`.
 - Tên miền `longpeoo.io.vn` (DNS ở Cloudflare). `www` chuyển hướng 301 về tên miền chính.

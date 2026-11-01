@@ -30,7 +30,7 @@ const points = journeys.map((j) => ({ id: j.id, title: j.data.title, place: j.da
 const globeLabels = { label: fmt(t.journeys.globeLabel, { n: points.length }), hint: t.journeys.globeHint };
 
 const photos = await toGalleryPhotos(
-  (await getPhotos()).slice(0, 6).map((p) => ({ src: p.src, alt: p.alt, caption: p.caption, href: `/journeys/${p.journey.id}` })),
+  (await getPhotos()).slice(0, 10).map((p) => ({ src: p.src, alt: p.alt, caption: p.caption, href: `/journeys/${p.journey.id}` })),
 );
 ---
 
@@ -42,7 +42,7 @@ const photos = await toGalleryPhotos(
       {isNew && <Badge variant="signal"><i class="tx-dot" aria-hidden="true"></i>{t.home.videoNew}</Badge>}
       <p class="transmission__title">{video.title}</p>
       {video.published && <p class="mono muted">{dateFmt.format(video.published)}</p>}
-      <a href="/videos" class={cn(buttonVariants({ variant: 'launch-outline', size: 'pill' }))}>
+      <a href="/vlogs" class={cn(buttonVariants({ variant: 'launch-outline', size: 'pill' }))}>
         {t.home.videoAll} <ArrowUpRightIcon data-icon="inline-end" />
       </a>
     </div>
@@ -67,7 +67,7 @@ const photos = await toGalleryPhotos(
 )}
 
 {photos.length > 0 && (
-  <section class="home-sec container" aria-label={t.home.photosTitle}>
+  <section class="home-sec home-photos container" aria-label={t.home.photosTitle}>
     <SectionHead code={t.home.photosCode} title={t.home.photosTitle} href="/gallery" linkLabel={t.home.photosLink} />
     <PhotoGallery client:visible photos={photos} variant="polaroid" labels={t.gallery} />
   </section>
@@ -84,5 +84,12 @@ const photos = await toGalleryPhotos(
   .payloads { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: var(--space-8); }
   @media (max-width: 860px) {
     .transmission { grid-template-columns: 1fr; }
+  }
+  /* Cuộn phim: tối đa 2 dòng đầy: 5 cột → 10 ảnh, 4 cột → 8, 2–3 cột → 6 */
+  @media (max-width: 1023px) {
+    .home-photos :global(.photo-gallery li:nth-child(n + 9)) { display: none; }
+  }
+  @media (max-width: 767px) {
+    .home-photos :global(.photo-gallery li:nth-child(n + 7)) { display: none; }
   }
 </style>

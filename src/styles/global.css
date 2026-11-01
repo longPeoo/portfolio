@@ -152,7 +152,7 @@
   --space-12: 3rem;
   --space-16: 4rem;
   --space-24: 6rem;
-  --section-y: clamp(4rem, 3rem + 6vw, 9rem);
+  --section-y: clamp(3rem, 2rem + 4vw, 6rem);
   --r-sm: 6px;
   --r: 14px;
   --r-lg: 28px;
@@ -300,29 +300,29 @@ body::before {
   }
 }
 
-/* ---------- Bài viết Markdown (plugin typography) — màu lấy theo token, tự đổi sáng/tối ---------- */
-@layer components {
-  .prose {
-    --tw-prose-body: var(--foreground);
-    --tw-prose-headings: var(--foreground);
-    --tw-prose-lead: var(--muted-foreground);
-    --tw-prose-links: var(--primary);
-    --tw-prose-bold: var(--foreground);
-    --tw-prose-counters: var(--muted-foreground);
-    --tw-prose-bullets: var(--primary);
-    --tw-prose-hr: var(--border);
-    --tw-prose-quotes: var(--foreground);
-    --tw-prose-quote-borders: var(--primary);
-    --tw-prose-captions: var(--muted-foreground);
-    --tw-prose-code: var(--foreground);
-    --tw-prose-pre-code: var(--c-paper);
-    --tw-prose-pre-bg: var(--c-space);
-    --tw-prose-th-borders: var(--border);
-    --tw-prose-td-borders: var(--border);
-  }
-  .prose :where(h2, h3) { font-family: var(--font-display); font-stretch: 112%; letter-spacing: -0.02em; }
-  .prose :where(img) { border-radius: var(--r); }
+/* ---------- Bài viết Markdown (plugin typography) — màu lấy theo token, tự đổi sáng/tối ----------
+   Cố ý KHÔNG đặt trong @layer: plugin sinh .prose (kèm màu xám mặc định) ở layer utilities,
+   mà layer sau luôn thắng layer trước → đặt ở components thì chữ bị xám tối trên nền tối. */
+.prose {
+  --tw-prose-body: var(--foreground);
+  --tw-prose-headings: var(--foreground);
+  --tw-prose-lead: var(--muted-foreground);
+  --tw-prose-links: var(--primary);
+  --tw-prose-bold: var(--foreground);
+  --tw-prose-counters: var(--muted-foreground);
+  --tw-prose-bullets: var(--primary);
+  --tw-prose-hr: var(--border);
+  --tw-prose-quotes: var(--foreground);
+  --tw-prose-quote-borders: var(--primary);
+  --tw-prose-captions: var(--muted-foreground);
+  --tw-prose-code: var(--foreground);
+  --tw-prose-pre-code: var(--c-paper);
+  --tw-prose-pre-bg: var(--c-space);
+  --tw-prose-th-borders: var(--border);
+  --tw-prose-td-borders: var(--border);
 }
+.prose :where(h2, h3) { font-family: var(--font-display); font-stretch: 112%; letter-spacing: -0.02em; }
+.prose :where(img) { border-radius: var(--r); }
 
 /* ---------- Media: trình phát video & ảnh (component React nên đặt style toàn cục) ---------- */
 @layer components {
@@ -373,11 +373,21 @@ body::before {
   .photo-gallery--grid button:hover img { transform: scale(1.05); }
 
   /* Ảnh polaroid dán băng keo, xoay nhẹ như được thả lên bàn */
-  .photo-gallery--polaroid { columns: 3 240px; column-gap: var(--space-8); }
-  .photo-gallery--polaroid li { break-inside: avoid; margin-bottom: var(--space-8); }
+  /* Lưới đọc từ trái sang phải: 2 cột (điện thoại) → 3 → 4 → 5 (máy tính) */
+  .photo-gallery--polaroid {
+    --cols: 2;
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    align-items: start;
+    gap: var(--space-8) var(--space-4);
+    padding-top: 12px; /* chừa chỗ cho băng keo */
+  }
+  @media (min-width: 480px) { .photo-gallery--polaroid { --cols: 3; } }
+  @media (min-width: 768px) { .photo-gallery--polaroid { --cols: 4; gap: var(--space-8) var(--space-6); } }
+  @media (min-width: 1024px) { .photo-gallery--polaroid { --cols: 5; } }
   .photo-gallery--polaroid button {
     position: relative;
-    padding: 10px 10px 14px;
+    padding: clamp(5px, 0.7vw, 10px) clamp(5px, 0.7vw, 10px) clamp(8px, 1vw, 14px);
     background: #fffdf8;
     color: var(--c-ink);
     box-shadow: 0 1px 2px rgb(0 0 0 / 0.08), 0 10px 24px -12px rgb(27 27 47 / 0.35);
@@ -392,15 +402,23 @@ body::before {
     position: absolute;
     top: -10px;
     left: 50%;
-    width: 84px;
-    height: 22px;
+    width: clamp(44px, 32%, 84px);
+    height: clamp(14px, 1.4vw, 22px);
     translate: -50% 0;
     rotate: -3deg;
     background: color-mix(in srgb, var(--c-sun) 55%, transparent);
     box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
   }
   .photo-gallery--polaroid img { width: 100%; height: auto; }
-  .photo-gallery__caption { display: block; padding-top: 10px; font-size: var(--fs-sm); font-style: italic; text-align: center; }
+  .photo-gallery__caption {
+    display: block;
+    padding-top: 8px;
+    font-size: clamp(0.6875rem, 0.6rem + 0.25vw, 0.875rem);
+    font-style: italic;
+    line-height: 1.35;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
 }
 
 /* ---------- Quả địa cầu Missions ---------- */
