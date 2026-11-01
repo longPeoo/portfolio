@@ -9,7 +9,7 @@ date: 2026-03-01
 role: "Kỹ sư phân hệ năng lượng"
 status: "Nominal"
 tags: ["CubeSat", "EPS", "Thử nghiệm môi trường"]
-cover: "./cover.jpg"
+cover: "./cover.webp"
 coverAlt: "Minh hoạ vệ tinh nhỏ bay trên quỹ đạo quanh Trái Đất"
 links:
   - label: "Báo cáo kỹ thuật"

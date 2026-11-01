@@ -8,7 +8,9 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "node scripts/photos.mjs --check",
     "build": "astro build",
+    "photos": "node scripts/photos.mjs",
     "preview": "astro preview",
     "check": "astro check"
   },
@@ -42,6 +44,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
     "@tailwindcss/typography": "^0.5.20",
+    "sharp": "^0.35.5",
     "typescript": "^6.0.3"
   }
 }

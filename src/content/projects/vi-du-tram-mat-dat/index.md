@@ -6,7 +6,7 @@ date: 2025-09-01
 role: "Trưởng nhóm"
 status: "Complete"
 tags: ["Ground station", "SDR", "RF"]
-cover: "./cover.jpg"
+cover: "./cover.webp"
 coverAlt: "Minh hoạ chảo ăng-ten của trạm mặt đất"
 featured: true
 draft: true

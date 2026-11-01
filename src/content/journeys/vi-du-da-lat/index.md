@@ -7,10 +7,10 @@ place: "Đà Lạt"
 country: "Việt Nam"
 lat: 11.94
 lng: 108.44
-cover: "./cover.jpg"
+cover: "./cover.webp"
 coverAlt: "Rừng thông Đà Lạt trong sương"
 gallery:
-  - src: "./1.jpg"
+  - src: "./1.webp"
     alt: "Đồi thông lúc bình minh"
 tags: ["Việt Nam", "Cao nguyên"]
 draft: true

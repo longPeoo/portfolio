@@ -7,13 +7,13 @@ place: Boulogne Sur Mer
 country: Pháp
 lat: 47.058247
 lng: 2.627377
-cover: IMG_4774.jpeg
+cover: IMG_4774.webp
 coverAlt: Trông cũng ngoan ngoãn hiền lành, chụp với tháp sắt nè
 gallery:
-  - src: IMG_4646.jpeg
+  - src: IMG_4646.webp
     alt: Đây là con phố mình ở nè đẹp chưa
     caption: ''
-  - src: IMG_4642.jpeg
+  - src: IMG_4642.webp
     alt: Công viên cách nhà đúng 10 bước chân, hôm nào đi làm về cũng ra đây chạy mấy vòng
     caption: ''
 youtube: ''

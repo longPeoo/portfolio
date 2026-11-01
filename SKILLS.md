@@ -220,7 +220,10 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 - `draft: true` = chỉ hiện khi `npm run dev`. Các bài mẫu "Ví dụ: …" đều là draft, xoá khi có nội dung thật.
 - Trang chưa có nội dung tự hiện `ComingSoon`; khối trang chủ chưa có dữ liệu thì tự ẩn.
 - Ảnh luôn đi qua `astro:assets` (`<Image>` hoặc `toGalleryPhotos()` trong `src/lib/photos.ts`) để tự nén WebP và tạo nhiều kích thước.
-- **Ảnh gốc lưu trong repo**, cạnh bài viết. CMS tự đổi ảnh tải lên sang WebP, cạnh dài ≤ 2560px, chất lượng 85, đồng thời xoá EXIF/GPS (`media_libraries` trong `config.yml`).
+- **Ảnh gốc lưu trong repo**, cạnh bài viết (`src/content/<bài>/`), **không** để trong `public/` (ảnh ở `public/` không được Astro nén, phát nguyên file gốc).
+  CMS tự đổi ảnh tải lên sang WebP, cạnh dài ≤ 2560px, chất lượng 85, đồng thời xoá EXIF/GPS (`media_libraries` trong `config.yml`), chặn file > 20 MB.
+  Chép ảnh thẳng vào thư mục thì chạy `npm run photos` trước khi commit (cùng thông số, tự sửa đường dẫn trong `.md`/`.yaml`; `-- --dry` để xem trước).
+  `prebuild` chạy `photos.mjs --check`: dừng build nếu có ảnh RAW/HEIC hoặc file trong `public/` > 25 MiB (giới hạn của Cloudflare Workers).
   Không nhúng ảnh từ Google Drive/Photos (không phải CDN, link hay hỏng, Astro không tối ưu được). Video để trên YouTube.
   Khi repo vượt khoảng 1 GB thì chuyển album lớn sang kho ảnh ngoài (Cloudflare R2 hoặc Cloudinary), hỏi chủ dự án trước.
 - Video lấy bằng **YouTube Data API v3** lúc build (`src/lib/youtube.ts`, biến môi trường `YOUTUBE_API_KEY`). Không đọc trang YouTube trái phép.

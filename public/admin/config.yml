@@ -30,9 +30,11 @@ public_folder: /uploads
 # đổi sang WebP, cạnh dài tối đa 2560px (ảnh bìa lớn nhất trên web là 2400px), chất lượng 85.
 # Ảnh điện thoại 5–10 MB → còn khoảng 0,4–1 MB. Ảnh được vẽ lại nên mất luôn EXIF (gồm toạ độ GPS nơi chụp).
 # Lúc build, Astro còn cắt tiếp ra nhiều cỡ nhỏ hơn cho người xem.
+# Chặn file quá 20 MB (thường là ảnh RAW .dng: trình duyệt không hiển thị được, Cloudflare không phát file > 25 MiB).
 media_libraries:
   default:
     config:
+      max_file_size: 20000000
       transformations:
         raster_image:
           format: webp

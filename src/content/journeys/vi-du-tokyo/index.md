@@ -8,10 +8,10 @@ place: "Tokyo"
 country: "Nhật Bản"
 lat: 35.68
 lng: 139.69
-cover: "./cover.jpg"
+cover: "./cover.webp"
 coverAlt: "Đường chân trời Tokyo về đêm"
 gallery:
-  - src: "./1.jpg"
+  - src: "./1.webp"
     alt: "Phố Tokyo mùa hoa anh đào"
     caption: "Mùa hoa anh đào"
 tags: ["Nhật Bản", "Thành phố", "Vũ trụ"]
