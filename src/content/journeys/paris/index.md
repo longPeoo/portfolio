@@ -26,7 +26,7 @@ gallery:
     caption: Thấy 2 chú đáng iu quá nên chụp vội
     alt: Thấy 2 chú đáng iu quá nên chụp vội
   - src: paris_04.webp
-    caption: Một góc nhà
+    caption: Một góc nhà ở Paris
     alt: Một góc nhà
   - src: paris_07.webp
     caption: Bảo tàng Lourve nhưng mà đông quá, mình không thích chỗ đông người
