@@ -1,12 +1,17 @@
 /**
  * Nén ảnh trước khi commit: làm đúng việc CMS tự làm khi tải ảnh lên (xem media_libraries trong public/admin/config.yml).
  *
- *   npm run photos              nén ảnh JPEG/PNG/WebP còn to trong src/content và public/uploads:
+ *   npm run photos              nén ảnh JPEG/PNG/WebP/TIFF còn to và đổi ảnh DNG trong src/content và public/uploads:
  *                               cạnh dài ≤ 2560px, WebP chất lượng 85, xoá EXIF (gồm GPS), sửa đường dẫn trong .md/.yaml
  *   npm run photos -- --dry     chỉ xem trước: ảnh nào sẽ được nén, nặng bao nhiêu sau khi nén
  *   npm run photos -- --check   chỉ kiểm tra (tự chạy trước mỗi lần build, không cần sharp):
- *                               lỗi nếu có ảnh RAW/HEIC (trình duyệt không hiển thị được)
+ *                               lỗi nếu còn ảnh DNG/TIFF/RAW/HEIC (trình duyệt không hiển thị được)
  *                               hoặc file trong public/ quá 25 MiB (Cloudflare Workers không phát được)
+ *
+ * DNG: không cần bộ đọc RAW. File DNG của iPhone (ProRAW) kèm sẵn ảnh đã xử lý đúng độ phân giải gốc
+ * (chính là ảnh thấy trong app Ảnh) ở lớp đầu tiên của file → sharp đọc lớp đó. DNG từ máy khác chỉ kèm
+ * ảnh xem trước nhỏ (< MIN_PREVIEW) thì bỏ qua và báo xuất JPEG, để không ra ảnh mờ.
+ * HEIC và RAW riêng của hãng (CR2, NEF, ARW…) vẫn cần xuất ra JPEG trước.
  */
 import { existsSync, readdirSync, readFileSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
 import { basename, dirname, extname, join, relative, sep } from 'node:path';
@@ -14,8 +19,12 @@ import { basename, dirname, extname, join, relative, sep } from 'node:path';
 const MAX_SIDE = 2560;
 const QUALITY = 85;
 const ASSET_LIMIT = 25 * 1024 * 1024;
+/** Cạnh dài tối thiểu của ảnh nhúng trong DNG để dùng được (nhỏ hơn = chỉ là ảnh thu nhỏ) */
+const MIN_PREVIEW = 1600;
 const RASTER = new Set(['.jpg', '.jpeg', '.png', '.webp']);
-const UNSUPPORTED = new Set(['.dng', '.heic', '.heif', '.raw', '.cr2', '.cr3', '.nef', '.arw', '.orf', '.raf', '.rw2', '.tif', '.tiff']);
+/** Đổi được bằng npm run photos nhưng trình duyệt không hiển thị → phải đổi trước khi build */
+const CONVERT = new Set(['.dng', '.tif', '.tiff']);
+const UNSUPPORTED = new Set(['.heic', '.heif', '.raw', '.cr2', '.cr3', '.nef', '.arw', '.orf', '.raf', '.rw2']);
 const PHOTO_DIRS = ['src/content', 'public/uploads'];
 const TEXT_DIRS = ['src/content', 'src/data'];
 
@@ -33,8 +42,11 @@ const mb = (bytes) => `${(bytes / 1048576).toFixed(2)} MB`;
 if (mode === 'check') {
   const errors = [];
   for (const file of [...walk('src/content'), ...walk('public')]) {
-    if (UNSUPPORTED.has(extname(file).toLowerCase())) {
-      errors.push(`${posix(file)}: định dạng ${extname(file)} không hiển thị được trên web. Xuất ra JPEG rồi chạy "npm run photos".`);
+    const ext = extname(file).toLowerCase();
+    if (CONVERT.has(ext)) {
+      errors.push(`${posix(file)}: định dạng ${ext} không hiển thị được trên web. Chạy "npm run photos" để đổi sang WebP.`);
+    } else if (UNSUPPORTED.has(ext)) {
+      errors.push(`${posix(file)}: định dạng ${ext} không hiển thị được trên web. Xuất ra JPEG rồi chạy "npm run photos".`);
     } else if (file.startsWith('public') && statSync(file).size > ASSET_LIMIT) {
       errors.push(`${posix(file)}: ${mb(statSync(file).size)}, quá giới hạn 25 MiB/file của Cloudflare Workers.`);
     }
@@ -98,15 +110,21 @@ let after = 0;
 for (const file of PHOTO_DIRS.flatMap(walk)) {
   const ext = extname(file).toLowerCase();
   if (UNSUPPORTED.has(ext)) {
-    rows.push([posix(file), mb(statSync(file).size), '—', 'BỎ QUA: xuất ra JPEG trước (RAW/HEIC)']);
+    rows.push([posix(file), mb(statSync(file).size), '—', 'BỎ QUA: xuất ra JPEG trước (HEIC/RAW của hãng)']);
     continue;
   }
-  if (!RASTER.has(ext)) continue;
+  if (!RASTER.has(ext) && !CONVERT.has(ext)) continue;
   const input = readFileSync(file);
-  const meta = await sharp(input).metadata();
+  const meta = await sharp(input).metadata().catch(() => null);
+  const side = Math.max(meta?.width ?? 0, meta?.height ?? 0);
+  if (!meta || (ext === '.dng' && side < MIN_PREVIEW)) {
+    const why = meta ? `ảnh nhúng trong DNG chỉ ${meta.width}×${meta.height}` : 'không đọc được file';
+    rows.push([posix(file), mb(input.length), '—', `BỎ QUA: ${why}. Xuất JPEG (Lightroom, app Ảnh) rồi chạy lại`]);
+    continue;
+  }
   const gps = hasGps(meta.exif);
   // WebP đã đủ nhỏ và không còn EXIF thì để nguyên
-  if (ext === '.webp' && !meta.exif && Math.max(meta.width ?? 0, meta.height ?? 0) <= MAX_SIDE) continue;
+  if (ext === '.webp' && !meta.exif && side <= MAX_SIDE) continue;
 
   const { data, info } = await sharp(input)
     .rotate() // xoay theo EXIF trước khi bỏ EXIF
