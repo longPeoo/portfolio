@@ -216,7 +216,7 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 | Chữ cố định trên giao diện (nhãn MSN-xx, tiêu đề mục, nút, bảng tiến độ) | `src/i18n/ui.yaml`, `src/i18n/ui.en.yaml` (zod trong `src/lib/i18n.ts`) |
 | Bản tiếng Anh của tên nghề, câu giới thiệu, menu | `src/data/site.en.yaml` (chỉ các trường cần dịch) |
 | Dự án kỹ thuật | `src/content/projects/<ten-khong-dau>/index.md` + ảnh cùng thư mục |
-| Chuyến đi (kèm toạ độ cho địa cầu, album, video) | `src/content/journeys/<ten-khong-dau>/index.md` + ảnh cùng thư mục. Tối thiểu: `place`, `countryCode` (ISO 2 chữ → cờ tròn `circle-flags` + tên nước tự động qua `Intl.DisplayNames`, `src/lib/flags.ts`), `lat`, `lng` → chỉ là ghim + cờ trên địa cầu. Có `cover` → thêm thẻ, trang riêng, ảnh ở trang Ảnh (`getStories()` trong `content.ts`) |
+| Chuyến đi (kèm toạ độ cho địa cầu, album, video) | `src/content/journeys/<ten-khong-dau>/index.md` + ảnh cùng thư mục. Tối thiểu: `place`, `countryCode` (ISO 2 chữ → cờ tròn `circle-flags` + tên nước tự động qua `Intl.DisplayNames`, `src/lib/flags.ts`), `lat`, `lng` → chỉ là ghim + cờ trên địa cầu. Có `cover` → thêm thẻ, trang riêng, ảnh ở trang Ảnh (`getStories()` trong `content.ts`). Tên ảnh `<địa-danh>_NN.webp`, ảnh bìa `_00`. `ongoing: true` = hành trình chưa kết thúc (Việt Nam): hiện "… – nay" và `T+n ngày` (`formatElapsed`), số ngày tăng theo mỗi lần build lại (6 giờ/lần) |
 | Trang Về tôi (timeline, kỹ năng) | `src/content/pages/about.md` |
 | Nhạc nền (2–3 bài, phát lần lượt) | `src/data/music.yaml` (zod trong `src/lib/music.ts`), file nhạc ở `public/music/`. CMS: Cài đặt → Nhạc nền |
 | Kênh YouTube, video nổi bật, ghim, ẩn, nhóm, bật/tắt Shorts | `src/data/videos.yaml` (Shorts nhận biết qua playlist tự động `UUSH…` của kênh) |

@@ -11,7 +11,7 @@ import { PhotoGallery } from '@/components/media/PhotoGallery';
 import JourneyCard from '@/components/sections/JourneyCard.astro';
 import { cn } from '@/lib/utils';
 import { t, fmt } from '@/lib/i18n';
-import { getJourneys, hasStory, missionNumber, formatMonth, formatRange } from '@/lib/content';
+import { getJourneys, hasStory, missionNumber, formatMonth, formatRange, formatElapsed } from '@/lib/content';
 import { flagSvg } from '@/lib/flags';
 import { toGalleryPhotos } from '@/lib/photos';
 import { youtubeId } from '@/lib/youtube';
@@ -27,7 +27,7 @@ export async function getStaticPaths() {
 }
 
 const { journey, number, next } = Astro.props;
-const { title, summary, place, country, countryCode, lat, lng, date, endDate, cover, coverAlt, gallery, youtube, tags } = journey.data;
+const { title, summary, place, country, countryCode, lat, lng, date, endDate, ongoing, cover, coverAlt, gallery, youtube, tags } = journey.data;
 const { Content } = await render(journey);
 const videoId = youtubeId(youtube);
 const photos = await toGalleryPhotos(gallery);
@@ -53,7 +53,7 @@ const article = {
       </a>
       <div class="trip__title">
         <div>
-          <p class="mono muted">M-{String(number).padStart(2, '0')} · {t.journeys.log} · {coord}{date && ` · ${formatRange(date, endDate)}`}</p>
+          <p class="mono muted">M-{String(number).padStart(2, '0')} · {t.journeys.log} · {coord}{date && ` · ${formatRange(date, endDate, ongoing)}`}{date && ongoing && ` · ${formatElapsed(date)}`}</p>
           <h1>{title}</h1>
           <p class="trip__lead">{summary}</p>
         </div>

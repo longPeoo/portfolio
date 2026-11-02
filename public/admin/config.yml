@@ -78,6 +78,7 @@ collections:
       - { name: summary, label: Tóm tắt (1–2 câu), widget: text, required: false, i18n: true }
       - { name: date, label: Ngày bắt đầu, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false, required: false, hint: "Để trống = xếp cuối danh sách", i18n: duplicate }
       - { name: endDate, label: Ngày kết thúc, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false, required: false, i18n: duplicate }
+      - { name: ongoing, label: Hành trình chưa kết thúc, widget: boolean, default: false, required: false, hint: "Bật = hiện \"… – nay\" và số ngày T+n (tự tăng mỗi ngày), bỏ qua ngày kết thúc", i18n: duplicate }
       - { name: place, label: Địa điểm, widget: string, hint: "Ví dụ: Hà Giang", i18n: true }
       - { name: countryCode, label: Mã quốc gia (2 chữ), widget: string, default: VN, pattern: ['^[A-Za-z]{2}$', 'Nhập đúng 2 chữ cái, ví dụ VN, FR, JP'], hint: "Dùng để hiện cờ và tên nước. Ví dụ: VN Việt Nam, FR Pháp, JP Nhật Bản, CH Thụy Sĩ, IT Ý, IN Ấn Độ, US Mỹ, GB Anh", i18n: duplicate }
       - { name: country, label: Tên quốc gia (tuỳ chọn), widget: string, required: false, hint: "Để trống = tự lấy theo mã (FR → Pháp). Chỉ điền khi muốn gọi khác, ví dụ Ý thay cho Italy", i18n: true }
@@ -666,6 +667,14 @@ collections:
                 i18n: true
               - name: zoomReset
                 label: Nút xem cả địa cầu
+                widget: string
+                i18n: true
+              - name: ongoing
+                label: 'Chữ thay ngày kết thúc khi hành trình chưa kết thúc ("nay")'
+                widget: string
+                i18n: true
+              - name: elapsed
+                label: 'Số ngày của hành trình chưa kết thúc ({n} = số ngày)'
                 widget: string
                 i18n: true
             i18n: true

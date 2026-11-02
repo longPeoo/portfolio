@@ -14,7 +14,7 @@ interface Props {
 }
 
 const { journey, size = 'default' } = Astro.props;
-const { title, summary, place, country, countryCode, date, endDate, cover, coverAlt } = journey.data;
+const { title, summary, place, country, countryCode, date, endDate, ongoing, cover, coverAlt } = journey.data;
 const stampId = `stamp-${journey.id}`;
 ---
 
@@ -37,7 +37,7 @@ const stampId = `stamp-${journey.id}`;
     </svg>
   </div>
   <div class="jcard__body">
-    <p class="mono muted jcard__meta"><Fragment set:html={flagSvg(countryCode)} />{place}, {country}{date && ` · ${formatRange(date, endDate)}`}</p>
+    <p class="mono muted jcard__meta"><Fragment set:html={flagSvg(countryCode)} />{place}, {country}{date && ` · ${formatRange(date, endDate, ongoing)}`}</p>
     <h3>{title}</h3>
     {size === 'default' && <p class="jcard__sum">{summary}</p>}
   </div>

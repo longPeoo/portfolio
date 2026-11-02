@@ -1,6 +1,6 @@
 import type { ImageMetadata } from 'astro';
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
-import { intl } from '@/lib/i18n';
+import { intl, t, fmt } from '@/lib/i18n';
 import { flagSvg, uniqueCountries } from '@/lib/flags';
 
 /** Bài nháp (draft: true) chỉ hiện khi chạy `npm run dev` */
@@ -57,12 +57,20 @@ export const formatMonth = (d: Date) => dateFmt.format(d);
 
 const monthFmt = new Intl.DateTimeFormat(intl, { month: 'long' });
 
-/** "tháng 3 năm 2026", "tháng 3 – tháng 4 năm 2026" hoặc "tháng 12 năm 2025 – tháng 1 năm 2026" */
-export function formatRange(start: Date, end?: Date) {
+/**
+ * "tháng 3 năm 2026", "tháng 3 – tháng 4 năm 2026" hoặc "tháng 12 năm 2025 – tháng 1 năm 2026".
+ * ongoing: hành trình chưa kết thúc → "tháng 3 năm 2000 – nay".
+ */
+export function formatRange(start: Date, end?: Date, ongoing = false) {
+  if (ongoing) return `${formatMonth(start)} – ${t.journeys.ongoing}`;
   if (!end || (end.getFullYear() === start.getFullYear() && end.getMonth() === start.getMonth())) return formatMonth(start);
   if (end.getFullYear() === start.getFullYear()) return `${monthFmt.format(start)} – ${formatMonth(end)}`;
   return `${formatMonth(start)} – ${formatMonth(end)}`;
 }
+
+/** Số ngày từ ngày bắt đầu tới lúc build ("T+9.731 ngày"); web build lại mỗi 6 giờ nên số này tăng mỗi ngày */
+export const formatElapsed = (start: Date) =>
+  fmt(t.journeys.elapsed, { n: new Intl.NumberFormat(intl).format(Math.floor((Date.now() - start.valueOf()) / 86_400_000)) });
 
 /**
  * Dữ liệu cho địa cầu (MissionsGlobe): mọi nơi đã đến + cờ (mỗi nước một lần, không lặp trong props của island).

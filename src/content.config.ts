@@ -46,6 +46,8 @@ const journeys = defineCollection({
         summary: z.string().default(''),
         date: z.preprocess(blank, z.coerce.date().optional()),
         endDate: z.preprocess(blank, z.coerce.date().optional()),
+        /** Hành trình chưa kết thúc (vd. Việt Nam): hiện "… – nay" và số ngày T+n, tự tăng mỗi lần build lại */
+        ongoing: z.boolean().default(false),
         place: z.string(),
         /** Mã quốc gia ISO 2 chữ (VN, FR, JP…) → cờ + tên nước tự động */
         countryCode: z.string().trim().toUpperCase().regex(/^[A-Z]{2}$/, 'Mã quốc gia gồm 2 chữ cái, ví dụ VN, FR, JP'),

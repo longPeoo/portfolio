@@ -96,6 +96,8 @@ journeys:
   zoomIn: Phóng to
   zoomOut: Thu nhỏ
   zoomReset: Xem cả địa cầu
+  ongoing: nay
+  elapsed: T+{n} ngày
 videos:
   code: Phím 04 · Vlog
   title: '"Hành trang của mình là chiếc balo và một trái tim ham học hỏi"'

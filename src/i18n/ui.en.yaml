@@ -96,6 +96,8 @@ journeys:
   zoomIn: Zoom in
   zoomOut: Zoom out
   zoomReset: Show the whole globe
+  ongoing: present
+  elapsed: T+{n} days
 videos:
   code: MSN-04 · Transmissions
   title: Vlogs
