@@ -1,8 +1,7 @@
 ---
 title: Dùng hạt muon vũ trụ để nhìn xuyên kim tự tháp
-summary: Dự án nhóm về hạt muon từ tia vũ trụ, mô phỏng cách dùng muon để phát hiện Phòng Nữ hoàng ẩn bên trong kim tự tháp bằng G4Beamline.
+summary: Dự án nhóm về hạt muon từ tia vũ trụ, mô phỏng cách dùng muon để phát hiện Phòng Nữ hoàng (Queen room) ẩn bên trong kim tự tháp bằng G4Beamline.
 date: 2020-10-01
-endDate: 2020-12-31
 role: Thành viên nhóm
 status: Research
 tags:
@@ -13,10 +12,11 @@ tags:
   - DRS4
 cover: ''
 coverAlt: ''
-gallery: []
 links: []
 featured: false
 draft: false
+endDate: 2020-12-31
+gallery: []
 ---
 
 Dự án nhóm thực hiện tại Quy Nhơn với sự hướng dẫn của PGS. Nguyễn Thị Hồng Vân (USTH) và TS. Cao Văn Sơn (ICISE). Một chủ đề nghe như phim khoa học viễn tưởng: dùng những hạt đến từ vũ trụ để chụp ảnh bên trong một công trình bằng đá.
@@ -29,4 +29,4 @@ Dự án nhóm thực hiện tại Quy Nhơn với sự hướng dẫn của PGS
 
 ## Cùng năm đó
 
-Năm 2020 mình hoàn thành khoá Vietnam School on Neutrino tại ICISE và nhận giải Outstanding Final Presentation của VSON 2020.
+Năm 2020 mình và những người bạn thân iu của mình đã hoàn thành khoá Vietnam School on Neutrino tại ICISE và nhận giải Outstanding Final Presentation của VSON 2020.
