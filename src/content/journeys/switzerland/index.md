@@ -3,7 +3,7 @@ title: Đất nước khiến mình phải lặng câm
 summary: Trước khi về Việt Nam mình quyết định lượn 1 vòng quanh châu Âu. Bắt đầu từ Thụy Sĩ, một trong những quốc gia nổi tiếng nhất thế giới về cảnh quan thiên nhiên, chất lượng cuộc sống, mình không có ý kiến gì cả vì đúng như lời đồn luôn... nhưng mà mọi người cũng đồn là siêu siêu siêu đắt. Mình không phản đối đâu
 date: 2023-08-15
 endDate: 2023-08-20
-place: Zurich; Bernese Oberland;
+place: Zurich; Bernese Oberland
 countryCode: CH
 country: Thụy Sĩ
 lat: 47.3769
