@@ -48,7 +48,7 @@ const article = {
 <BaseLayout title={title} description={summary} image={og} schema={article}>
   <article class="trip">
     <header class="container trip__head">
-      <a href="/journeys" class={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'trip__back')}>
+      <a href="/journeys" class={cn(buttonVariants({ variant: 'launch-outline', size: 'pill' }), 'trip__back')}>
         <ArrowLeftIcon data-icon="inline-start" /> {t.journeys.back}
       </a>
       <div class="trip__title">
@@ -104,7 +104,10 @@ const article = {
 
 <style>
   .trip__head { padding-top: calc(var(--header-h) + var(--space-8)); }
-  .trip__back { margin-bottom: var(--space-8); margin-left: -0.5rem; }
+  /* Nút về danh sách: viên thuốc viền (launch-outline) cho dễ thấy; rê chuột thì mũi tên nhích sang trái */
+  .trip__back { margin-bottom: var(--space-8); font-size: var(--fs-base); }
+  .trip__back :global(svg) { transition: translate var(--dur) var(--ease-spring); }
+  .trip__back:hover :global(svg) { translate: -4px 0; }
   /* overflow-x: clip — con dấu phóng to 2.2× lúc "đóng cộp" không được làm trang cuộn ngang trên điện thoại */
   .trip__title { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-8); overflow-x: clip; overflow-clip-margin: var(--gutter); }
   h1 { font-size: var(--fs-h2); margin-block: var(--space-3) var(--space-6); max-width: 18ch; }

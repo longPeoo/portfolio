@@ -35,7 +35,7 @@ const schema = z.object({
   ] as const),
   about: group(['code', 'title', 'intro', 'trajectoryCode', 'trajectoryTitle', 'skillsCode', 'skillsTitle', 'cosmosCode', 'cosmosHint', 'cosmosEarth', 'cosmosMoon', 'cosmosInner', 'cosmosSolar', 'cosmosStars', 'cosmosGalaxy', 'cosmosSun', 'cosmosMoonName', 'cosmosHere'] as const),
   space: group(['code', 'title', 'intro', 'back', 'cv', 'payload', 'role', 'time', 'systems'] as const),
-  journeys: group(['code', 'title', 'intro', 'stats', 'back', 'log', 'video', 'albumCode', 'albumTitle', 'next', 'stampMonth', 'globeLabel', 'globeHint', 'flagsLabel', 'flagsFrom', 'flagsTo', 'zoomIn', 'zoomOut', 'zoomReset', 'ongoing', 'elapsed'] as const),
+  journeys: group(['code', 'title', 'intro', 'stats', 'back', 'log', 'video', 'albumCode', 'albumTitle', 'next', 'stampMonth', 'globeLabel', 'globeHint', 'flagsLabel', 'flagsFrom', 'flagsTo', 'zoomIn', 'zoomOut', 'zoomReset', 'ongoing', 'elapsed', 'sortLabel', 'sortNewest', 'sortOldest', 'sortAz', 'sortZa', 'sortCount'] as const),
   videos: group(['code', 'title', 'intro', 'subscribe', 'all', 'new', 'views', 'play', 'openYoutube', 'close'] as const),
   gallery: group(['code', 'title', 'intro', 'count', 'open', 'prev', 'next', 'seeJourney'] as const),
   contact: group(['code', 'title', 'titleEm', 'intro', 'metaTitle', 'metaDescription'] as const),

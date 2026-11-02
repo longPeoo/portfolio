@@ -100,7 +100,8 @@ Thang cỡ chữ: `--fs-mono`, `--fs-sm`, `--fs-base`, `--fs-lg`, `--fs-h3`, `--
 | **Quỹ đạo phóng** (P3) | trang Về tôi: `data-trajectory` tự vẽ theo cuộn, `data-stage` bật ra; `data-gauge` thanh kỹ năng đầy dần |
 | **Nền vũ trụ** | trang Về tôi: canvas cố định phủ kín màn hình, nằm sau nội dung (`CosmosBackdrop.astro` + `src/scripts/cosmos.ts`, tải động từ `initCosmos()` trong `motion.ts`). Cuộn hết câu chuyện + timeline (`data-cosmos-track`) = camera lùi theo thang đo thật, 6 bậc L0–L5: Trái Đất (ghim Hà Nội, ngày/đêm) → Trái Đất–Mặt Trăng → hành tinh đá → Hệ Mặt Trời (Kuiper, Oort, Voyager 1) → sao lân cận → Dải Ngân Hà ("Bạn ở đây"). Tối: vũ trụ thật; sáng: bản đồ sao in mực trên giấy. Lớp nền mờ sau cột chữ để chữ luôn đọc được; số đo L/FOV/ZOOM ở góc dưới phải. Không có tác vụ > 50ms (dựng Ngân Hà chia nhiều lượt). Giảm chuyển động: nhảy thẳng tới từng bậc, hình đứng yên |
 | Thẻ dự án | rê chuột: lưới bản vẽ kỹ thuật, 4 góc ngắm, đèn trạng thái sáng |
-| Thẻ chuyến đi | rê chuột: con dấu hộ chiếu đóng "cộp"; trang chi tiết: con dấu đóng một lần khi mở |
+| Thẻ chuyến đi | rê chuột: con dấu hộ chiếu đóng "cộp"; trang chi tiết: con dấu đóng một lần khi mở; nút "Tất cả hành trình" là `launch-outline` cỡ `pill`, mũi tên nhích trái khi rê chuột |
+| Sắp xếp hành trình | `JourneyGrid.astro`: Gần nhất (mặc định) / Xa nhất / A → Z / Z → A; nền cam trượt theo spring tới nút đang chọn, thẻ trượt sang chỗ mới bằng View Transitions (giảm chuyển động: đổi ngay). Hành trình `ongoing` (Việt Nam) luôn trên cùng, chuyến chưa có ngày xếp cuối. Lựa chọn lưu ở `?sort=` |
 | Ảnh polaroid | dán băng keo, xoay nhẹ; rê chuột thì thẳng lại và nhấc lên. Lưới đọc trái → phải: 2 cột (< 480px) → 3 → 4 (≥ 768px) → 5 (≥ 1024px). Trang chủ tối đa 2 dòng đầy |
 | Vlog (`/vlogs`, đường dẫn cũ `/videos` chuyển hướng 301) | khung CRT có vạch quét, nhấp nháy khi rê chuột; nút play nảy |
 | Dải cờ | "From [cờ nhà] to [các nước đã đến]" (trang Hành trình, khối "Mình đã đến" ở trang chủ). Cờ nhà (`site.yaml > homeCountry`) to hơn, viền cam, quầng vàng phập phồng; rê chuột: cờ nảy lên, nghiêng, viền cam |
@@ -159,6 +160,7 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 | Thẻ dự án | `Card` (`ProjectCard.astro`) |
 | Xem ảnh phóng to, phát video | `Dialog` (`PhotoGallery.tsx`, `VideoGrid.tsx`) |
 | Lọc video theo nhóm | `Tabs` (`VideoGrid.tsx`) |
+| Sắp xếp danh sách tĩnh (chuyến đi) | nút `aria-pressed` + script thuần (`JourneyGrid.astro`), không hydrate React |
 | Form liên hệ (sau này) | `FieldGroup` + `Field` + `Input`/`Textarea` |
 
 ### Luật bắt buộc (từ skill shadcn)
@@ -246,7 +248,7 @@ src/
 │   ├── layout/      ← MissionBar, Footer, ThemeToggle, MusicToggle, MobileNav (island)
 │   ├── media/       ← island React: MissionsGlobe, PhotoGallery, VideoGrid, VideoPlayer
 │   └── sections/    ← Hero, HomeSections, PageHeader, SectionHead, ProjectCard, JourneyCard, CosmosBackdrop,
-│                       FlagStrip, ComingSoon, SocialList
+│                       FlagStrip, JourneyGrid, ComingSoon, SocialList
 ├── content/         ← projects/, journeys/, pages/ (Markdown + ảnh)
 ├── assets/earth/    ← ảnh NASA cho Trái Đất (day, night, moon .webp; day-8k/day-4k chỉ tải khi phóng to địa cầu Hành trình)
 ├── content.config.ts← schema nội dung

@@ -2,7 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ComingSoon from '@/components/sections/ComingSoon.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
-import JourneyCard from '@/components/sections/JourneyCard.astro';
+import JourneyGrid from '@/components/sections/JourneyGrid.astro';
 import FlagStrip from '@/components/sections/FlagStrip.astro';
 import { MissionsGlobe } from '@/components/media/MissionsGlobe';
 import { getJourneys, hasStory, toGlobe } from '@/lib/content';
@@ -28,11 +28,7 @@ const countries = uniqueCountries(journeys.map((j) => j.data));
       <section class="container globe-wrap">
         <MissionsGlobe client:visible points={points} flags={flags} labels={{ label: fmt(t.journeys.globeLabel, { n: points.length }), hint: t.journeys.globeHint, zoomIn: t.journeys.zoomIn, zoomOut: t.journeys.zoomOut, zoomReset: t.journeys.zoomReset }} />
       </section>
-      {stories.length > 0 && (
-        <section class="container grid">
-          {stories.map((j) => <JourneyCard journey={j} />)}
-        </section>
-      )}
+      {stories.length > 0 && <JourneyGrid stories={stories} />}
     </>
   )}
 </BaseLayout>
@@ -41,5 +37,4 @@ const countries = uniqueCountries(journeys.map((j) => j.data));
   .stats { margin-top: var(--space-6); color: var(--primary); }
   :global(.journeys-flags) { margin-top: var(--space-6); }
   .globe-wrap { margin-bottom: var(--section-y); }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: var(--space-12) var(--space-8); }
 </style>

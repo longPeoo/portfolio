@@ -1,0 +1,252 @@
+---
+/**
+ * Lưới thẻ chuyến đi + thanh sắp xếp: Gần nhất / Xa nhất (theo ngày bắt đầu), A → Z / Z → A (theo tiêu đề).
+ * Hành trình chưa kết thúc (ongoing, vd. Việt Nam) luôn nằm trên cùng; chuyến chưa có ngày xếp cuối khi sắp theo thời gian.
+ * HTML render sẵn theo "Gần nhất"; bấm nút thì script đổi thứ tự thẻ trong DOM (thứ tự Tab cũng đổi theo),
+ * thẻ trượt sang chỗ mới bằng View Transitions nếu trình duyệt hỗ trợ. Lựa chọn lưu ở ?sort= trên URL.
+ */
+import { CalendarArrowDownIcon, CalendarArrowUpIcon, ArrowDownAZIcon, ArrowDownZAIcon } from 'lucide-react';
+import JourneyCard from '@/components/sections/JourneyCard.astro';
+import type { Story } from '@/lib/content';
+import { intl, t, fmt } from '@/lib/i18n';
+
+interface Props {
+  stories: Story[];
+}
+
+const collator = new Intl.Collator(intl);
+const time = (s: Story) => s.data.date?.valueOf();
+// Mặc định "Gần nhất": hành trình chưa kết thúc → có ngày (mới trước) → chưa có ngày (theo tên)
+const stories = [...Astro.props.stories].sort(
+  (a, b) =>
+    Number(b.data.ongoing) - Number(a.data.ongoing) ||
+    (time(b) ?? -Infinity) - (time(a) ?? -Infinity) ||
+    collator.compare(a.data.title, b.data.title),
+);
+
+const options = [
+  { key: 'newest', label: t.journeys.sortNewest, Icon: CalendarArrowDownIcon },
+  { key: 'oldest', label: t.journeys.sortOldest, Icon: CalendarArrowUpIcon },
+  { key: 'az', label: t.journeys.sortAz, Icon: ArrowDownAZIcon },
+  { key: 'za', label: t.journeys.sortZa, Icon: ArrowDownZAIcon },
+];
+---
+
+<section class="container jsort" data-jsort>
+  <div class="jsort__bar">
+    <p class="mono jsort__count">LOG · {fmt(t.journeys.sortCount, { n: stories.length })}</p>
+    <div class="jsort__ctl">
+      <span class="mono jsort__label" id="jsort-label">{t.journeys.sortLabel}</span>
+      <div class="jsort__track" role="group" aria-labelledby="jsort-label" data-jsort-track>
+        <span class="jsort__thumb" aria-hidden="true"></span>
+        {options.map(({ key, label, Icon }, i) => (
+          <>
+            {i === 2 && <span class="jsort__sep" aria-hidden="true"></span>}
+            <button type="button" class="jsort__opt" data-sort={key} aria-pressed={key === 'newest' ? 'true' : 'false'}>
+              <Icon aria-hidden="true" className="jsort__icon" />
+              <span>{label}</span>
+            </button>
+          </>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <div class="jsort__grid" data-jsort-grid>
+    {stories.map((j) => (
+      <div
+        class="jsort__item"
+        data-id={j.id}
+        data-title={j.data.title}
+        data-date={time(j) ?? ''}
+        data-pinned={j.data.ongoing ? '' : undefined}
+      >
+        <JourneyCard journey={j} />
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .jsort__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4) var(--space-6);
+    padding-bottom: var(--space-6);
+    margin-bottom: var(--space-12);
+    border-bottom: 1px solid var(--line);
+  }
+  .jsort__count { color: var(--signal-ink); }
+  .jsort__ctl { display: flex; align-items: center; gap: var(--space-4); }
+  .jsort__label { color: var(--fg-muted); }
+
+  /* Thanh trượt kiểu viên thuốc: nền cam (giống nút launch) trượt tới lựa chọn đang bật */
+  .jsort__track {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    background: var(--bg-elev);
+  }
+  .jsort__thumb {
+    position: absolute;
+    z-index: -1;
+    top: 4px;
+    bottom: 4px;
+    left: 0;
+    width: var(--w, 0px);
+    translate: var(--x, 0px) 0;
+    border-radius: 999px;
+    background: var(--primary);
+    box-shadow: 0 2px 0 0 var(--c-ink);
+  }
+  .jsort__track.is-ready .jsort__thumb {
+    transition:
+      translate 520ms var(--ease-spring),
+      width 520ms var(--ease-spring);
+  }
+  .jsort__thumb.is-pop { animation: jsort-pop 420ms var(--ease-spring); }
+  @keyframes jsort-pop {
+    40% { scale: 1.06 0.86; }
+  }
+
+  .jsort__opt {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 36px;
+    padding-inline: 14px;
+    border-radius: 999px;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--fg-muted);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .jsort__opt:hover { color: var(--fg); }
+  .jsort__opt[aria-pressed='true'] { color: var(--primary-foreground); }
+  .jsort__opt :global(.jsort__icon) { width: 16px; height: 16px; flex: none; transition: transform var(--dur) var(--ease-spring); }
+  .jsort__opt:hover :global(.jsort__icon) { transform: translateY(2px); }
+  .jsort__sep { width: 1px; height: 18px; margin-inline: 4px; background: var(--line); }
+
+  .jsort__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+    gap: var(--space-12) var(--space-8);
+  }
+
+  @media (max-width: 640px) {
+    .jsort__ctl { flex-direction: column; align-items: stretch; gap: var(--space-2); width: 100%; }
+    .jsort__track { display: grid; grid-template-columns: repeat(4, 1fr); }
+    .jsort__sep { display: none; }
+    .jsort__opt { padding-inline: 6px; }
+  }
+  @media (max-width: 420px) {
+    .jsort__opt :global(.jsort__icon) { display: none; }
+  }
+
+  /* Khi đổi thứ tự: thẻ (và ảnh bìa) trượt sang chỗ mới cùng một nhịp */
+  :global(html.is-sorting)::view-transition-group(*) {
+    animation-duration: 560ms;
+    animation-timing-function: var(--ease-out);
+  }
+</style>
+
+<script>
+  type Order = 'newest' | 'oldest' | 'az' | 'za';
+  const ORDERS: Order[] = ['newest', 'oldest', 'az', 'za'];
+  let resize: ResizeObserver | undefined;
+
+  function init() {
+    resize?.disconnect();
+    const root = document.querySelector<HTMLElement>('[data-jsort]');
+    if (!root) return;
+    const grid = root.querySelector<HTMLElement>('[data-jsort-grid]')!;
+    const track = root.querySelector<HTMLElement>('[data-jsort-track]')!;
+    const thumb = track.querySelector<HTMLElement>('.jsort__thumb')!;
+    const buttons = [...track.querySelectorAll<HTMLButtonElement>('[data-sort]')];
+    const items = [...grid.children] as HTMLElement[];
+    const collator = new Intl.Collator(document.documentElement.lang || 'vi');
+    const title = (el: HTMLElement) => el.dataset.title ?? '';
+    const date = (el: HTMLElement) => (el.dataset.date ? Number(el.dataset.date) : undefined);
+
+    // So sánh theo thời gian: chuyến chưa có ngày luôn xếp cuối, trùng ngày thì theo tên
+    const byTime = (dir: 1 | -1) => (a: HTMLElement, b: HTMLElement) => {
+      const da = date(a);
+      const db = date(b);
+      if (da === undefined || db === undefined) return (da === undefined ? 1 : 0) - (db === undefined ? 1 : 0) || collator.compare(title(a), title(b));
+      return (da - db) * dir || collator.compare(title(a), title(b));
+    };
+    const compare: Record<Order, (a: HTMLElement, b: HTMLElement) => number> = {
+      newest: byTime(-1),
+      oldest: byTime(1),
+      az: (a, b) => collator.compare(title(a), title(b)),
+      za: (a, b) => collator.compare(title(b), title(a)),
+    };
+    // Hành trình chưa kết thúc luôn đứng đầu
+    const pinned = (el: HTMLElement) => (el.hasAttribute('data-pinned') ? 0 : 1);
+
+    const moveThumb = () => {
+      const active = buttons.find((b) => b.getAttribute('aria-pressed') === 'true');
+      if (!active) return;
+      thumb.style.setProperty('--x', `${active.offsetLeft}px`);
+      thumb.style.setProperty('--w', `${active.offsetWidth}px`);
+    };
+
+    const apply = (order: Order, animate: boolean) => {
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.sort === order)));
+      moveThumb();
+      const sorted = [...items].sort((a, b) => pinned(a) - pinned(b) || compare[order](a, b));
+      if (sorted.every((el, i) => grid.children[i] === el)) return;
+      const reorder = () => {
+        sorted.forEach((el) => grid.append(el));
+        // Thẻ chưa cuộn tới đang bị ẩn chờ "hiện dần" (motion.ts) — vị trí đã đổi nên hiện luôn
+        grid.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => {
+          el.style.opacity = '1';
+          el.style.visibility = 'inherit';
+          el.style.transform = 'none';
+        });
+      };
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!animate || reduce || !document.startViewTransition) return reorder();
+      const html = document.documentElement;
+      items.forEach((el) => (el.style.viewTransitionName = `jsort-${el.dataset.id}`));
+      html.classList.add('is-sorting');
+      document.startViewTransition(reorder).finished.finally(() => {
+        html.classList.remove('is-sorting');
+        items.forEach((el) => (el.style.viewTransitionName = ''));
+      });
+    };
+
+    const fromUrl = new URL(location.href).searchParams.get('sort') as Order | null;
+    apply(fromUrl && ORDERS.includes(fromUrl) ? fromUrl : 'newest', false);
+    requestAnimationFrame(() => track.classList.add('is-ready'));
+    resize = new ResizeObserver(moveThumb);
+    resize.observe(track);
+
+    buttons.forEach((b) =>
+      b.addEventListener('click', () => {
+        const order = b.dataset.sort as Order;
+        if (b.getAttribute('aria-pressed') === 'true') return;
+        apply(order, true);
+        thumb.classList.remove('is-pop');
+        void thumb.offsetWidth;
+        thumb.classList.add('is-pop');
+        const url = new URL(location.href);
+        if (order === 'newest') url.searchParams.delete('sort');
+        else url.searchParams.set('sort', order);
+        history.replaceState(history.state, '', url);
+      }),
+    );
+  }
+
+  document.addEventListener('astro:page-load', init);
+  document.addEventListener('astro:before-swap', () => resize?.disconnect());
+</script>

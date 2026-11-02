@@ -677,6 +677,30 @@ collections:
                 label: 'Số ngày của hành trình chưa kết thúc ({n} = số ngày)'
                 widget: string
                 i18n: true
+              - name: sortLabel
+                label: 'Nhãn thanh sắp xếp'
+                widget: string
+                i18n: true
+              - name: sortNewest
+                label: 'Nút sắp xếp: gần nhất'
+                widget: string
+                i18n: true
+              - name: sortOldest
+                label: 'Nút sắp xếp: xa nhất'
+                widget: string
+                i18n: true
+              - name: sortAz
+                label: 'Nút sắp xếp: A → Z'
+                widget: string
+                i18n: true
+              - name: sortZa
+                label: 'Nút sắp xếp: Z → A'
+                widget: string
+                i18n: true
+              - name: sortCount
+                label: 'Số nhật ký trên thanh sắp xếp ({n} = số chuyến)'
+                widget: string
+                i18n: true
             i18n: true
           - name: videos
             label: Trang Vlog

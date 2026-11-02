@@ -98,6 +98,12 @@ journeys:
   zoomReset: Xem cả địa cầu
   ongoing: nay
   elapsed: T+{n} ngày
+  sortLabel: Sắp xếp
+  sortNewest: Gần nhất
+  sortOldest: Xa nhất
+  sortAz: A → Z
+  sortZa: Z → A
+  sortCount: '{n} nhật ký'
 videos:
   code: Phím 04 · Vlog
   title: '"Hành trang của mình là chiếc balo và một trái tim ham học hỏi"'

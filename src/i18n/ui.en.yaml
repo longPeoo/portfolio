@@ -98,6 +98,12 @@ journeys:
   zoomReset: Show the whole globe
   ongoing: present
   elapsed: T+{n} days
+  sortLabel: Sort
+  sortNewest: Newest
+  sortOldest: Oldest
+  sortAz: A → Z
+  sortZa: Z → A
+  sortCount: '{n} logs'
 videos:
   code: MSN-04 · Transmissions
   title: Vlogs
