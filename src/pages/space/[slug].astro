@@ -6,9 +6,11 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { PhotoGallery } from '@/components/media/PhotoGallery';
 import { cn } from '@/lib/utils';
-import { getProjects, formatMonth } from '@/lib/content';
-import { t } from '@/lib/i18n';
+import { getProjects, formatRange } from '@/lib/content';
+import { toGalleryPhotos } from '@/lib/photos';
+import { t, fmt } from '@/lib/i18n';
 
 export async function getStaticPaths() {
   const projects = await getProjects();
@@ -16,8 +18,9 @@ export async function getStaticPaths() {
 }
 
 const { project, index } = Astro.props;
-const { title, summary, role, date, tags, cover, coverAlt, links, status } = project.data;
+const { title, summary, role, date, endDate, tags, cover, coverAlt, gallery, links, status } = project.data;
 const { Content } = await render(project);
+const photos = await toGalleryPhotos(gallery);
 const og = cover ? (await getImage({ src: cover, width: 1200, format: 'jpg' })).src : undefined;
 const article = {
   '@context': 'https://schema.org',
@@ -31,7 +34,7 @@ const article = {
 
 <BaseLayout title={title} description={summary} image={og} schema={article}>
   <article class="case container">
-    <a href="/space" class={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'case__back')}>
+    <a href="/space" class={cn(buttonVariants({ variant: 'launch-outline', size: 'pill' }), 'case__back')}>
       <ArrowLeftIcon data-icon="inline-start" /> {t.space.back}
     </a>
 
@@ -41,7 +44,7 @@ const article = {
 
     <dl class="case__meta">
       <div><dt class="mono muted">{t.space.role}</dt><dd>{role}</dd></div>
-      <div><dt class="mono muted">{t.space.time}</dt><dd>{formatMonth(date)}</dd></div>
+      <div><dt class="mono muted">{t.space.time}</dt><dd>{formatRange(date, endDate, status === 'Nominal' && !endDate)}</dd></div>
       {tags.length > 0 && (
         <div><dt class="mono muted">{t.space.systems}</dt><dd class="case__tags">{tags.map((t) => <Badge variant="telemetry">{t}</Badge>)}</dd></div>
       )}
@@ -54,6 +57,14 @@ const article = {
     <div class="prose prose-lg case__body">
       <Content />
     </div>
+
+    {photos.length > 0 && (
+      <section class="case__gallery" aria-labelledby="gallery-title">
+        <p class="mono muted">{fmt(t.journeys.albumCode, { n: photos.length })}</p>
+        <h2 id="gallery-title">{t.journeys.albumTitle}</h2>
+        <PhotoGallery client:visible photos={photos} variant="grid" labels={t.gallery} />
+      </section>
+    )}
 
     {links.length > 0 && (
       <>
@@ -72,7 +83,10 @@ const article = {
 
 <style>
   .case { padding-top: calc(var(--header-h) + var(--space-8)); }
-  .case__back { margin-bottom: var(--space-8); margin-left: -0.5rem; }
+  /* Giống nút "Tất cả hành trình": viên thuốc viền, mũi tên nhích sang trái khi rê chuột */
+  .case__back { margin-bottom: var(--space-8); font-size: var(--fs-base); }
+  .case__back :global(svg) { transition: translate var(--dur) var(--ease-spring); }
+  .case__back:hover :global(svg) { translate: -4px 0; }
   h1 { font-size: var(--fs-h2); margin-block: var(--space-3) var(--space-6); max-width: 20ch; }
   .case__lead { font-size: var(--fs-lg); color: var(--fg-muted); max-width: 52ch; }
   .case__meta {
@@ -89,4 +103,6 @@ const article = {
   .case__cover { width: 100%; height: auto; border-radius: var(--r-lg); margin-bottom: var(--space-12); }
   .case__body { max-width: 68ch; }
   .case__links { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+  .case__gallery { margin-top: var(--section-y); }
+  .case__gallery h2 { font-size: var(--fs-h3); margin-block: var(--space-2) var(--space-6); }
 </style>

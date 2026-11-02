@@ -91,8 +91,8 @@ journeys:
   globeLabel: Quả địa cầu đánh dấu {n} chuyến đi. Bấm vào ghim để mở chuyến đi.
   globeHint: Kéo để xoay · cuộn chuột hoặc chụm 2 ngón để phóng to
   flagsLabel: Những nước mình đã đặt chân tới
-  flagsFrom: From
-  flagsTo: to
+  flagsFrom: Từ
+  flagsTo: đến
   zoomIn: Phóng to
   zoomOut: Thu nhỏ
   zoomReset: Xem cả địa cầu

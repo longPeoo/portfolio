@@ -99,12 +99,12 @@ Thang cỡ chữ: `--fs-mono`, `--fs-sm`, `--fs-base`, `--fs-lg`, `--fs-h3`, `--
 | **Hiện dần khi cuộn** (P3) | phần tử có `data-reveal` (chỉ áp cho khối dưới màn hình đầu) |
 | **Quỹ đạo phóng** (P3) | trang Về tôi: `data-trajectory` tự vẽ theo cuộn, `data-stage` bật ra; `data-gauge` thanh kỹ năng đầy dần |
 | **Nền vũ trụ** | trang Về tôi: canvas cố định phủ kín màn hình, nằm sau nội dung (`CosmosBackdrop.astro` + `src/scripts/cosmos.ts`, tải động từ `initCosmos()` trong `motion.ts`). Cuộn hết câu chuyện + timeline (`data-cosmos-track`) = camera lùi theo thang đo thật, 6 bậc L0–L5: Trái Đất (ghim Hà Nội, ngày/đêm) → Trái Đất–Mặt Trăng → hành tinh đá → Hệ Mặt Trời (Kuiper, Oort, Voyager 1) → sao lân cận → Dải Ngân Hà ("Bạn ở đây"). Tối: vũ trụ thật; sáng: bản đồ sao in mực trên giấy. Lớp nền mờ sau cột chữ để chữ luôn đọc được; số đo L/FOV/ZOOM ở góc dưới phải. Không có tác vụ > 50ms (dựng Ngân Hà chia nhiều lượt). Giảm chuyển động: nhảy thẳng tới từng bậc, hình đứng yên |
-| Thẻ dự án | rê chuột: lưới bản vẽ kỹ thuật, 4 góc ngắm, đèn trạng thái sáng |
+| Thẻ dự án | rê chuột: lưới bản vẽ kỹ thuật, 4 góc ngắm, đèn trạng thái sáng; trang chi tiết có album ảnh (`gallery`) và nút "Tất cả dự án" kiểu `launch-outline` |
 | Thẻ chuyến đi | rê chuột: con dấu hộ chiếu đóng "cộp"; trang chi tiết: con dấu đóng một lần khi mở; nút "Tất cả hành trình" là `launch-outline` cỡ `pill`, mũi tên nhích trái khi rê chuột |
 | Sắp xếp hành trình | `JourneyGrid.astro`: Gần nhất (mặc định) / Xa nhất / A → Z / Z → A; nền cam trượt theo spring tới nút đang chọn, thẻ trượt sang chỗ mới bằng View Transitions (giảm chuyển động: đổi ngay). Hành trình `ongoing` (Việt Nam) luôn trên cùng, chuyến chưa có ngày xếp cuối. Lựa chọn lưu ở `?sort=` |
 | Ảnh polaroid | dán băng keo, xoay nhẹ; rê chuột thì thẳng lại và nhấc lên. Lưới đọc trái → phải: 2 cột (< 480px) → 3 → 4 (≥ 768px) → 5 (≥ 1024px). Trang chủ tối đa 2 dòng đầy |
 | Vlog (`/vlogs`, đường dẫn cũ `/videos` chuyển hướng 301) | khung CRT có vạch quét, nhấp nháy khi rê chuột; nút play nảy |
-| Dải cờ | "From [cờ nhà] to [các nước đã đến]" (trang Hành trình, khối "Mình đã đến" ở trang chủ). Cờ nhà (`site.yaml > homeCountry`) to hơn, viền cam, quầng vàng phập phồng; rê chuột: cờ nảy lên, nghiêng, viền cam |
+| Dải cờ | "Từ [cờ nhà] đến [các nước đã đến]" (bản tiếng Anh: "From … to …", chữ lấy từ `flagsFrom`/`flagsTo`) (trang Hành trình, khối "Mình đã đến" ở trang chủ). Cờ nhà (`site.yaml > homeCountry`) to hơn, viền cam, quầng vàng phập phồng; rê chuột: cờ nảy lên, nghiêng, viền cam |
 | Địa cầu Missions | Trái Đất thật (WebGL, ảnh NASA dùng chung với hero: `src/scripts/globe.ts`), sáng: chiếu chính diện; tối: phía khuất có đèn thành phố. Tự xoay chậm (dừng khi giảm chuyển động), kéo để xoay (chuột: ngang + dọc, cảm ứng: chỉ ngang), rê vào tên chuyến đi → xoay tới đó; đường bay nối các chuyến có ngày theo thời gian; **ghim là cờ tròn** của nước đó, tên nơi chỉ hiện khi rê chuột/đang chọn (điểm gần nhau không chồng chữ); chuyến có trang riêng thì bấm ghim để mở (ẩn khi quay ra sau); rê chuột lên địa cầu thì ngừng quay. **Phóng to** tới ×8 (`MAX_ZOOM` trong `globe.ts`); phóng quá ×1.5 thì tải ảnh nét `day-8k.webp` (1,2 MB, máy tính) hoặc `day-4k.webp` (0,4 MB, điện thoại), hiện dần lên — không tải nếu người xem không phóng to: cuộn chuột trên địa cầu (phóng vào đúng chỗ con trỏ; trang vừa cuộn < 300 ms hoặc đã chạm giới hạn ×1/×6 thì cú cuộn thuộc về trang, không "kẹt"), nút +/−/cả địa cầu, chụm 2 ngón, bấm đúp; khi phóng to bề mặt cắt theo "ống kính" tròn, ngừng tự quay, chạm một ngón xoay mọi hướng. Rê vào một nơi trong danh sách → phóng tới ×3. Ghim gần nhau < 22px gom thành cụm có số "+n", rê hiện tên các nơi, bấm → phóng ×2,5 vào giữa cụm. Danh sách bên cạnh (trang Hành trình) cao tối đa bằng địa cầu, tự cuộn bên trong (`data-lenis-prevent`) |
 | Trứng phục sinh | gõ `launch` ở bất kỳ đâu → mưa sao băng |
 
@@ -217,7 +217,7 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 | Tên, nghề nghiệp, câu giới thiệu, vị trí, menu, mạng xã hội, email, file CV (nút tải ở trang Vũ trụ) | `src/data/site.yaml` (kiểm tra bằng zod trong `src/lib/site.ts`) |
 | Chữ cố định trên giao diện (nhãn MSN-xx, tiêu đề mục, nút, bảng tiến độ) | `src/i18n/ui.yaml`, `src/i18n/ui.en.yaml` (zod trong `src/lib/i18n.ts`) |
 | Bản tiếng Anh của tên nghề, câu giới thiệu, menu | `src/data/site.en.yaml` (chỉ các trường cần dịch) |
-| Dự án kỹ thuật | `src/content/projects/<ten-khong-dau>/index.md` + ảnh cùng thư mục |
+| Dự án kỹ thuật, sự kiện, hội thảo | `src/content/projects/<ten-khong-dau>/index.md` + ảnh cùng thư mục, tên ảnh `<tiền-tố>_NN.webp` (bìa `_00`). `date` bắt buộc, `endDate` tuỳ chọn (dự án `Nominal` không có `endDate` hiện "… – nay"), `gallery` như chuyến đi. Chỉ ghi thông tin đã công khai (báo chí, băng rôn sự kiện); dự án cho đơn vị quốc phòng/nhà nước chưa công bố thì không ghi tên đơn vị |
 | Chuyến đi (kèm toạ độ cho địa cầu, album, video) | `src/content/journeys/<ten-khong-dau>/index.md` + ảnh cùng thư mục. Tối thiểu: `place`, `countryCode` (ISO 2 chữ → cờ tròn `circle-flags` + tên nước tự động qua `Intl.DisplayNames`, `src/lib/flags.ts`), `lat`, `lng` → chỉ là ghim + cờ trên địa cầu. Có `cover` → thêm thẻ, trang riêng, ảnh ở trang Ảnh (`getStories()` trong `content.ts`). Tên ảnh `<địa-danh>_NN.webp`, ảnh bìa `_00`. `ongoing: true` = hành trình chưa kết thúc (Việt Nam): hiện "… – nay" và `T+n ngày` (`formatElapsed`), số ngày tăng theo mỗi lần build lại (6 giờ/lần) |
 | Trang Về tôi (timeline, kỹ năng) | `src/content/pages/about.md` |
 | Nhạc nền (2–3 bài, phát lần lượt) | `src/data/music.yaml` (zod trong `src/lib/music.ts`), file nhạc ở `public/music/`. CMS: Cài đặt → Nhạc nền |
@@ -225,7 +225,7 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 | Màu, font, khoảng cách | `src/styles/global.css` |
 
 - Schema của nội dung nằm ở `src/content.config.ts`. Thêm trường thì cập nhật cả schema lẫn `public/admin/config.yml`.
-- `draft: true` = chỉ hiện khi `npm run dev`. Các bài mẫu "Ví dụ: …" đều là draft, xoá khi có nội dung thật.
+- `draft: true` = chỉ hiện khi `npm run dev`.
 - Trang chưa có nội dung tự hiện `ComingSoon`; khối trang chủ chưa có dữ liệu thì tự ẩn.
 - Ảnh luôn đi qua `astro:assets` (`<Image>` hoặc `toGalleryPhotos()` trong `src/lib/photos.ts`) để tự nén WebP và tạo nhiều kích thước.
 - **Ảnh gốc lưu trong repo**, cạnh bài viết (`src/content/<bài>/`), **không** để trong `public/` (ảnh ở `public/` không được Astro nén, phát nguyên file gốc).

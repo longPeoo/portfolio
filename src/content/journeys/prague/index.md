@@ -59,4 +59,4 @@ Món phải thử ở Praha là bánh ống Trdelník, bột cuốn quanh que r�
 
 Sáng ngày 29/8 là buổi cuối cùng, mình lên Lâu đài Praha, ngắm nhà thờ St. Vitus rồi đi bộ qua cầu Charles. Trời vẫn mưa lất phất nên vắng người lắm, cây cầu đá cổ với mấy bức tượng hai bên chìm trong làn mưa, nhìn buồn buồn mà lãng mạn kiểu gì í, chắc vì thế nên người ta mới gọi là Praha si tình.
 
-12 giờ 15 trưa mình bay về Paris, khép lại chuyến 15 ngày qua sáu đất nước Thụy Sĩ, Ý, Hungary, Slovakia, Áo và Séc. Ngồi trên máy bay nhìn lại mới thấy mình đi được nhiều thật, mệt thì có mệt, ví thì cũng mỏng đi nhiều, nhưng mà đổi lại là cả một bầu trời kỉ niệm, xứng đáng lắm.
+12 giờ 15 trưa mình bay về Paris, khép lại chuyến 15 ngày qua bảy đất nước Thụy Sĩ, Ý, Vatican, Hungary, Slovakia, Áo và Séc. Ngồi trên máy bay nhìn lại mới thấy mình đi được nhiều thật, mệt thì có mệt, ví thì cũng mỏng đi nhiều, nhưng mà đổi lại là cả một bầu trời kỉ niệm, xứng đáng lắm.

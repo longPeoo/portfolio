@@ -51,8 +51,8 @@ gallery:
     caption: Ngồi ngắm mặt trời lặn trên mỏm đá
     alt: Bóng mình ngồi trên mỏm đá lúc mặt trời lặn trên biển
   - src: vietnam_18.webp
-    caption: Hai bóng người đứng ngắm trời trên vách đá
-    alt: Bóng hai người đứng trên vách đá nhìn ra biển lúc chạng vạng
+    caption: Chiều 14/11/2024, hai bóng người ngắm hoàng hôn trên vách đá
+    alt: Bóng hai người đứng trên vách đá nhìn ra biển lúc hoàng hôn
   - src: vietnam_17.webp
     caption: Tượng Phật trên đỉnh núi to ơi là to
     alt: Tượng Phật Di Lặc bằng đá khổng lồ trên đỉnh núi
@@ -77,6 +77,21 @@ gallery:
   - src: vietnam_27.webp
     caption: Giang tay đón thác nước mát lạnh
     alt: Mình dang tay đứng trên tảng đá trước thác nước
+  - src: vietnam_28.webp
+    caption: Kê ghế giữa đồi, ngồi ngắm mây trôi qua núi
+    alt: Mình ngồi ghế xếp trên đồi cỏ nhìn ra dãy núi mây mù
+  - src: vietnam_29.webp
+    caption: Con đường rợp bóng cây, đi xe máy mát rượi
+    alt: Con đường hai bên hàng cây xanh, xe máy chạy phía trước
+  - src: vietnam_30.webp
+    caption: Xe hồng áo hồng, nhìn thôi đã thấy vui
+    alt: Hai người đi chiếc xe máy màu hồng trên đường phố
+  - src: vietnam_31.webp
+    caption: Hoa sứ nở hồng dưới trời xanh ngắt
+    alt: Cành hoa sứ hồng nở dưới bầu trời xanh
+  - src: vietnam_32.webp
+    caption: Trời xanh, cỏ xanh, toà nhà mái vòm trắng
+    alt: Toà nhà trắng có mái vòm sau hàng cây xanh
   - src: vietnam_23.webp
     caption: Đồ ăn Việt thì không đâu sánh bằng
     alt: Mâm cơm với các món ăn Việt trên bàn gỗ

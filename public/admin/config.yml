@@ -115,7 +115,8 @@ collections:
     fields:
       - { name: title, label: Tên dự án, widget: string, i18n: true }
       - { name: summary, label: Tóm tắt (1–2 câu), widget: text, i18n: true }
-      - { name: date, label: Thời gian, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false, i18n: duplicate }
+      - { name: date, label: Bắt đầu, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false, i18n: duplicate }
+      - { name: endDate, label: Kết thúc, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false, required: false, hint: "Để trống nếu chỉ trong một tháng. Dự án đang chạy (Nominal) để trống = hiện … – nay", i18n: duplicate }
       - { name: role, label: Vai trò của tôi, widget: string, i18n: true }
       - name: status
         label: Trạng thái
@@ -129,6 +130,16 @@ collections:
       - { name: tags, label: Hệ thống / công nghệ, widget: list, required: false, i18n: duplicate }
       - { name: cover, label: Ảnh bìa, widget: image, required: false, i18n: duplicate }
       - { name: coverAlt, label: Mô tả ảnh bìa, widget: string, required: false, i18n: true }
+      - name: gallery
+        label: Album ảnh
+        widget: list
+        required: false
+        hint: "Ảnh sự kiện, sản phẩm, hiện trường. Đặt tên ảnh theo dạng <tên-dự-án>_01.webp"
+        fields:
+          - { name: src, label: Ảnh, widget: image, i18n: duplicate }
+          - { name: caption, label: Chú thích (hiện dưới ảnh), widget: string, required: false, hint: "Để trống = dùng phần mô tả ảnh bên dưới", i18n: true }
+          - { name: alt, label: Mô tả ảnh (cho người khiếm thị và Google), widget: string, i18n: true }
+        i18n: true
       - name: links
         label: Liên kết
         widget: list

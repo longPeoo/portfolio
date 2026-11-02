@@ -20,12 +20,17 @@ const projects = defineCollection({
       title: z.string(),
       summary: z.string(),
       date: z.coerce.date(),
+      /** Để trống = dự án/sự kiện diễn ra trong một tháng; Nominal (đang chạy) thì hiện "… – nay" */
+      endDate: z.preprocess(blank, z.coerce.date().optional()),
       role: z.string(),
       /** Tình trạng dự án, hiện như đèn trạng thái: Nominal (đang chạy), Complete (đã xong), Research */
       status: z.enum(['Nominal', 'Complete', 'Research']).default('Complete'),
       tags: z.array(z.string()).default([]),
-      cover: image().optional(),
+      /** Để trống = thẻ hiện nền trống, trang chi tiết không có ảnh bìa */
+      cover: z.preprocess(blank, image().optional()),
       coverAlt: z.string().default(''),
+      /** Ảnh sự kiện / sản phẩm, đặt cùng thư mục với index.md (giống album chuyến đi) */
+      gallery: z.array(z.object({ src: image(), alt: z.string(), caption: z.string().optional() })).default([]),
       links: z.array(link).default([]),
       featured: z.boolean().default(false),
       draft: z.boolean().default(false),
