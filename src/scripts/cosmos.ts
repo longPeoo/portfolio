@@ -442,13 +442,18 @@ export function mountCosmos(root: HTMLElement, track: HTMLElement, signal: Abort
     const e = f * f * f * (f * (f * 6 - 15) + 10);
     return lerp(STOPS[i], STOPS[i + 1], e);
   };
-  // Mép phải của cột chữ (đo lại khi đổi cỡ cửa sổ): bỏ qua khối rộng gần hết màn hình như lưới kỹ năng
+  // Mép phải của cột chữ (đo lại khi đổi cỡ cửa sổ): bỏ qua khối rộng gần hết khung như lưới kỹ năng.
+  // Ngưỡng lấy theo cả màn hình lẫn khung nội dung (.container, tối đa 1320px): màn rất rộng thì khung hẹp hơn 85% màn hình,
+  // nếu chỉ so với màn hình thì khối rộng hết khung (vd. dòng nhãn PHÍM 01) bị tính là chữ → Trái Đất bị đẩy ra sát mép.
   let textRight = 0;
   const measure = () => {
     textRight = 0;
+    const box = document.querySelector('main .container');
+    const boxRight = box ? box.getBoundingClientRect().right - parseFloat(getComputedStyle(box).paddingRight) : Infinity;
+    const limit = Math.min(window.innerWidth * 0.85, boxRight * 0.92);
     document.querySelectorAll('main :is(p, h1, h2, h3)').forEach((node) => {
       const right = node.getBoundingClientRect().right;
-      if (right < window.innerWidth * 0.85) textRight = Math.max(textRight, right);
+      if (right < limit) textRight = Math.max(textRight, right);
     });
   };
   const onScroll = () => {
