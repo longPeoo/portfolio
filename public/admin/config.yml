@@ -409,6 +409,10 @@ collections:
                 label: Nút tắt nhạc nền (chữ cho trình đọc màn hình)
                 widget: string
                 i18n: true
+              - name: live
+                label: Bộ đếm người xem trên menu (chữ sau con số)
+                widget: string
+                i18n: true
             i18n: true
           - name: home
             label: Trang chủ
@@ -417,6 +421,10 @@ collections:
             fields:
               - name: heroCode
                 label: Nhãn hero (MSN-00)
+                widget: string
+                i18n: true
+              - name: live
+                label: Bộ đếm người xem ở hero (chữ sau con số)
                 widget: string
                 i18n: true
               - name: heroNow
@@ -837,6 +845,128 @@ collections:
                 i18n: true
               - name: metaDescription
                 label: Mô tả cho Google ({name} = tên)
+                widget: string
+                i18n: true
+            i18n: true
+          - name: inbox
+            label: Hộp thư (form trang Liên hệ)
+            widget: object
+            collapsed: true
+            fields:
+              - name: code
+                label: Nhãn mục
+                widget: string
+                i18n: true
+              - name: title
+                label: Tiêu đề
+                widget: string
+                i18n: true
+              - name: intro
+                label: Đoạn giới thiệu
+                widget: text
+                i18n: true
+              - name: modeLabel
+                label: Nhãn chọn kiểu tin (trình đọc màn hình)
+                widget: string
+                i18n: true
+              - name: modeAnonymous
+                label: Nút Hỏi ẩn danh
+                widget: string
+                i18n: true
+              - name: modeNamed
+                label: Nút Để lại lời nhắn
+                widget: string
+                i18n: true
+              - name: name
+                label: Ô Tên
+                widget: string
+                i18n: true
+              - name: email
+                label: Ô Email
+                widget: string
+                i18n: true
+              - name: phone
+                label: Ô Số điện thoại
+                widget: string
+                i18n: true
+              - name: optional
+                label: Chữ (không bắt buộc)
+                widget: string
+                i18n: true
+              - name: emailHintAnonymous
+                label: Gợi ý email khi ẩn danh
+                widget: string
+                i18n: true
+              - name: contactHint
+                label: Gợi ý email/điện thoại khi để lại lời nhắn
+                widget: string
+                i18n: true
+              - name: message
+                label: Ô Lời nhắn
+                widget: string
+                i18n: true
+              - name: messagePlaceholder
+                label: Chữ mờ trong ô lời nhắn
+                widget: string
+                i18n: true
+              - name: submit
+                label: Nút Gửi
+                widget: string
+                i18n: true
+              - name: sending
+                label: Nút Gửi khi đang gửi
+                widget: string
+                i18n: true
+              - name: privacy
+                label: Ghi chú quyền riêng tư
+                widget: string
+                i18n: true
+              - name: successTitle
+                label: Gửi xong: tiêu đề
+                widget: string
+                i18n: true
+              - name: successText
+                label: Gửi xong: nội dung
+                widget: string
+                i18n: true
+              - name: again
+                label: Nút gửi tin khác
+                widget: string
+                i18n: true
+              - name: errorMessage
+                label: Lỗi: lời nhắn
+                widget: string
+                i18n: true
+              - name: errorName
+                label: Lỗi: tên
+                widget: string
+                i18n: true
+              - name: errorEmail
+                label: Lỗi: email
+                widget: string
+                i18n: true
+              - name: errorPhone
+                label: Lỗi: số điện thoại
+                widget: string
+                i18n: true
+              - name: errorContact
+                label: Lỗi: thiếu email và điện thoại
+                widget: string
+                i18n: true
+              - name: errorRate
+                label: Lỗi: gửi quá nhanh
+                widget: string
+                i18n: true
+              - name: errorCaptcha
+                label: Lỗi: chống bot
+                widget: string
+                i18n: true
+              - name: errorSend
+                label: Lỗi: gửi thất bại
+                widget: string
+                i18n: true
+              - name: noscript
+                label: Khi trình duyệt tắt JavaScript
                 widget: string
                 i18n: true
             i18n: true

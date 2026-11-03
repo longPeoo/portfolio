@@ -63,6 +63,15 @@ Workflow `.github/workflows/refresh.yml` build và deploy lại theo lịch đ�
 
 Chưa có secret thì workflow tự bỏ qua, không báo lỗi.
 
+## Thống kê truy cập, người đang xem, hộp thư
+
+- **Lượt truy cập** (bao nhiêu người, xem trang nào, từ nước nào, đến từ đâu): Cloudflare **Web Analytics**, không cookie.
+- **Số người đang xem**: hiện trên thanh menu và ở hero trang chủ, do Worker `worker/presence.ts` đếm.
+- **Hộp thư** ở trang Liên hệ: hỏi ẩn danh hoặc để lại lời nhắn. Thư về email của bạn, bấm Trả lời là trả lời thẳng người gửi; bản lưu nằm trong Durable Object `Inbox` (xem bằng Data Studio).
+
+Cài đặt một lần trên Cloudflare (Email Routing, Turnstile, 2 secret, Web Analytics): xem **mục 9 trong [SKILLS.md](SKILLS.md)**.
+Thử trên máy: `cp .dev.vars.example .dev.vars`, `npm run build`, `npm run dev:api` rồi mở http://localhost:8787.
+
 ## Deploy
 
 Mỗi lần push lên nhánh `main` (kể cả bấm Lưu trong `/admin`), Cloudflare tự build và phát thư mục `dist/` sau khoảng 1 phút.

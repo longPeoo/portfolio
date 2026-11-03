@@ -19,7 +19,11 @@ const stars = [
 <section class="hero">
   <div class="container hero__inner">
     <div class="hero__meta mono">
-      <span>{t.home.heroCode}</span>
+      <span class="hero__greet">
+        <span>{t.home.heroCode}</span>
+        <!-- Số người đang xem (src/scripts/live.ts): chừa sẵn chỗ, có số mới hiện → không xô nội dung -->
+        <span class="hero__live" data-live><i aria-hidden="true"></i><span data-live-count>--</span> {t.home.live}</span>
+      </span>
       <span class="hero__flap"><span class="muted">{t.home.heroNow}</span><span class="flap" data-flap={JSON.stringify(site.roles)} role="img">{site.roles[0]}</span></span>
       <span class="muted">{site.location.lat} · {site.location.lon}</span>
     </div>
@@ -132,6 +136,33 @@ const stars = [
     border-bottom: 1px dashed var(--line);
   }
 
+  .hero__greet { display: flex; flex-wrap: wrap; align-items: center; gap: 4px var(--space-4); }
+  .hero__live {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ok);
+    font-variant-numeric: tabular-nums;
+    opacity: 0;
+    transition: opacity var(--dur-slow) var(--ease-out);
+  }
+  .hero__live[data-ready] { opacity: 1; }
+  .hero__live[data-off] { display: none; }
+  .hero__live i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ok);
+    animation: hero-ping 2.4s var(--ease-out) infinite;
+  }
+  .hero__live :global(.is-tick) { display: inline-block; animation: hero-tick 480ms var(--ease-spring); }
+  @keyframes hero-ping {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 60%, transparent); }
+    70%, 100% { box-shadow: 0 0 0 7px transparent; }
+  }
+  @keyframes hero-tick {
+    40% { transform: translateY(-3px) scale(1.15); color: var(--primary); }
+  }
   .hero__flap { display: inline-flex; align-items: center; gap: 10px; }
   @media (max-width: 900px) { .hero__flap { display: none; } }
   .hero__text { grid-column: 1 / span 7; grid-row: 2; position: relative; z-index: 2; container-type: inline-size; }

@@ -1,0 +1,446 @@
+---
+/**
+ * Hộp thư ở trang Liên hệ: "Hỏi ẩn danh" (lời nhắn + email nếu muốn được trả lời)
+ * hoặc "Để lại lời nhắn" (tên + email/số điện thoại + lời nhắn).
+ *
+ * - Component shadcn (Field, Input, Textarea, Button) render tĩnh, không hydrate React; script thuần bên dưới lo việc gửi.
+ * - Luật kiểm tra dùng chung với Worker: src/lib/message.ts. Worker: worker/message.ts (POST /api/message).
+ * - Chống bot: Cloudflare Turnstile chỉ tải khi người xem chạm vào form, thường vô hình (chỉ hiện khi cần xác minh);
+ *   thêm ô bẫy "website" ẩn mà người thật không thấy.
+ * - Chế độ ẩn danh: ô tên / số điện thoại bị ẩn VÀ disabled nên không bao giờ được gửi đi.
+ */
+import { SendIcon, VenetianMaskIcon, PenLineIcon, RotateCcwIcon } from 'lucide-react';
+import Orbi from '@/components/brand/Orbi.astro';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { MESSAGE_LIMITS } from '@/lib/message';
+import { services } from '@/lib/services';
+import { intl, t, fmt } from '@/lib/i18n';
+
+const L = MESSAGE_LIMITS;
+const n = new Intl.NumberFormat(intl);
+const errors = {
+  message: fmt(t.inbox.errorMessage, { min: L.messageMin, max: n.format(L.messageMax) }),
+  name: t.inbox.errorName,
+  email: t.inbox.errorEmail,
+  phone: t.inbox.errorPhone,
+  contact: t.inbox.errorContact,
+  rate: t.inbox.errorRate,
+  captcha: t.inbox.errorCaptcha,
+  send: t.inbox.errorSend,
+};
+const input = 'h-11 rounded-xl px-4 bg-card dark:bg-card md:text-base';
+---
+
+<section class="inbox" aria-labelledby="inbox-title" data-inbox data-site-key={services.turnstileSiteKey} data-errors={JSON.stringify(errors)}>
+  <p class="mono muted">{t.inbox.code}</p>
+  <h2 id="inbox-title">{t.inbox.title}</h2>
+  <p class="inbox__intro">{t.inbox.intro}</p>
+
+  <form class="inbox__card" action="/api/message" method="post" novalidate data-inbox-form>
+    <fieldset class="inbox__mode">
+      <legend class="sr-only">{t.inbox.modeLabel}</legend>
+      <span class="inbox__thumb" aria-hidden="true"></span>
+      <label>
+        <input class="sr-only" type="radio" name="mode" value="anonymous" checked />
+        <VenetianMaskIcon aria-hidden="true" className="inbox__mode-icon" />
+        <span>{t.inbox.modeAnonymous}</span>
+      </label>
+      <label>
+        <input class="sr-only" type="radio" name="mode" value="named" />
+        <PenLineIcon aria-hidden="true" className="inbox__mode-icon" />
+        <span>{t.inbox.modeNamed}</span>
+      </label>
+    </fieldset>
+
+    <FieldGroup className="gap-6">
+      <Field data-field="name" data-named>
+        <FieldLabel htmlFor="inbox-name">{t.inbox.name}</FieldLabel>
+        <Input id="inbox-name" name="name" autoComplete="name" maxLength={L.name} required className={input} disabled />
+        <FieldError hidden data-error>{errors.name}</FieldError>
+      </Field>
+
+      <div class="inbox__pair">
+        <Field data-field="email">
+          <FieldLabel htmlFor="inbox-email">{t.inbox.email} <span class="inbox__opt">· {t.inbox.optional}</span></FieldLabel>
+          <Input id="inbox-email" name="email" type="email" inputMode="email" autoComplete="email" spellCheck={false} maxLength={L.email} className={input} aria-describedby="inbox-email-hint" />
+          <FieldDescription id="inbox-email-hint" data-anonymous>{t.inbox.emailHintAnonymous}</FieldDescription>
+          <FieldError hidden data-error>{errors.email}</FieldError>
+        </Field>
+        <Field data-field="phone" data-named>
+          <FieldLabel htmlFor="inbox-phone">{t.inbox.phone} <span class="inbox__opt">· {t.inbox.optional}</span></FieldLabel>
+          <Input id="inbox-phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" maxLength={L.phone} className={input} disabled />
+          <FieldError hidden data-error>{errors.phone}</FieldError>
+        </Field>
+      </div>
+      <Field data-field="contact" data-named className="-mt-3">
+        <FieldDescription>{t.inbox.contactHint}</FieldDescription>
+        <FieldError hidden data-error>{errors.contact}</FieldError>
+      </Field>
+
+      <Field data-field="message">
+        <div class="inbox__label-row">
+          <FieldLabel htmlFor="inbox-message">{t.inbox.message}</FieldLabel>
+          <span class="mono inbox__counter" aria-hidden="true"><span data-counter>0</span> / {n.format(L.messageMax)}</span>
+        </div>
+        <Textarea
+          id="inbox-message"
+          name="message"
+          rows={5}
+          required
+          minLength={L.messageMin}
+          maxLength={L.messageMax}
+          placeholder={t.inbox.messagePlaceholder}
+          className="min-h-36 rounded-xl bg-card dark:bg-card px-4 py-3 md:text-base"
+        />
+        <FieldError hidden data-error>{errors.message}</FieldError>
+      </Field>
+
+      <!-- Ô bẫy bot: người thật không thấy, không Tab tới được -->
+      <div class="inbox__trap" aria-hidden="true">
+        <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+      </div>
+
+      <div class="inbox__captcha" data-turnstile></div>
+
+      <Alert variant="destructive" hidden data-form-error>
+        <AlertDescription data-form-error-text />
+      </Alert>
+
+      <div class="inbox__foot">
+        <Button type="submit" variant="launch" size="pill" className="inbox__submit" data-submit data-sending={t.inbox.sending}>
+          <span data-submit-text>{t.inbox.submit}</span>
+          <SendIcon data-icon="inline-end" />
+        </Button>
+        <p class="inbox__privacy">{t.inbox.privacy}</p>
+      </div>
+    </FieldGroup>
+  </form>
+
+  <div class="inbox__card inbox__done" hidden data-inbox-done>
+    <span class="inbox__orbi" aria-hidden="true"><Orbi size={72} /><i></i><i></i></span>
+    <h3 tabindex="-1" data-done-title>{t.inbox.successTitle}</h3>
+    <p class="muted">{t.inbox.successText}</p>
+    <Button type="button" variant="launch-outline" size="pill" data-again>
+      <RotateCcwIcon data-icon="inline-start" />
+      {t.inbox.again}
+    </Button>
+  </div>
+
+  <!-- Không có JS thì không gửi được (cần Turnstile) → ẩn form, chỉ còn lời nhắc gửi mail -->
+  <noscript><style is:inline>.inbox__card { display: none; }</style><p class="inbox__noscript">{t.inbox.noscript}</p></noscript>
+</section>
+
+<style>
+  .inbox {
+    width: min(100%, 720px);
+    margin-top: var(--section-y);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  h2 { font-size: var(--fs-h2); margin-block: var(--space-3) var(--space-4); max-width: 24ch; text-wrap: balance; }
+  .inbox__intro { max-width: 60ch; color: var(--fg-muted); text-wrap: balance; }
+
+  .inbox__card {
+    width: 100%;
+    margin-top: var(--space-8);
+    padding: clamp(var(--space-4), 4vw, var(--space-8));
+    border: 1px solid var(--line);
+    border-radius: calc(var(--r) * 2);
+    background: var(--bg-elev);
+    text-align: start;
+  }
+  .inbox__card[hidden] { display: none; }
+
+  /* Chọn kiểu tin: viên thuốc 2 nút, nền cam trượt theo lựa chọn (giống thanh sắp xếp hành trình) */
+  .inbox__mode {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin: 0 0 var(--space-8);
+    padding: 4px;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    background: var(--bg);
+  }
+  .inbox__mode label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 42px;
+    padding-inline: 10px;
+    border-radius: 999px;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--fg-muted);
+    cursor: pointer;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .inbox__mode label:hover { color: var(--fg); }
+  .inbox__mode label:has(:checked) { color: var(--primary-foreground); }
+  .inbox__mode label:has(:focus-visible) { outline: 2px dashed var(--ring); outline-offset: 2px; }
+  .inbox__mode :global(.inbox__mode-icon) { width: 18px; height: 18px; flex: none; transition: transform var(--dur) var(--ease-spring); }
+  .inbox__mode label:hover :global(.inbox__mode-icon) { transform: rotate(-10deg) scale(1.1); }
+  .inbox__thumb {
+    position: absolute;
+    z-index: -1;
+    inset: 4px auto 4px 4px;
+    width: calc(50% - 5px);
+    border-radius: 999px;
+    background: var(--primary);
+    box-shadow: 0 2px 0 0 var(--c-ink);
+    transition: translate 520ms var(--ease-spring);
+  }
+  .inbox__mode:has([value='named']:checked) .inbox__thumb { translate: calc(100% + 2px) 0; }
+
+  /* Ẩn danh: ẩn tên / điện thoại; có tên: ẩn gợi ý email của chế độ ẩn danh */
+  .inbox:has([value='anonymous']:checked) [data-named],
+  .inbox:has([value='named']:checked) [data-anonymous] { display: none; }
+
+  .inbox__pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: var(--space-6) var(--space-4); }
+  .inbox__opt { font-weight: 400; color: var(--fg-muted); }
+  .inbox__label-row { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-4); }
+  .inbox__counter { font-size: 0.6875rem; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
+  .inbox__counter[data-near] { color: var(--signal-ink); }
+
+  .inbox__trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+  /* Báo lỗi thì thay luôn câu gợi ý (hai câu gần giống nhau) */
+  [data-field='contact'][data-invalid] :global([data-slot='field-description']) { display: none; }
+  /* Turnstile thường vô hình (cao 0): bù khoảng cách của FieldGroup để nút Gửi không bị đẩy xuống */
+  .inbox__captcha { margin-top: calc(var(--space-6) * -1); }
+  .inbox__captcha:empty { display: none; }
+
+  .inbox__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-6); }
+  .inbox__privacy { flex: 1 1 220px; font-size: var(--fs-sm); color: var(--fg-muted); }
+  .inbox :global(.inbox__submit[aria-busy='true']) { cursor: progress; }
+
+  /* Gửi xong: Orbi phát sóng */
+  .inbox__done { display: flex; flex-direction: column; align-items: center; gap: var(--space-4); text-align: center; }
+  .inbox__done h3 { font-size: var(--fs-h3); outline-offset: 6px; }
+  .inbox__done p { max-width: 46ch; }
+  .inbox__orbi { position: relative; display: grid; place-items: center; margin-bottom: var(--space-2); }
+  .inbox__orbi i {
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--primary);
+    border-radius: 50%;
+    opacity: 0;
+    animation: inbox-wave 1.8s var(--ease-out) infinite;
+  }
+  .inbox__orbi i:nth-child(3) { animation-delay: 0.6s; }
+  .inbox__done:not([hidden]) :global(.orbi) { animation: inbox-pop 620ms var(--ease-spring) backwards; }
+  @keyframes inbox-wave {
+    from { opacity: 0.8; transform: scale(0.9); }
+    to { opacity: 0; transform: scale(2); }
+  }
+  @keyframes inbox-pop {
+    from { transform: translateY(18px) scale(0.6); opacity: 0; }
+  }
+
+  .inbox__noscript { margin-top: var(--space-6); color: var(--fg-muted); }
+</style>
+
+<script>
+  import { parseMessage, MESSAGE_LIMITS, type MessageField } from '@/lib/message';
+
+  type Turnstile = {
+    render: (el: HTMLElement, opts: Record<string, unknown>) => string;
+    reset: (id: string) => void;
+    remove: (id: string) => void;
+    getResponse: (id: string) => string | undefined;
+  };
+  type ErrorKey = MessageField | 'rate' | 'captcha' | 'send';
+  const win = window as Window & { turnstile?: Turnstile };
+  const TURNSTILE_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+
+  let widget: string | undefined;
+  let turnstileLoad: Promise<Turnstile> | undefined;
+  /** Mã Turnstile mới nhất (mỗi mã dùng một lần) và hàng đợi chờ mã khi người xem bấm gửi quá sớm */
+  let token = '';
+  let waiting: ((t: string) => void)[] = [];
+
+  function loadTurnstile() {
+    turnstileLoad ??= new Promise<Turnstile>((resolve, reject) => {
+      if (win.turnstile) return resolve(win.turnstile);
+      const s = document.createElement('script');
+      s.src = TURNSTILE_SRC;
+      s.async = true;
+      s.onload = () => (win.turnstile ? resolve(win.turnstile) : reject(new Error('turnstile')));
+      s.onerror = () => {
+        turnstileLoad = undefined;
+        reject(new Error('turnstile'));
+      };
+      document.head.append(s);
+    });
+    return turnstileLoad;
+  }
+
+  function init() {
+    const root = document.querySelector<HTMLElement>('[data-inbox]');
+    if (!root) return;
+    const form = root.querySelector<HTMLFormElement>('[data-inbox-form]')!;
+    const done = root.querySelector<HTMLElement>('[data-inbox-done]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const submitText = submit.querySelector<HTMLElement>('[data-submit-text]')!;
+    const formError = form.querySelector<HTMLElement>('[data-form-error]')!;
+    const counter = form.querySelector<HTMLElement>('[data-counter]')!;
+    const message = form.elements.namedItem('message') as HTMLTextAreaElement;
+    const captcha = form.querySelector<HTMLElement>('[data-turnstile]')!;
+    const errors = JSON.parse(root.dataset.errors ?? '{}') as Record<ErrorKey, string>;
+    const siteKey = root.dataset.siteKey ?? '';
+    const labels = { submit: submitText.textContent ?? '', sending: submit.dataset.sending ?? '' };
+    const fmtN = new Intl.NumberFormat(document.documentElement.lang || 'vi');
+
+    // Ẩn danh → khoá ô tên / điện thoại để chúng không bao giờ nằm trong dữ liệu gửi đi
+    const syncMode = () => {
+      const named = (form.elements.namedItem('mode') as RadioNodeList).value === 'named';
+      form.querySelectorAll<HTMLInputElement>('[data-named] input').forEach((el) => (el.disabled = !named));
+      clearErrors();
+    };
+
+    const fieldOf = (key: MessageField) => form.querySelector<HTMLElement>(`[data-field="${key}"]`);
+    function clearErrors() {
+      form.querySelectorAll<HTMLElement>('[data-field][data-invalid]').forEach((f) => {
+        f.removeAttribute('data-invalid');
+        f.querySelector('[data-error]')?.setAttribute('hidden', '');
+        f.querySelector('input, textarea')?.removeAttribute('aria-invalid');
+      });
+      formError.hidden = true;
+    }
+    function showFieldError(key: MessageField) {
+      const field = fieldOf(key);
+      if (!field) return showFormError('send');
+      const err = field.querySelector<HTMLElement>('[data-error]')!;
+      err.textContent = errors[key];
+      err.hidden = false;
+      field.setAttribute('data-invalid', 'true');
+      const control = (key === 'contact' ? fieldOf('email')?.querySelector('input') : field.querySelector('input, textarea')) as HTMLElement | null;
+      control?.setAttribute('aria-invalid', 'true');
+      control?.focus();
+    }
+    function showFormError(key: ErrorKey) {
+      form.querySelector<HTMLElement>('[data-form-error-text]')!.textContent = errors[key];
+      formError.hidden = false;
+    }
+
+    const updateCounter = () => {
+      const len = [...message.value].length;
+      counter.textContent = fmtN.format(len);
+      counter.parentElement!.toggleAttribute('data-near', len > MESSAGE_LIMITS.messageMax * 0.9);
+    };
+
+    // Turnstile: tải khi người xem lần đầu chạm vào form
+    const startCaptcha = async () => {
+      if (!siteKey || widget) return;
+      try {
+        const ts = await loadTurnstile();
+        if (!captcha.isConnected || widget) return;
+        widget = ts.render(captcha, {
+          sitekey: siteKey,
+          theme: document.documentElement.classList.contains('dark') ? 'dark' : 'light',
+          language: document.documentElement.lang || 'vi',
+          size: 'flexible',
+          appearance: 'interaction-only',
+          'refresh-expired': 'auto',
+          callback: (t: string) => {
+            token = t;
+            waiting.forEach((resolve) => resolve(t));
+            waiting = [];
+          },
+          'expired-callback': () => (token = ''),
+          'error-callback': () => {
+            token = '';
+          },
+        });
+      } catch {
+        // Không tải được Turnstile: vẫn cho gửi, Worker sẽ trả lỗi captcha nếu bắt buộc
+      }
+    };
+    const getToken = () =>
+      !siteKey
+        ? Promise.resolve('')
+        : token
+          ? Promise.resolve(token)
+          : new Promise<string>((resolve) => {
+              waiting.push(resolve);
+              window.setTimeout(() => resolve(''), 15_000);
+            });
+
+    form.addEventListener('focusin', startCaptcha, { once: true });
+    form.addEventListener('change', (e) => (e.target as HTMLInputElement).name === 'mode' && syncMode());
+    form.addEventListener('input', (e) => {
+      const field = (e.target as HTMLElement).closest<HTMLElement>('[data-field]');
+      if (field?.hasAttribute('data-invalid')) {
+        field.removeAttribute('data-invalid');
+        field.querySelector('[data-error]')?.setAttribute('hidden', '');
+        (e.target as HTMLElement).removeAttribute('aria-invalid');
+      }
+      if (e.target === message) updateCounter();
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (submit.getAttribute('aria-busy') === 'true') return;
+      clearErrors();
+
+      const raw = Object.fromEntries(new FormData(form)) as Record<string, string>;
+      const parsed = parseMessage(raw);
+      if (!parsed.ok) return showFieldError(parsed.field);
+
+      submit.setAttribute('aria-busy', 'true');
+      submitText.textContent = labels.sending;
+      startCaptcha();
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ ...parsed.data, website: raw.website ?? '', 'cf-turnstile-response': await getToken() }),
+        });
+        const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string; field?: MessageField };
+        if (data.ok) {
+          form.reset();
+          syncMode();
+          updateCounter();
+          form.hidden = true;
+          done.hidden = false;
+          done.querySelector<HTMLElement>('[data-done-title]')!.focus();
+        } else if (data.error === 'invalid' && data.field) showFieldError(data.field);
+        else showFormError(data.error === 'rate' ? 'rate' : data.error === 'captcha' ? 'captcha' : 'send');
+      } catch {
+        showFormError('send');
+      } finally {
+        submit.removeAttribute('aria-busy');
+        submitText.textContent = labels.submit;
+        // Mã Turnstile chỉ dùng được một lần
+        token = '';
+        if (widget) win.turnstile?.reset(widget);
+      }
+    });
+
+    done.querySelector('[data-again]')!.addEventListener('click', () => {
+      done.hidden = true;
+      form.hidden = false;
+      message.focus();
+    });
+
+    syncMode();
+    updateCounter();
+  }
+
+  document.addEventListener('astro:page-load', init);
+  // Rời trang Liên hệ: gỡ widget Turnstile để lần sau vẽ lại sạch sẽ
+  document.addEventListener('astro:before-swap', () => {
+    if (widget) win.turnstile?.remove(widget);
+    widget = undefined;
+    token = '';
+    waiting = [];
+  });
+</script>

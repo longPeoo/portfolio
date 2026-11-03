@@ -3,6 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import { ArrowUpRightIcon } from 'lucide-react';
 import Orbi from '@/components/brand/Orbi.astro';
 import { SocialList } from '@/components/sections/SocialList';
+import MessageForm from '@/components/sections/MessageForm.astro';
 import { site } from '@/lib/site';
 import { t, fmt } from '@/lib/i18n';
 ---
@@ -23,6 +24,8 @@ import { t, fmt } from '@/lib/i18n';
         <ArrowUpRightIcon className="contact__arrow" />
       </span>
     </a>
+
+    <MessageForm />
 
     {site.socials.length > 0 && (
       <div class="contact__socials">

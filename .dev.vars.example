@@ -1,0 +1,6 @@
+# Sao chép thành file .dev.vars (không commit) để chạy Worker trên máy bằng `npm run dev:api`.
+# Trên web thật, đặt các giá trị này ở Cloudflare: Worker → Settings → Variables and Secrets (loại Secret).
+# Email nhận thư báo tin (phải đã xác minh trong Email Routing của longpeoo.io.vn)
+CONTACT_INBOX=ban@example.com
+# Secret key thử nghiệm của Turnstile: luôn cho qua. Trên web thật dùng secret key của widget.
+TURNSTILE_SECRET=1x0000000000000000000000000000000AA

@@ -1,0 +1,17 @@
+{
+  // Worker chạy trên Cloudflare (không có DOM) nên kiểm tra kiểu riêng: `npm run check` chạy cả hai.
+  // Kiểu của env/binding sinh từ wrangler.jsonc: `npm run cf-typegen` (chạy lại sau khi sửa wrangler.jsonc).
+  "compilerOptions": {
+    "target": "es2024",
+    "lib": ["es2024"],
+    "module": "es2022",
+    "moduleResolution": "bundler",
+    "types": [],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true
+  },
+  "include": ["./**/*.ts", "../src/lib/message.ts"]
+}

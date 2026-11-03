@@ -5,6 +5,7 @@ import '@/styles/global.css';
 import { site } from '@/lib/site';
 import { t, LOCALES, defaultLocale, type Locale } from '@/lib/i18n';
 import { cleanPath } from '@/lib/utils';
+import { services } from '@/lib/services';
 import MissionBar from '@/components/layout/MissionBar.astro';
 import Footer from '@/components/layout/Footer.astro';
 import Orbi from '@/components/brand/Orbi.astro';
@@ -95,6 +96,20 @@ const personSchema = {
         }
       } catch {}
     </script>
+
+    <!--
+      Thống kê lượt truy cập: Cloudflare Web Analytics (không cookie, không lưu IP → không cần bảng hỏi đồng ý).
+      Đặt trong <head> nên chuyển trang (View Transitions) không tải lại; "spa": true để vẫn đếm từng trang.
+      Token ở src/lib/services.ts, để trống thì không gắn.
+    -->
+    {services.analyticsToken && (
+      <script
+        is:inline
+        defer
+        src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon={JSON.stringify({ token: services.analyticsToken, spa: true })}
+      ></script>
+    )}
 
     <ClientRouter />
   </head>

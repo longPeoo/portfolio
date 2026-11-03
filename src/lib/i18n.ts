@@ -26,9 +26,9 @@ const schema = z.object({
     status: group(['nominal', 'active', 'queued'] as const),
     projectStatus: group(['Nominal', 'Complete', 'Research'] as const),
   }),
-  chrome: group(['countdown', 'skipIntro', 'clock', 'mainMenu', 'openMenu', 'closeMenu', 'theme', 'footerCode', 'footerNav', 'footerTagline', 'toTop', 'musicPlay', 'musicPause'] as const),
+  chrome: group(['countdown', 'skipIntro', 'clock', 'mainMenu', 'openMenu', 'closeMenu', 'theme', 'footerCode', 'footerNav', 'footerTagline', 'toTop', 'musicPlay', 'musicPause', 'live'] as const),
   home: group([
-    'heroCode', 'heroNow', 'hello', 'rolesLabel', 'ctaJourneys', 'ctaYoutube',
+    'heroCode', 'live', 'heroNow', 'hello', 'rolesLabel', 'ctaJourneys', 'ctaYoutube',
     'videoCode', 'videoTitle', 'videoNew', 'videoAll',
     'projectsCode', 'projectsTitle', 'journeysCode', 'journeysTitle',
     'photosCode', 'photosTitle', 'photosLink',
@@ -39,6 +39,14 @@ const schema = z.object({
   videos: group(['code', 'title', 'intro', 'subscribe', 'all', 'new', 'views', 'play', 'openYoutube', 'close'] as const),
   gallery: group(['code', 'title', 'intro', 'count', 'open', 'prev', 'next', 'seeJourney'] as const),
   contact: group(['code', 'title', 'titleEm', 'intro', 'metaTitle', 'metaDescription'] as const),
+  /** Form hỏi ẩn danh / để lại lời nhắn ở trang Liên hệ */
+  inbox: group([
+    'code', 'title', 'intro', 'modeLabel', 'modeAnonymous', 'modeNamed',
+    'name', 'email', 'phone', 'optional', 'emailHintAnonymous', 'contactHint',
+    'message', 'messagePlaceholder', 'submit', 'sending', 'privacy', 'successTitle',
+    'successText', 'again', 'errorMessage', 'errorName', 'errorEmail', 'errorPhone',
+    'errorContact', 'errorRate', 'errorCaptcha', 'errorSend', 'noscript',
+  ] as const),
   notFound: group(['metaTitle', 'code', 'title', 'text', 'back'] as const),
 });
 

@@ -23,5 +23,9 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    // `npm run dev` không chạy Worker: /api/* (đếm người xem, hộp thư) chuyển sang `npm run dev:api` (cổng 8787) nếu đang bật
+    server: {
+      proxy: { '/api': { target: 'http://localhost:8787', ws: true } },
+    },
   },
 });

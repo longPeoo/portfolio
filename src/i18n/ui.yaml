@@ -29,8 +29,10 @@ chrome:
   toTop: Bay lên đầu trang
   musicPlay: Bật nhạc nền
   musicPause: Tắt nhạc nền
+  live: đang xem
 home:
   heroCode: Hi · Chúc mọi người một ngày tốt lành
+  live: người đang ghé thăm
   heroNow: 'LONGPEOO LÀ :'
   hello: Hé ca lô cả nhà, mình là
   rolesLabel: Nghề nghiệp
@@ -133,6 +135,36 @@ contact:
   intro: Hợp tác dự án kỹ thuật, hợp tác nghiên cứu và phát triển hay các nhãn hàng muốn book mình, hoặc chỉ đơn giản muốn nói chuyện, muốn bàn luận nhiều hơn về ngành Khoa học và Công nghệ Vũ trụ thì gửi ngay cho mình một cái mail nhé.
   metaTitle: Liên hệ
   metaDescription: Liên hệ hợp tác, tài trợ hoặc chỉ để chào {name}.
+inbox:
+  code: Hộp thư · Hỏi gì cũng được
+  title: Hoặc nhắn ngay ở đây
+  intro: 'Ngại xưng tên thì cứ hỏi ẩn danh nhé. Mình đọc hết, và nếu bạn để lại email thì mình trả lời qua mail luôn.'
+  modeLabel: Kiểu tin nhắn
+  modeAnonymous: Hỏi ẩn danh
+  modeNamed: Để lại lời nhắn
+  name: Tên của bạn
+  email: Email
+  phone: Số điện thoại
+  optional: không bắt buộc
+  emailHintAnonymous: 'Chỉ mình thấy, để mình trả lời bạn qua mail. Bỏ trống nếu muốn ẩn danh hoàn toàn.'
+  contactHint: Để lại ít nhất email hoặc số điện thoại để mình liên hệ lại nhé.
+  message: Lời nhắn
+  messagePlaceholder: 'Bạn muốn hỏi hay kể gì với mình?'
+  submit: Gửi tín hiệu
+  sending: Đang phát tín hiệu…
+  privacy: Không lưu IP hay vị trí của bạn. Hỏi ẩn danh thì tên và số điện thoại không được gửi đi.
+  successTitle: 'Đã bắt được tín hiệu!'
+  successText: 'Cảm ơn bạn đã nhắn cho mình. Nếu bạn để lại email hoặc số điện thoại, mình sẽ trả lời sớm nhất có thể.'
+  again: Gửi tin khác
+  errorMessage: 'Lời nhắn cần từ {min} đến {max} ký tự.'
+  errorName: Cho mình xin tên của bạn nhé.
+  errorEmail: 'Email chưa đúng, kiểu như ban@gmail.com nhé.'
+  errorPhone: Số điện thoại chưa đúng (8–15 chữ số).
+  errorContact: Để lại email hoặc số điện thoại để mình liên hệ lại nhé.
+  errorRate: 'Bạn gửi hơi nhanh, đợi một phút rồi thử lại nhé.'
+  errorCaptcha: 'Chưa xác minh được bạn không phải bot, thử gửi lại nhé.'
+  errorSend: 'Tín hiệu bị nhiễu, chưa gửi được. Thử lại sau hoặc gửi mail trực tiếp cho mình nhé.'
+  noscript: 'Bật JavaScript để gửi lời nhắn, hoặc gửi mail trực tiếp cho mình ở trên nhé.'
 notFound:
   metaTitle: Lạc vào vũ trụ
   code: Lỗi 404 · Mất tín hiệu

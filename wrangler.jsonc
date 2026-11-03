@@ -1,10 +1,40 @@
-// Cấu hình deploy lên Cloudflare Workers (static assets).
+// Cấu hình deploy lên Cloudflare Workers.
 // Cloudflare tự build bằng `npm run build` rồi phát nội dung thư mục ./dist qua CDN.
+// Worker (worker/index.ts) chỉ chạy cho /api/*: đếm người đang xem + hộp thư trang Liên hệ. Xem mục 9 trong SKILLS.md.
 {
+  "$schema": "node_modules/wrangler/config-schema.json",
   "name": "portfolio",
+  "main": "./worker/index.ts",
   "compatibility_date": "2026-10-01",
+  "observability": { "enabled": true },
+  // Giữ biến môi trường đặt trên dashboard (secret luôn được giữ)
+  "keep_vars": true,
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "404-page"
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    // Trang tĩnh phát thẳng, không tốn lượt chạy Worker
+    "run_worker_first": ["/api/*"]
+  },
+  // Durable Object: Presence = người đang xem (WebSocket ngủ đông), Inbox = kho lời nhắn (SQLite)
+  "durable_objects": {
+    "bindings": [
+      { "name": "PRESENCE", "class_name": "Presence" },
+      { "name": "INBOX", "class_name": "Inbox" }
+    ]
+  },
+  "exports": {
+    "Presence": { "type": "durable-object", "storage": "sqlite" },
+    "Inbox": { "type": "durable-object", "storage": "sqlite" }
+  },
+  // Gửi email báo tin tới địa chỉ đã xác minh trong Email Routing (secret CONTACT_INBOX)
+  "send_email": [{ "name": "MAILER" }],
+  // Mỗi IP tối đa 3 lời nhắn / 60 giây
+  "ratelimits": [{ "name": "MESSAGE_LIMIT", "namespace_id": "1001", "simple": { "limit": 3, "period": 60 } }],
+  "vars": {
+    "MAIL_FROM": "orbi@longpeoo.io.vn"
   }
+  // Secret (đặt trên dashboard: Worker → Settings → Variables and Secrets, loại Secret; KHÔNG ghi vào file này):
+  //   CONTACT_INBOX     email nhận thư báo tin (đã xác minh trong Email Routing)
+  //   TURNSTILE_SECRET  secret key của widget Turnstile
 }

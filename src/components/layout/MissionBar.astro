@@ -38,7 +38,12 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
   </nav>
 
   <div class="mbar__tele mono" aria-label={t.chrome.clock}>
+    <!-- Số người đang xem (src/scripts/live.ts); không kết nối được thì ẩn cả cụm, chỉ còn chấm trạng thái -->
     <span class="mbar__status" aria-hidden="true"></span>
+    <span class="mbar__live" data-live>
+      <span><span class="mbar__count" data-live-count>--</span> {t.chrome.live}</span>
+      <span class="mbar__sep" aria-hidden="true">/</span>
+    </span>
     <span>UTC <time data-clock="UTC" data-seconds>--:--:--</time></span>
     <span class="mbar__sep" aria-hidden="true">/</span>
     <span>{site.location.code} <time data-clock={site.location.timezone}>--:--</time></span>
@@ -148,6 +153,13 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
     animation: ping 2.4s var(--ease-out) infinite;
   }
   .mbar__sep { opacity: 0.4; }
+  .mbar__live { display: contents; }
+  .mbar__live[data-off] { display: none; }
+  .mbar__count { display: inline-block; min-width: 2ch; text-align: right; color: var(--fg); }
+  .mbar__count.is-tick { animation: live-tick 480ms var(--ease-spring); }
+  @keyframes live-tick {
+    40% { transform: translateY(-3px) scale(1.15); color: var(--primary); }
+  }
 
   .mbar__actions { display: flex; align-items: center; gap: 8px; }
   .mbar__burger { display: none; }
@@ -168,6 +180,8 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
 </style>
 
 <script>
+  import { initLive } from '@/scripts/live';
+
   let clockTimer: number | undefined;
   // Listener gắn vào window được gỡ mỗi khi chuyển trang để không bị chồng
   let pageListeners: AbortController | undefined;
@@ -220,5 +234,6 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
     initClock();
     initScrollState();
     initThemeToggle();
+    initLive();
   });
 </script>

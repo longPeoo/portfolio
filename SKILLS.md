@@ -22,8 +22,8 @@ Dễ thương, năng động nhưng vẫn nghiêm túc.
 - Nhãn telemetry chữ mono in hoa: mã + tên mục, ví dụ `MSN-00 · Bệ phóng`, `MSN-99 · Gửi tín hiệu`, toạ độ `21.03°N · 105.85°E`.
   Mã (`MSN-xx`, `P1`, `T+00`, `PL-01`, `ALT`, `UTC`) giữ nguyên ở mọi ngôn ngữ; phần chữ lấy từ `src/i18n/` (xem mục 5).
 - Logo góc trái: Orbi + chữ **Longpeoo** (`public/brand/longpeoo-wordmark.webp`, dùng làm CSS mask nên tự đổi màu theo sáng/tối; rê chuột chuyển cam).
-- Thanh menu "Mission Control": số thứ tự `01–05`, chấm "quỹ đạo" dưới mục đang mở, đồng hồ UTC và giờ Hà Nội, chấm trạng thái nhấp nháy, nút nhạc nền cạnh nút đổi giao diện.
-- Hero: "Xin chào, tôi là", tên cực lớn kèm dấu chấm cam nảy (cỡ chữ tự co theo độ dài tên, luôn một dòng), chip nghề nghiệp,
+- Thanh menu "Mission Control": số thứ tự `01–05`, chấm "quỹ đạo" dưới mục đang mở, chấm trạng thái nhấp nháy kèm **số người đang xem** (`3 ĐANG XEM`), đồng hồ UTC và giờ Hà Nội, nút nhạc nền cạnh nút đổi giao diện.
+- Hero: "Xin chào, tôi là", tên cực lớn kèm dấu chấm cam nảy (cỡ chữ tự co theo độ dài tên, luôn một dòng), chip nghề nghiệp, chip xanh "● n người đang ghé thăm" ngay sau lời chào (hiện ở mọi cỡ màn hình),
   **Orbi bay theo quỹ đạo elip quanh Trái Đất**, vệt cam chạy theo, sao lấp lánh.
   - Trái Đất: WebGL (`src/scripts/earth.ts`), ảnh NASA, nghiêng 23,4°, tự quay, ghim cam ở Hà Nội, quầng khí quyển.
   - Giao diện sáng: **Mặt Trời** góc trên phải (vẽ bằng shader: rìa tối dần, hạt sáng, vết đen, nhật hoa; SVG chỉ là bản dự phòng) chiếu sáng Trái Đất. Giao diện tối: nửa đêm có đèn thành phố, **Mặt Trăng** sáng quay quanh, bị che khi đi ra sau.
@@ -89,7 +89,8 @@ Thang cỡ chữ: `--fs-mono`, `--fs-sm`, `--fs-base`, `--fs-lg`, `--fs-h3`, `--
 | Menu mobile | mở dạng **vòng tròn** từ nút menu (`.menu-sheet` trong `global.css`), các mục bay vào lần lượt |
 | Nút `launch` | nảy lò xo khi rê chuột, bóng đổ dài ra, mũi tên nhích chéo |
 | Nút mạng xã hội | nảy lên, nghiêng, đổi màu cam |
-| Liên hệ | sóng tín hiệu lan ra quanh Orbi khi rê chuột vào email |
+| Liên hệ | sóng tín hiệu lan ra quanh Orbi khi rê chuột vào email. Hộp thư: nền cam trượt theo spring giữa "Hỏi ẩn danh" / "Để lại lời nhắn"; gửi xong Orbi bật lên giữa hai vòng sóng |
+| Bộ đếm người xem | số mới "nảy" và loé cam; chip ở hero hiện dần khi có số (chỗ chừa sẵn, không xô nội dung) |
 | Footer | tên lửa phụt lửa khi rê chuột, phóng vút lên khi bấm. **Tối:** Mặt Trăng tự quay, Orbi ngủ đung đưa trên đỉnh, sao lấp lánh, sao băng; rê chuột → Orbi thức dậy nhảy lên. **Sáng:** Mặt Trời có vết đen trôi, nhật hoa xoay, hạt năng lượng bay vào tấm pin Orbi (pin sáng nhịp); rê chuột → Orbi nhào lộn. Đổi giao diện: Mặt Trời lặn, Mặt Trăng mọc, Orbi bay sang |
 | Trang chờ | Orbi trong vòng tròn đứt nét quay chậm ở trên, chữ căn giữa bên dưới, chip "Đang lắp ráp" nhấp nháy; nút phụ (vd. Tải CV) truyền qua slot |
 | **Màn đếm ngược** (P3) | T-3 → 1, Orbi cưỡi tên lửa cất cánh; chỉ lần đầu mỗi phiên, bấm/gõ phím để bỏ qua, tự ẩn sau 3 giây nếu script lỗi |
@@ -161,7 +162,7 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 | Xem ảnh phóng to, phát video | `Dialog` (`PhotoGallery.tsx`, `VideoGrid.tsx`) |
 | Lọc video theo nhóm | `Tabs` (`VideoGrid.tsx`) |
 | Sắp xếp danh sách tĩnh (chuyến đi) | nút `aria-pressed` + script thuần (`JourneyGrid.astro`), không hydrate React |
-| Form liên hệ (sau này) | `FieldGroup` + `Field` + `Input`/`Textarea` |
+| Form (hộp thư Liên hệ) | `FieldGroup` + `Field` + `Input`/`Textarea` + `Alert`, render tĩnh, script thuần (`MessageForm.astro`); chọn chế độ bằng radio gốc kiểu viên thuốc, không hydrate React |
 
 ### Luật bắt buộc (từ skill shadcn)
 
@@ -181,6 +182,7 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
   | `MobileNav` | `client:media="(max-width: 860px)"` | desktop không tải React |
   | `MissionsGlobe`, `PhotoGallery`, `VideoGrid`, `VideoPlayer` | `client:visible` | chỉ tải khi cuộn tới |
   | `ThemeToggle` | **không hydrate** | render tĩnh, click gắn bằng script thuần trong `MissionBar.astro` |
+| Bộ đếm người xem (`src/scripts/live.ts`) | không phải island | một WebSocket cho cả phiên (script module), mở sau `load` + lúc rảnh, ~1 KB gzip |
 | `MusicToggle.astro` | không phải island | script thuần; `Audio` sống trong script module nên chuyển trang nhạc vẫn phát. `preload="none"`: không tải byte nhạc nào trước khi bấm. Mặc định tắt (trình duyệt chặn tự phát có tiếng). Danh sách trống = không render nút |
 
   **Không dùng `client:load`** cho component chỉ cần một sự kiện click: render tĩnh rồi gắn sự kiện bằng `<script>`.
@@ -223,6 +225,8 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 | Nhạc nền (2–3 bài, phát lần lượt) | `src/data/music.yaml` (zod trong `src/lib/music.ts`), file nhạc ở `public/music/`. CMS: Cài đặt → Nhạc nền |
 | Kênh YouTube, video nổi bật, ghim, ẩn, nhóm, bật/tắt Shorts | `src/data/videos.yaml` (Shorts nhận biết qua playlist tự động `UUSH…` của kênh) |
 | Màu, font, khoảng cách | `src/styles/global.css` |
+| Khoá công khai: token Web Analytics, site key Turnstile | `src/lib/services.ts` (khoá bí mật để ở Cloudflare, xem mục 9) |
+| Chữ của hộp thư (form Liên hệ) | nhóm `inbox` trong `src/i18n/ui.yaml`; luật kiểm tra (độ dài, email, số điện thoại) ở `src/lib/message.ts`, dùng chung cho form và Worker |
 
 - Schema của nội dung nằm ở `src/content.config.ts`. Thêm trường thì cập nhật cả schema lẫn `public/admin/config.yml`.
 - `draft: true` = chỉ hiện khi `npm run dev`.
@@ -255,10 +259,12 @@ src/
 ├── data/            ← site.yaml (+ site.en.yaml), videos.yaml, music.yaml, skills.yaml
 ├── i18n/            ← ui.yaml (vi), ui.en.yaml (en): chữ trên giao diện
 ├── layouts/BaseLayout.astro  ← SEO, JSON-LD, theme, preloader, altimeter, header/footer
-├── lib/             ← site.ts, skills.ts, i18n.ts, content.ts, photos.ts, youtube.ts, utils.ts (cn, cleanPath)
+├── lib/             ← site.ts, skills.ts, i18n.ts, content.ts, photos.ts, youtube.ts, utils.ts (cn, cleanPath),
+│                       message.ts (luật hộp thư, dùng chung với Worker), services.ts (khoá công khai Cloudflare)
 ├── pages/           ← mỗi file = một URL ([slug].astro = trang chi tiết)
-├── scripts/         ← motion.ts (chuyển động toàn trang), earth.ts (Trái Đất WebGL ở hero), globe.ts (địa cầu chuyến đi), cosmos.ts (nền vũ trụ ở Về tôi)
+├── scripts/         ← motion.ts (chuyển động toàn trang), earth.ts (Trái Đất WebGL ở hero), globe.ts (địa cầu chuyến đi), cosmos.ts (nền vũ trụ ở Về tôi), live.ts (số người đang xem)
 └── styles/global.css
+worker/              ← Cloudflare Worker cho /api/*: index.ts (định tuyến), presence.ts (đếm người xem), message.ts + inbox.ts (hộp thư)
 public/admin/        ← Sveltia CMS
 .github/workflows/refresh.yml ← build lại mỗi 6 giờ (video mới)
 ```
@@ -306,3 +312,23 @@ Rồi chụp màn hình (sáng/tối, desktop/mobile), so với thiết kế ở
 - `refresh.yml` build và deploy lại mỗi 6 giờ (cần secret `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`). Thiếu secret thì workflow tự bỏ qua.
 - Node 24 (file `.node-version`). Trên máy dùng `fnm use`.
 - Tên miền `longpeoo.io.vn` (DNS ở Cloudflare). `www` chuyển hướng 301 về tên miền chính.
+
+### Worker, bộ đếm người xem, hộp thư
+
+Web vẫn là trang tĩnh. Worker (`worker/`, `main` trong `wrangler.jsonc`) **chỉ chạy cho `/api/*`** (`assets.run_worker_first`), trang tĩnh phát thẳng không tốn lượt chạy.
+
+| Đường dẫn | Việc | Ghi chú |
+|---|---|---|
+| `/api/live` | WebSocket → Durable Object `Presence` (một bản duy nhất, tên `site`) | Hibernation API: không có ai vào/ra thì object ngủ. Ping 30 giây do Cloudflare tự trả lời. Nhiều tab cùng trình duyệt = 1 người (mã ngẫu nhiên trong `localStorage`, không lưu phía máy chủ). Tab ẩn > 60 giây thì ngắt |
+| `/api/message` | POST lời nhắn → lưu vào Durable Object `Inbox` (SQLite) + email báo tin | Kiểm tra theo thứ tự: Origin, ≤ 16 KB, ô bẫy `website`, giới hạn 3 tin/60 giây/IP (`MESSAGE_LIMIT`), Turnstile, luật `src/lib/message.ts`. Email có `Reply-To` = email người gửi → bấm Trả lời là trả lời thẳng. **Không lưu IP, user agent, vị trí**; chế độ ẩn danh không bao giờ gửi tên/số điện thoại (ô bị `disabled`, Worker cũng bỏ) |
+
+- Durable Object khai báo bằng `exports` (SQLite) trong `wrangler.jsonc`, không cần tạo tài nguyên trước.
+- Xem/xoá lời nhắn đã lưu: Cloudflare → Workers & Pages → Durable Objects → `Inbox` → **Data Studio**, nhập tên `inbox`. Cột `mailed = 0` = email báo tin bị lỗi, cần xem ở đây.
+- Chạy trên máy: `cp .dev.vars.example .dev.vars`, `npm run build`, rồi `npm run dev:api` (cổng 8787, mô phỏng Durable Object và email: thư lưu thành file trong `.wrangler/tmp/email/`). `npm run dev` tự chuyển `/api` sang cổng này nếu đang bật; không bật thì bộ đếm tự ẩn.
+- Sửa `wrangler.jsonc` thì chạy `npm run cf-typegen` để cập nhật kiểu `Env` (`worker/worker-configuration.d.ts`). `npm run check` kiểm tra cả Worker (`tsc -p worker`).
+
+**Cài đặt một lần trên Cloudflare** (thiếu bước nào thì phần đó tự tắt, web không vỡ):
+1. **Email Routing** của `longpeoo.io.vn`: bật, thêm và xác minh email nhận thư ở mục Destination addresses. Địa chỉ gửi đi là `MAIL_FROM` (`orbi@longpeoo.io.vn`) trong `wrangler.jsonc`.
+2. **Turnstile** → Add widget: hostname `longpeoo.io.vn`, chế độ Managed. Site key dán vào `src/lib/services.ts`; secret key đặt làm secret `TURNSTILE_SECRET`. Chưa đặt secret thì Worker bỏ qua Turnstile (vẫn có giới hạn tần suất + ô bẫy).
+3. Worker `portfolio` → Settings → **Variables and Secrets** (biến lúc chạy, *không phải* mục Build), loại **Secret**: `CONTACT_INBOX` (email nhận thư, đã xác minh ở bước 1), `TURNSTILE_SECRET`. Dùng loại Secret để `wrangler deploy` không ghi đè (`keep_vars: true` giữ cả biến thường).
+4. **Web Analytics** (thống kê lượt truy cập, không cookie): Add a site → `longpeoo.io.vn` → chọn gắn bằng JS snippet → chép token vào `src/lib/services.ts`. Xem số liệu tại Cloudflare → Web Analytics.
