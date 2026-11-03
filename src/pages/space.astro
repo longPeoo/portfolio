@@ -4,9 +4,12 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import ComingSoon from '@/components/sections/ComingSoon.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
 import ProjectCard from '@/components/sections/ProjectCard.astro';
+import SectionHead from '@/components/sections/SectionHead.astro';
+import SkillGrid from '@/components/sections/SkillGrid.astro';
 import { buttonVariants } from '@/components/ui/button';
 import { getProjects } from '@/lib/content';
 import { site } from '@/lib/site';
+import { skills } from '@/lib/skills';
 import { cn } from '@/lib/utils';
 import { t } from '@/lib/i18n';
 
@@ -15,7 +18,7 @@ const { title, intro, code } = t.space;
 ---
 
 <BaseLayout title={title} description={intro}>
-  {projects.length === 0 ? (
+  {projects.length === 0 && skills.length === 0 ? (
     <ComingSoon code={code} title={title} intro={intro}>
       {site.cv && (
         <a href={site.cv} class={cn(buttonVariants({ variant: 'launch', size: 'pill' }))} download>
@@ -32,14 +35,29 @@ const { title, intro, code } = t.space;
           </a>
         )}
       </PageHeader>
-      <section class="container grid">
-        {projects.map((p, i) => <ProjectCard project={p} index={i} />)}
-      </section>
+
+      <!-- Mình biết gì (kỹ năng) → mình đã làm gì (dự án, sự kiện) -->
+      {skills.length > 0 && (
+        <section class="container" aria-label={t.space.skillsTitle}>
+          <SectionHead code={t.space.skillsCode} title={t.space.skillsTitle} />
+          <SkillGrid skills={skills} />
+        </section>
+      )}
+
+      {projects.length > 0 && (
+        <section class="container projects" aria-label={t.space.projectsTitle}>
+          <SectionHead code={t.space.projectsCode} title={t.space.projectsTitle} />
+          <div class="grid">
+            {projects.map((p, i) => <ProjectCard project={p} index={i} />)}
+          </div>
+        </section>
+      )}
     </>
   )}
 </BaseLayout>
 
 <style>
   .cv { margin-top: var(--space-8); }
+  .projects { margin-top: var(--section-y); }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: var(--space-8); }
 </style>

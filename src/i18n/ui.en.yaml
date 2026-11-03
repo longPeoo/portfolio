@@ -53,8 +53,6 @@ about:
   intro: From a kid who kept looking up at the night sky to a space engineer, and why I still keep packing my backpack.
   trajectoryCode: Trajectory
   trajectoryTitle: Stage by stage
-  skillsCode: Subsystems
-  skillsTitle: Skills
   cosmosCode: Zoom · Cosmos
   cosmosHint: Scroll to zoom out
   cosmosEarth: Earth
@@ -75,6 +73,10 @@ space:
   payload: Payload
   role: Role
   time: Date
+  skillsCode: Subsystems
+  skillsTitle: Skills
+  projectsCode: Payloads
+  projectsTitle: Projects & events
   systems: Systems
 journeys:
   code: MSN-03 · Missions

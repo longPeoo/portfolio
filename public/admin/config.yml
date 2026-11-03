@@ -171,17 +171,22 @@ collections:
               - { name: title, label: Tiêu đề, widget: string, i18n: true }
               - { name: text, label: Mô tả, widget: text, i18n: true }
             i18n: true
-          - name: subsystems
+          - { name: draft, label: Bản nháp (chưa đăng), widget: boolean, default: true, i18n: duplicate }
+          - { name: body, label: Câu chuyện, widget: markdown, i18n: true }
+        i18n: true
+      - name: skills
+        label: Kỹ năng (trang Vũ trụ)
+        file: src/data/skills.{{locale}}.yaml
+        fields:
+          - name: skills
             label: Kỹ năng (phân hệ)
             widget: list
             fields:
-              - { name: code, label: Mã (3 chữ), widget: string, hint: "Ví dụ: PWR, COM, NAV", i18n: true }
+              - { name: code, label: Mã / nhóm, widget: string, hint: "Chữ cam nhỏ ở góc thẻ, ví dụ: GIS, Viễn thám", i18n: true }
               - { name: name, label: Tên, widget: string, i18n: true }
-              - { name: level, label: Mức độ (0–100), widget: number, value_type: int, min: 0, max: 100, i18n: true }
+              - { name: level, label: Mức độ (0–100), widget: number, value_type: int, min: 0, max: 100, i18n: duplicate }
               - { name: items, label: Chi tiết, widget: list, i18n: true }
             i18n: true
-          - { name: draft, label: Bản nháp (chưa đăng), widget: boolean, default: true, i18n: duplicate }
-          - { name: body, label: Câu chuyện, widget: markdown, i18n: true }
         i18n: true
     i18n: true
 
@@ -504,14 +509,6 @@ collections:
                 label: Tiêu đề mục các mốc
                 widget: string
                 i18n: true
-              - name: skillsCode
-                label: Nhãn mục kỹ năng
-                widget: string
-                i18n: true
-              - name: skillsTitle
-                label: Tiêu đề mục kỹ năng
-                widget: string
-                i18n: true
               - name: cosmosCode
                 label: Nhãn bảng thu phóng vũ trụ
                 widget: string
@@ -596,6 +593,22 @@ collections:
                 i18n: true
               - name: systems
                 label: Nhãn Hệ thống
+                widget: string
+                i18n: true
+              - name: skillsCode
+                label: Nhãn mục kỹ năng
+                widget: string
+                i18n: true
+              - name: skillsTitle
+                label: Tiêu đề mục kỹ năng
+                widget: string
+                i18n: true
+              - name: projectsCode
+                label: Nhãn mục dự án
+                widget: string
+                i18n: true
+              - name: projectsTitle
+                label: Tiêu đề mục dự án
                 widget: string
                 i18n: true
             i18n: true

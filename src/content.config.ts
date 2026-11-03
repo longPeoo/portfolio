@@ -82,10 +82,7 @@ const pages = defineCollection({
     intro: z.string(),
     /** Các mốc trên "quỹ đạo phóng" ở trang Về tôi */
     timeline: z.array(z.object({ year: z.string(), title: z.string(), text: z.string() })).default([]),
-    /** Kỹ năng trình bày như các "subsystem" của tàu, level 0–100 */
-    subsystems: z
-      .array(z.object({ code: z.string(), name: z.string(), level: z.number().min(0).max(100), items: z.array(z.string()) }))
-      .default([]),
+    /* Kỹ năng đã chuyển sang trang Vũ trụ: src/data/skills.yaml (src/lib/skills.ts) */
     draft: z.boolean().default(false),
   }),
 });

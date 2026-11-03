@@ -74,7 +74,7 @@ Thang cỡ chữ: `--fs-mono`, `--fs-sm`, `--fs-base`, `--fs-lg`, `--fs-h3`, `--
 - Header cố định cao `--header-h` (68px). Section đầu trang cần `padding-top` cộng thêm khoảng này.
 - Khoảng cách dọc giữa các section: `--section-y`.
 - Hero trang chủ: khối quỹ đạo giới hạn theo chiều cao màn hình (`100svh − header − 240px`), hero cao theo nội dung: chữ và nút luôn nằm trong màn hình đầu, phần kế tiếp ló lên ở mép dưới.
-- Lưới thẻ có nhiều phần (nhãn, tiêu đề, thanh đo…) dùng **CSS subgrid** (`grid-template-rows: subgrid`) để các thẻ cùng hàng thẳng hàng dù tiêu đề dài ngắn khác nhau (xem `.subsystem` ở `about.astro`).
+- Lưới thẻ có nhiều phần (nhãn, tiêu đề, thanh đo…) dùng **CSS subgrid** (`grid-template-rows: subgrid`) để các thẻ cùng hàng thẳng hàng dù tiêu đề dài ngắn khác nhau (xem `.subsystem` ở `SkillGrid.astro`).
 
 ---
 
@@ -97,7 +97,7 @@ Thang cỡ chữ: `--fs-mono`, `--fs-sm`, `--fs-base`, `--fs-lg`, `--fs-h3`, `--
 | **Đồng hồ độ cao** (P3) | thanh bên phải: cuộn trang = ALT 0 → 408 km (ẩn dưới 1180px; ẩn ở trang Về tôi vì đã có số đo của nền vũ trụ) |
 | **Cuộn mượt** (P3) | Lenis (chỉ chuột/touchpad; tắt khi đang mở menu/lightbox) |
 | **Hiện dần khi cuộn** (P3) | phần tử có `data-reveal` (chỉ áp cho khối dưới màn hình đầu) |
-| **Quỹ đạo phóng** (P3) | trang Về tôi: `data-trajectory` tự vẽ theo cuộn, `data-stage` bật ra; `data-gauge` thanh kỹ năng đầy dần |
+| **Quỹ đạo phóng** (P3) | trang Về tôi: `data-trajectory` tự vẽ theo cuộn, `data-stage` bật ra. Trang Vũ trụ: `data-gauge` thanh kỹ năng đầy dần (`SkillGrid.astro`) |
 | **Nền vũ trụ** | trang Về tôi: canvas cố định phủ kín màn hình, nằm sau nội dung (`CosmosBackdrop.astro` + `src/scripts/cosmos.ts`, tải động từ `initCosmos()` trong `motion.ts`). Cuộn hết câu chuyện + timeline (`data-cosmos-track`) = camera lùi theo thang đo thật, 6 bậc L0–L5: Trái Đất (ghim Hà Nội, ngày/đêm) → Trái Đất–Mặt Trăng → hành tinh đá → Hệ Mặt Trời (Kuiper, Oort, Voyager 1) → sao lân cận → Dải Ngân Hà ("Bạn ở đây"). Tối: vũ trụ thật; sáng: bản đồ sao in mực trên giấy. Lớp nền mờ sau cột chữ để chữ luôn đọc được; số đo L/FOV/ZOOM ở góc dưới phải. Không có tác vụ > 50ms (dựng Ngân Hà chia nhiều lượt). Giảm chuyển động: nhảy thẳng tới từng bậc, hình đứng yên |
 | Thẻ dự án | rê chuột: lưới bản vẽ kỹ thuật, 4 góc ngắm, đèn trạng thái sáng; trang chi tiết có album ảnh (`gallery`) và nút "Tất cả dự án" kiểu `launch-outline` |
 | Thẻ chuyến đi | rê chuột: con dấu hộ chiếu đóng "cộp"; trang chi tiết: con dấu đóng một lần khi mở; nút "Tất cả hành trình" là `launch-outline` cỡ `pill`, mũi tên nhích trái khi rê chuột |
@@ -142,7 +142,7 @@ Phong cách Mission Log được đưa vào component shadcn bằng **variant** 
 | `Button` | `social` + size `icon-lg` | nút icon mạng xã hội |
 | `Badge` | `telemetry`, `telemetry-solid` | chip nghề nghiệp ở hero |
 | `Badge` | `signal` | chip "Đang lắp ráp" |
-| `Badge` | `nominal`, `active`, `queued` | đèn trạng thái (`nominal` dùng ở thẻ kỹ năng trang Về tôi) |
+| `Badge` | `nominal`, `active`, `queued` | đèn trạng thái (`nominal` dùng ở thẻ kỹ năng trang Vũ trụ) |
 
 Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx`, rồi ghi vào bảng này.
 
@@ -219,7 +219,7 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 | Bản tiếng Anh của tên nghề, câu giới thiệu, menu | `src/data/site.en.yaml` (chỉ các trường cần dịch) |
 | Dự án kỹ thuật, sự kiện, hội thảo | `src/content/projects/<ten-khong-dau>/index.md` + ảnh cùng thư mục, tên ảnh `<tiền-tố>_NN.webp` (bìa `_00`). `date` bắt buộc, `endDate` tuỳ chọn (dự án `Nominal` không có `endDate` hiện "… – nay"), `gallery` như chuyến đi. Chỉ ghi thông tin đã công khai (báo chí, băng rôn sự kiện); dự án cho đơn vị quốc phòng/nhà nước chưa công bố thì không ghi tên đơn vị |
 | Chuyến đi (kèm toạ độ cho địa cầu, album, video) | `src/content/journeys/<ten-khong-dau>/index.md` + ảnh cùng thư mục. Tối thiểu: `place`, `countryCode` (ISO 2 chữ → cờ tròn `circle-flags` + tên nước tự động qua `Intl.DisplayNames`, `src/lib/flags.ts`), `lat`, `lng` → chỉ là ghim + cờ trên địa cầu. Có `cover` → thêm thẻ, trang riêng, ảnh ở trang Ảnh (`getStories()` trong `content.ts`). Tên ảnh `<địa-danh>_NN.webp`, ảnh bìa `_00`. `ongoing: true` = hành trình chưa kết thúc (Việt Nam): hiện "… – nay" và `T+n ngày` (`formatElapsed`), số ngày tăng theo mỗi lần build lại (6 giờ/lần) |
-| Trang Về tôi (timeline, kỹ năng) | `src/content/pages/about.md` |
+| Trang Về tôi (câu chuyện, timeline) | `src/content/pages/about.md` |
 | Nhạc nền (2–3 bài, phát lần lượt) | `src/data/music.yaml` (zod trong `src/lib/music.ts`), file nhạc ở `public/music/`. CMS: Cài đặt → Nhạc nền |
 | Kênh YouTube, video nổi bật, ghim, ẩn, nhóm, bật/tắt Shorts | `src/data/videos.yaml` (Shorts nhận biết qua playlist tự động `UUSH…` của kênh) |
 | Màu, font, khoảng cách | `src/styles/global.css` |
@@ -248,14 +248,14 @@ src/
 │   ├── layout/      ← MissionBar, Footer, ThemeToggle, MusicToggle, MobileNav (island)
 │   ├── media/       ← island React: MissionsGlobe, PhotoGallery, VideoGrid, VideoPlayer
 │   └── sections/    ← Hero, HomeSections, PageHeader, SectionHead, ProjectCard, JourneyCard, CosmosBackdrop,
-│                       FlagStrip, JourneyGrid, ComingSoon, SocialList
+│                       FlagStrip, JourneyGrid, SkillGrid, ComingSoon, SocialList
 ├── content/         ← projects/, journeys/, pages/ (Markdown + ảnh)
 ├── assets/earth/    ← ảnh NASA cho Trái Đất (day, night, moon .webp; day-8k/day-4k chỉ tải khi phóng to địa cầu Hành trình)
 ├── content.config.ts← schema nội dung
-├── data/            ← site.yaml (+ site.en.yaml), videos.yaml, music.yaml
+├── data/            ← site.yaml (+ site.en.yaml), videos.yaml, music.yaml, skills.yaml
 ├── i18n/            ← ui.yaml (vi), ui.en.yaml (en): chữ trên giao diện
 ├── layouts/BaseLayout.astro  ← SEO, JSON-LD, theme, preloader, altimeter, header/footer
-├── lib/             ← site.ts, i18n.ts, content.ts, photos.ts, youtube.ts, utils.ts (cn, cleanPath)
+├── lib/             ← site.ts, skills.ts, i18n.ts, content.ts, photos.ts, youtube.ts, utils.ts (cn, cleanPath)
 ├── pages/           ← mỗi file = một URL ([slug].astro = trang chi tiết)
 ├── scripts/         ← motion.ts (chuyển động toàn trang), earth.ts (Trái Đất WebGL ở hero), globe.ts (địa cầu chuyến đi), cosmos.ts (nền vũ trụ ở Về tôi)
 └── styles/global.css

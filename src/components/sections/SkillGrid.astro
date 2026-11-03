@@ -1,0 +1,67 @@
+---
+/**
+ * Lưới kỹ năng ("phân hệ" của tàu): mã, đèn Nominal, tên, thanh đo đầy dần khi cuộn tới (data-gauge, motion.ts), chi tiết.
+ * Subgrid: các thẻ cùng hàng dùng chung 4 dòng → tên dài xuống dòng thì cả hàng cùng giãn, thanh đo và danh sách luôn thẳng hàng.
+ */
+import type { Skill } from '@/lib/skills';
+import { t } from '@/lib/i18n';
+
+interface Props {
+  skills: Skill[];
+}
+
+const { skills } = Astro.props;
+---
+
+<div class="subsystems">
+  {skills.map((s) => (
+    <div class="subsystem" data-reveal>
+      <div class="subsystem__head">
+        <span class="mono subsystem__code">{s.code}</span>
+        <span class="mono subsystem__status"><i aria-hidden="true"></i>{t.common.status.nominal}</span>
+      </div>
+      <h3>{s.name}</h3>
+      <div class="subsystem__meter">
+        <div class="gauge" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={s.level} aria-label={`${s.name}: ${s.level}%`}>
+          <span data-gauge style={`--level:${s.level}%`}></span>
+        </div>
+        <span class="mono muted gauge__value" aria-hidden="true">{s.level}%</span>
+      </div>
+      <ul>{s.items.map((it) => <li>{it}</li>)}</ul>
+    </div>
+  ))}
+</div>
+
+<style>
+  .subsystems { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: var(--space-4); }
+  .subsystem {
+    display: grid;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+    row-gap: var(--space-3);
+    padding: var(--space-4) var(--space-6) var(--space-6);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: var(--bg-elev);
+  }
+  .subsystem__head { display: flex; justify-content: space-between; align-items: center; }
+  .subsystem__code { color: var(--primary); }
+  .subsystem__status { display: inline-flex; align-items: center; gap: 6px; color: var(--ok); font-size: 0.625rem; }
+  .subsystem__status i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: led 2.4s ease-in-out infinite; }
+  .subsystem h3 { align-self: start; font-size: 1.125rem; line-height: 1.2; text-wrap: balance; }
+  .subsystem__meter { display: flex; align-items: center; gap: var(--space-3); }
+  .subsystem__meter .gauge { flex: 1; }
+  .gauge { height: 8px; border-radius: var(--r-pill); background: var(--bg-sunken); overflow: hidden; }
+  .gauge span {
+    display: block;
+    height: 100%;
+    width: var(--level);
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--c-sun), var(--primary));
+    transform-origin: left;
+  }
+  .gauge__value { font-size: 0.6875rem; min-width: 4ch; text-align: right; }
+  .subsystem ul { margin: 0; padding-left: 1.1em; font-size: var(--fs-sm); line-height: 1.55; color: var(--fg-muted); }
+  .subsystem li::marker { color: var(--primary); }
+  @keyframes led { 50% { opacity: 0.35; } }
+</style>

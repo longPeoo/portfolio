@@ -53,8 +53,6 @@ about:
   intro: Câu chuyện từ một đứa trẻ hay ngước nhìn trời đêm đến kỹ sư công nghệ vũ trụ, và vì sao tôi vẫn luôn xách ba lô lên đường.
   trajectoryCode: MỘT SỐ MỐC NHO NHỎ MÌNH MUỐN LƯU GIỮ
   trajectoryTitle: Dòng chảy cuộc sống
-  skillsCode: Những thứ mình biết hoặc sẽ biết
-  skillsTitle: Tất tần tật
   cosmosCode: Thu phóng · Vũ trụ
   cosmosHint: Cuộn để bay ra xa
   cosmosEarth: Trái Đất
@@ -75,6 +73,10 @@ space:
   payload: Dự án
   role: Vai trò
   time: Thời gian
+  skillsCode: Những thứ mình biết hoặc sẽ biết
+  skillsTitle: Tất tần tật
+  projectsCode: Những việc mình đã làm
+  projectsTitle: Dự án & sự kiện
   systems: Hệ thống
 journeys:
   code: Phím 03 · Hành trình
