@@ -17,7 +17,7 @@ const ANALYTICS_TOKEN = '';
  * Để trống: khi chạy trên máy dùng khoá thử nghiệm (luôn cho qua), trên web thật thì form gửi không cần Turnstile
  * (Worker vẫn chặn bằng giới hạn tần suất + ô bẫy bot).
  */
-const TURNSTILE_SITE_KEY = '';
+const TURNSTILE_SITE_KEY = '0x4AAAAAAFxjq1KdquiCfRjN';
 const TURNSTILE_TEST_KEY = '1x00000000000000000000AA';
 
 export const services = {
