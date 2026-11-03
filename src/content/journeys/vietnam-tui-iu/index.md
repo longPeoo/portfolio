@@ -1,22 +1,23 @@
 ---
 title: Việt Nam tui iu
-summary: Hành trình dài nhất của mình, bắt đầu từ ngày 12/3/2000 và chưa có ngày kết thúc. Đi đâu xa đến mấy thì cuối cùng mình vẫn muốn quay về đây, nơi có gia đình, có bạn bè, và có cả những ngọn núi mình chưa leo hết.
+summary: Hành trình dài nhất của mình, bắt đầu từ ngày 12/3/2000 và chắc còn rất rất rất là lâu nữa mới có hồi kết. Đi thật đâu cũng cần có nơi để trở về, nơi đó ta gọi là Tổ quốc. Mình đặt Tổ quốc lên là ưu tiên số 1, vì không chỉ vì là Việt Nam, mà còn ôm trọn đến gia đình, người thân, bạn bè, những người thân thương của mình.
 date: 2000-03-12
+endDate: ''
 ongoing: true
 place: Việt Nam
 countryCode: VN
-# Toạ độ Đà Nẵng, khoảng giữa dải đất hình chữ S
+country: Việt Nam
 lat: 16.0544
 lng: 108.2022
 cover: vietnam_00.webp
 coverAlt: Những chiếc thúng chai trên bãi cát ven biển
 gallery:
   - src: vietnam_02.webp
-    caption: Ra đảo là phải chỉ tay lên trời cho có khí thế
-    alt: Mình đứng chỉ tay lên trời trên cầu cảng, phía sau là biển xanh và đảo
+    caption: Một đảo nào đó thuộc Nha Trang thì phải
+    alt: Một đảo nào đó thuộc Nha Trang thì phải
   - src: vietnam_03.webp
-    caption: Nước trong veo, cười không ngậm được mồm
-    alt: Mình đứng cười trên cầu cảng, phía sau là biển và tàu
+    caption: Ý là trông thì nhí nhố mà cũng bảnh đấy chứ
+    alt: Ý là trông thì nhí nhố mà cũng bảnh đấy chứ
   - src: vietnam_07.webp
     caption: Thuyền thúng thuyền máy đậu kín cả vịnh
     alt: Rất nhiều thuyền đánh cá đậu trên vịnh trước một hòn đảo
@@ -102,8 +103,8 @@ gallery:
     caption: Diện vest soi gương, thấy cũng bảnh phết
     alt: Mình mặc vest chụp ảnh qua gương trong cửa hàng
   - src: vietnam_19.webp
-    caption: Em Longpeoo lên sóng VTV1 với danh nghĩa kỹ sư
-    alt: Mình xuất hiện trên bản tin VTV1 với chú thích kỹ sư Nguyễn Hoàng Long
+    caption: Em Longpeoo lên sóng VTV1 nè
+    alt: Em Longpeoo lên sóng VTV1 nè
   - src: vietnam_20.webp
     caption: Lưu giữ 1000 khoảnh khắc cháy nhất hè 2026
     alt: Tấm ảnh photobooth của mình với khung chữ hè 2026
@@ -112,14 +113,14 @@ tags: []
 draft: false
 ---
 
-Ngày 12/3/2000 mình cất tiếng khóc chào đời, và đó cũng là ngày chuyến hành trình dài nhất của mình bắt đầu. Những chuyến đi khác đều có ngày về, còn chuyến này thì không, mỗi ngày trôi qua lại được cộng thêm một ngày nữa, và con số ở đầu trang này sẽ cứ thế tăng lên mãi thôi mọi người ạ.
+Ngày 12/3/2000 mình cất tiếng khóc chào đời, và đó cũng là ngày chuyến hành trình dài nhất của mình bắt đầu. Những chuyến đi khác đều có ngày về, còn chuyến này thì không, mỗi ngày trôi qua lại được cộng thêm một ngày nữa, và con số này sẽ tăng mãi cho đến khi hành trình khám phá Thế giới của mình kết thúc, hoặc mình hết xiền mua domain này kkk.
 
-Mình đã đi qua kha khá nước rồi, từ châu Âu mơ mộng, Ấn Độ hùng vĩ, đến Nhật Bản chỉn chu, nhưng đi đâu mình cũng mang theo lá cờ đỏ sao vàng. Cầm cờ ở hồ Pangong, giương cờ ở Sydney, treo cờ ở khách sạn tận Agra, đi càng xa lại càng thấy thương nơi mình sinh ra, càng muốn kể cho cả thế giới biết mình đến từ Việt Nam.
+Mình đã đi qua kha khá nước rồi, từ kinh đô thời trang Pháp, đến vương quốc Socola Bỉ, đến cả Thụy Sĩ mơ mộng, Ấn Độ hùng vĩ, đến đất nước mặt trời mọc ở Nhật Bản, từ châu Á đến châu Âu rồi đến cả châu Úc, nhưng vẫn luôn có một nơi để mình thuộc về. Việt Nam.
 
-Việt Nam mình có biển đẹp lắm luôn. Biển miền Trung xanh trong veo, những chiếc thúng chai nằm phơi nắng trên bãi cát, thuyền đánh cá đậu kín cả vịnh, ngồi trên bờ kè ngắm hoàng hôn là quên hết mệt mỏi. Mình còn chèo cả SUP giữa biển, mặt thì nghiêm túc như đi thi nhưng mà trong lòng vui lắm.
+Việt Nam mình có biển đẹp lắm luôn. Biển miền Trung xanh trong veo, những chiếc thúng chai nằm phơi nắng trên bãi cát, thuyền đánh cá đậu kín cả vịnh, ngồi trên bờ kè ngắm hoàng hôn là quên hết mệt mỏi. 
 
-Rồi núi rừng Việt Nam nữa, mình mê leo núi lắm. Bỏ sự sướng đi tìm sự khổ, mình đã leo Tà Chì Nhù, chạm cột mốc Nhìu Cồ San 2965m, đi xuyên qua những cánh rừng đầy rêu và thác nước. Mỗi lần đứng trên đỉnh núi nhìn xuống biển mây, mình lại thấy đất nước mình đẹp quá, đẹp đến mức chẳng cần đi đâu xa cũng đủ để ngắm cả đời.
+Rồi núi rừng Việt Nam nữa, mình mê leo núi lắm. Chả vì lí do gì cả, mình thích cảm giác chinh phục, mình luôn thích được bao quanh bởi mẹ thiên nhiên hùng vĩ, vì suy cho cùng con người mình mặc dù được sinh ra từ bố mẹ, nhưng về nguồn cội vẫn là từ thiên nhiên mà ra đó thôi.
 
-Và Việt Nam cũng là nơi mình lớn lên, đi làm và cống hiến. Mình là một kỹ sư làm trong ngành vũ trụ, có lần còn được lên sóng VTV1 nữa cơ, thấy mặt mình trên tivi mà vừa buồn cười vừa tự hào. Như mình từng nói ở bài Boulogne, đi xa để học hỏi, rồi về để phụng sự Tổ quốc, phụng sự bà con iu dấu.
+Và Việt Nam cũng là nơi mình lớn lên, đi làm và cống hiến. Mình là một kỹ sư làm trong ngành vũ trụ, có lần còn được lên sóng VTV1 nữa cơ, à thật ra không phải đâu lên cũng nhiều lắm rồi. Tự mình thấy mình đã có một cuộc sống thật rực rỡ, ít nhất với mình là vậy, và mình sẽ sống để sao cho về già chả có điều gì trên đời khiến mình phải tiếc nuối, phải ân hận, phải xót xa, cho dù đấy là việc đã từng làm hay việc chưa từng làm.
 
-Hành trình này chưa bao giờ có ngày kết thúc, và mình cũng mong là nó sẽ không bao giờ kết thúc. Mình sẽ còn đi tiếp, còn leo thêm nhiều ngọn núi, ngắm thêm nhiều bãi biển, rồi quay lại đây bổ sung thêm ảnh cho mọi người cùng xem nhé.
+Hành trình này chưa bao giờ có ngày kết thúc, và mình cũng mong là nó sẽ không bao giờ kết thúc. Mình sẽ còn đi tiếp, còn lang thang khắp mọi nơi, và mình sẽ đi đến tận cùng mọi ngóc ngách của Việt Nam để yêu trọn đất nước này.
