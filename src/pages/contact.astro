@@ -13,13 +13,15 @@ import { t, fmt } from '@/lib/i18n';
     <h1>{t.contact.title}<br /><em>{t.contact.titleEm}</em></h1>
     <p class="contact__intro">{t.contact.intro}</p>
 
-    <a class="contact__mail" href={`mailto:${site.email}`}>
+    <a class="contact__mail" href={`mailto:${site.email}`} style={`--mail-chars: ${site.email.length}`}>
       <span class="dish" aria-hidden="true">
         <Orbi size={64} />
         <i></i><i></i><i></i>
       </span>
-      {site.email}
-      <ArrowUpRightIcon className="contact__arrow" />
+      <span class="contact__addr">
+        {site.email}
+        <ArrowUpRightIcon className="contact__arrow" />
+      </span>
     </a>
 
     {site.socials.length > 0 && (
@@ -46,15 +48,24 @@ import { t, fmt } from '@/lib/i18n';
   h1 em { color: var(--fg-muted); font-weight: 400; }
   .contact__intro { max-width: 68ch; font-size: var(--fs-lg); color: var(--fg-muted); text-wrap: balance; }
 
+  /*
+   * Email luôn một dòng: cỡ chữ không vượt quá bề ngang khung chia cho độ dài email
+   * (Archivo ≈ 0,5em mỗi ký tự, cộng ~1,3em cho mũi tên). --mail-chars = số ký tự, đổi email trong CMS vẫn vừa.
+   */
   .contact__mail {
     display: inline-flex;
     align-items: center;
     gap: var(--space-4);
+    max-width: 100%;
     margin-top: var(--space-12);
     font-family: var(--font-display);
-    font-size: clamp(1.5rem, 1rem + 3vw, 3.5rem);
+    font-size: min(clamp(1.5rem, 1rem + 3vw, 3.5rem), (100vw - 2 * var(--gutter)) / (var(--mail-chars, 22) * 0.5 + 1.3));
     text-decoration: none;
-    overflow-wrap: anywhere;
+  }
+  .contact__addr { display: inline-flex; align-items: center; gap: 0.15em; white-space: nowrap; }
+  /* Điện thoại: Orbi lên trên, nhường cả bề ngang cho email */
+  @media (max-width: 640px) {
+    .contact__mail { flex-direction: column; gap: var(--space-3); }
   }
   .contact__mail:hover { color: var(--primary); }
   .dish { position: relative; flex: none; }
