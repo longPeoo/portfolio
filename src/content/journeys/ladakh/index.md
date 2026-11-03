@@ -3,6 +3,7 @@ title: Một thành phố đáng đi ở Ấn Độ
 summary: 'Chỉ 1 câu duy nhất thôi ấy: "Muốn ghét thế giới hãy đọc tin tức, muốn yêu thế giới hãy đi đến tận cùng"'
 date: 2026-09-27
 endDate: 2026-10-06
+ongoing: false
 place: Ladakh
 countryCode: IN
 country: Ấn Độ
@@ -62,7 +63,7 @@ gallery:
   - src: ladakh_06.webp
     caption: Đùa thôi bảnh thật
     alt: Đùa thôi bảnh thật
-youtube: ''
+youtube: https://www.youtube.com/watch?v=3q0T0lwIcPg
 tags: []
 draft: false
 ---
