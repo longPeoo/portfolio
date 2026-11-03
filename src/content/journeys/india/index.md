@@ -1,6 +1,9 @@
 ---
 title: Khổ hay sướng trên dãy Hi Mã Lạp Sơn
 summary: 10 ngày ở Ấn Độ, 5 ngày đầu leo trèo giữa dãy Himalaya với đỉnh Pangarchulla và đèo Kuari, 5 ngày sau lang thang New Delhi và Agra để ngắm Taj Mahal. Khổ hay sướng thì mọi người đọc hết rồi tự trả lời nhé hehe.
+date: 2026-04-26
+endDate: 2026-05-06
+ongoing: false
 place: Rishikesh; Kuari Pass; New Delhi; Agra
 countryCode: IN
 country: Ấn Độ
