@@ -922,11 +922,11 @@ collections:
                 widget: string
                 i18n: true
               - name: successTitle
-                label: Gửi xong: tiêu đề
+                label: "Gửi xong: tiêu đề"
                 widget: string
                 i18n: true
               - name: successText
-                label: Gửi xong: nội dung
+                label: "Gửi xong: nội dung"
                 widget: string
                 i18n: true
               - name: again
@@ -934,35 +934,35 @@ collections:
                 widget: string
                 i18n: true
               - name: errorMessage
-                label: Lỗi: lời nhắn
+                label: "Lỗi: lời nhắn"
                 widget: string
                 i18n: true
               - name: errorName
-                label: Lỗi: tên
+                label: "Lỗi: tên"
                 widget: string
                 i18n: true
               - name: errorEmail
-                label: Lỗi: email
+                label: "Lỗi: email"
                 widget: string
                 i18n: true
               - name: errorPhone
-                label: Lỗi: số điện thoại
+                label: "Lỗi: số điện thoại"
                 widget: string
                 i18n: true
               - name: errorContact
-                label: Lỗi: thiếu email và điện thoại
+                label: "Lỗi: thiếu email và điện thoại"
                 widget: string
                 i18n: true
               - name: errorRate
-                label: Lỗi: gửi quá nhanh
+                label: "Lỗi: gửi quá nhanh"
                 widget: string
                 i18n: true
               - name: errorCaptcha
-                label: Lỗi: chống bot
+                label: "Lỗi: chống bot"
                 widget: string
                 i18n: true
               - name: errorSend
-                label: Lỗi: gửi thất bại
+                label: "Lỗi: gửi thất bại"
                 widget: string
                 i18n: true
               - name: noscript
