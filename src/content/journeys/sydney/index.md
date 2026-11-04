@@ -1,8 +1,9 @@
 ---
-title: Mang cờ đỏ sao vàng tới IAC 2025
-summary: Chuyến đi Úc này đặc biệt lắm, vì mình không chỉ đi chơi mà còn được tham dự Đại hội Du hành Vũ trụ Quốc tế lần thứ 76, IAC 2025 ở Sydney, sự kiện lớn nhất năm của dân làm ngành vũ trụ như mình. Vừa được học, vừa được chơi, vừa được mang cờ Việt Nam đi khoe với cả thế giới.
+title: Cờ đỏ sao vàng sánh ngang các cường quốc
+summary: Chuyến đi Úc này khá là đặc biệt với mình. Mình mang chính sản phẩm do mình và mọi người trong phòng dựng để mang đi triển lãm vũ trụ IAC ở Úc, mình được mang cờ đỏ sao vàng để đặt sánh ngang với các cường quốc. Tất nhiên rồi họ phải gật gù chứ, mình đỉnh cao mà hehe
 date: 2025-09-27
 endDate: 2025-10-06
+ongoing: false
 place: Sydney
 countryCode: AU
 country: Úc
@@ -73,12 +74,12 @@ tags: []
 draft: false
 ---
 
-Ngày 27/9/2025 mình bay sang Sydney, lúc ấy Việt Nam đang chuẩn bị vào thu thì bên này lại đang là mùa xuân, vì nước Úc nằm ở Nam bán cầu mà, mọi thứ ngược hết với nhà mình. Chuyến này đặc biệt lắm, vì mình sang để tham dự IAC 2025, Đại hội Du hành Vũ trụ Quốc tế lần thứ 76, nơi mà cả thế giới làm ngành vũ trụ tụ họp về một chỗ.
+Mình ở Úc hơn 1 tuần lận, đủ để làm việc, đủ để khám phá khi đêm về, lúc ấy Việt Nam đang chuẩn bị vào thu thì bên này lại đang là mùa xuân, vì nước Úc nằm ở Nam bán cầu mà, mọi thứ ngược hết với nhà mình.
 
-Bước chân vào hội nghị là mình như đứa trẻ lạc vào cửa hàng đồ chơi. Mô hình tàu MMX của Nhật sắp đi lấy mẫu đất trên Phobos, mặt trăng của Sao Hỏa, rồi tàu đổ bộ mặt trăng vàng chóe, xe tự hành, robot nhìn như con cua, cả động cơ tên lửa thật đứng sừng sững. Mấy thứ ngày xưa chỉ được xem qua màn hình giờ đứng ngay trước mặt, mình đi hết gian này sang gian khác mà mắt cứ sáng rỡ lên.
+Bước chân vào hội nghị là mình như đứa trẻ lạc vào cửa hàng đồ chơi, nên mới bảo đàn ông không trưởng thành, chỉ có đồ chơi của họ càng ngày càng to hơn, và càng đắt hơn thôi haha. Mình không phải ngoại lệ, nhìn các cỗ máy phản lực, nhìn các tàu đổ bộ, nhìn các vệ tinh của các nước mà mê lắm, tự hứa phải nỗ lực để ngành nghề phát triển ở Việt Nam mặc dù tui cũng chỉ mới là hạt cát giữa sa mạc bao la.
 
-Khoảnh khắc mình tự hào nhất là được cùng mọi người giương cao lá cờ đỏ sao vàng ngay giữa hội nghị. Giữa bao nhiêu cường quốc vũ trụ, Việt Nam mình vẫn có mặt, vẫn đang cố gắng từng bước một, và em Longpeoo nhỏ bé cũng được góp một phần trong đó, nghĩ đến thôi là thấy có thêm động lực rồi.
+Khoảnh khắc mình tự hào nhất là được cùng mọi người giương cao lá cờ đỏ sao vàng ngay giữa hội nghị. Giữa bao nhiêu cường quốc vũ trụ, Việt Nam mình vẫn có mặt, vẫn đang cố gắng từng bước một, và em Longpeoo nhỏ bé cũng được góp một phần trong đó, nghĩ đã thấy vừa tự hào vừa thấy oách rồi.
 
-Xong việc thì tất nhiên là phải đi chơi rồi. Nhà hát Opera ban ngày trắng tinh như những cánh buồm, ban đêm thì lên đèn lung linh, mình chụp cả hai mà vẫn không biết chọn tấm nào làm ảnh bìa. Mình còn ra biển ngắm sóng, đi dạo quanh vịnh đầy thuyền buồm, rồi lên Blue Mountains, dãy núi được gọi là núi xanh vì tinh dầu từ rừng bạch đàn bốc lên tạo thành một lớp sương xanh mờ mờ phủ khắp thung lũng.
+Xong việc thì tất nhiên là phải đi chơi rồi. Bản tính lang thang ăn vào trong từng tế bào rồi, nên là mình vẫn lếch tha lếch thếch đi khắp nơi. Đợt này đi với anh trưởng phòng, một người mà mình rất đỗi yêu quý, không chỉ là sếp, mà còn là một người dẫn dắt, một người anh, một người bạn chỉ đường dẫn lối, dạy cho mình bao nhiêu thứ.
 
-Ngày 6/10 mình về lại Việt Nam với một vali đầy kỉ niệm và một cái đầu đầy ý tưởng. Đi xa mới thấy thế giới rộng lớn đến nhường nào, và ngành vũ trụ của nước mình còn nhiều việc phải làm lắm, nhưng mà không sao, cứ đi từng bước một thì kiểu gì cũng tới thôi mọi người nhỉ.
+Đi xa mới thấy thế giới rộng lớn đến nhường nào, và ngành vũ trụ của nước mình còn nhiều việc phải làm lắm, nhưng mà không sao, cứ đi từng bước một thì kiểu gì cũng tới thôi mọi người nhỉ.
