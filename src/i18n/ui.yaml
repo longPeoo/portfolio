@@ -69,17 +69,17 @@ about:
 space:
   code: Phím 02 · Dự án
   title: “Đã đánh là thắng, không chắc thắng thì không đánh – và làm khoa học cũng phải như vậy”
-  intro: Các dự án, nghiên cứu và hệ thống tôi từng tham gia trong lĩnh vực công nghệ vũ trụ.
+  intro: Các dự án, nghiên cứu và hệ thống mình từng tham gia, phần này chưa quan trọng lắm cập nhật sau nhé hehe
   back: Tất cả dự án
   cv: Tải CV
   payload: Dự án
   role: Vai trò
   time: Thời gian
+  systems: Hệ thống
   skillsCode: Những thứ mình biết hoặc sẽ biết
   skillsTitle: Tất tần tật
   projectsCode: Những việc mình đã làm
   projectsTitle: Dự án & sự kiện
-  systems: Hệ thống
 journeys:
   code: Phím 03 · Hành trình
   title: “Cuộc hành trình vạn dặm khởi đầu từ một bước chân”
@@ -138,7 +138,7 @@ contact:
 inbox:
   code: Hộp thư · Hỏi gì cũng được
   title: Hoặc nhắn ngay ở đây
-  intro: 'Ngại xưng tên thì cứ hỏi ẩn danh nhé. Mình đọc hết, và nếu bạn để lại email thì mình trả lời qua mail luôn.'
+  intro: Ngại xưng tên thì cứ hỏi ẩn danh nhé. Mình đọc hết, và nếu bạn để lại email thì mình trả lời qua mail luôn.
   modeLabel: Kiểu tin nhắn
   modeAnonymous: Hỏi ẩn danh
   modeNamed: Để lại lời nhắn
@@ -146,25 +146,25 @@ inbox:
   email: Email
   phone: Số điện thoại
   optional: không bắt buộc
-  emailHintAnonymous: 'Chỉ mình thấy, để mình trả lời bạn qua mail. Bỏ trống nếu muốn ẩn danh hoàn toàn.'
+  emailHintAnonymous: Chỉ mình thấy, để mình trả lời bạn qua mail. Bỏ trống nếu muốn ẩn danh hoàn toàn.
   contactHint: Để lại ít nhất email hoặc số điện thoại để mình liên hệ lại nhé.
   message: Lời nhắn
-  messagePlaceholder: 'Bạn muốn hỏi hay kể gì với mình?'
+  messagePlaceholder: Bạn muốn hỏi hay kể gì với mình?
   submit: Gửi tín hiệu
   sending: Đang phát tín hiệu…
   privacy: Không lưu IP hay vị trí của bạn. Hỏi ẩn danh thì tên và số điện thoại không được gửi đi.
-  successTitle: 'Đã bắt được tín hiệu!'
-  successText: 'Cảm ơn bạn đã nhắn cho mình. Nếu bạn để lại email hoặc số điện thoại, mình sẽ trả lời sớm nhất có thể.'
+  successTitle: Đã bắt được tín hiệu!
+  successText: Cảm ơn bạn đã nhắn cho mình. Nếu bạn để lại email hoặc số điện thoại, mình sẽ trả lời sớm nhất có thể.
   again: Gửi tin khác
-  errorMessage: 'Lời nhắn cần từ {min} đến {max} ký tự.'
+  errorMessage: Lời nhắn cần từ {min} đến {max} ký tự.
   errorName: Cho mình xin tên của bạn nhé.
-  errorEmail: 'Email chưa đúng, kiểu như ban@gmail.com nhé.'
+  errorEmail: Email chưa đúng, kiểu như ban@gmail.com nhé.
   errorPhone: Số điện thoại chưa đúng (8–15 chữ số).
   errorContact: Để lại email hoặc số điện thoại để mình liên hệ lại nhé.
-  errorRate: 'Bạn gửi hơi nhanh, đợi một phút rồi thử lại nhé.'
-  errorCaptcha: 'Chưa xác minh được bạn không phải bot, thử gửi lại nhé.'
-  errorSend: 'Tín hiệu bị nhiễu, chưa gửi được. Thử lại sau hoặc gửi mail trực tiếp cho mình nhé.'
-  noscript: 'Bật JavaScript để gửi lời nhắn, hoặc gửi mail trực tiếp cho mình ở trên nhé.'
+  errorRate: Bạn gửi hơi nhanh, đợi một phút rồi thử lại nhé.
+  errorCaptcha: Chưa xác minh được bạn không phải bot, thử gửi lại nhé.
+  errorSend: Tín hiệu bị nhiễu, chưa gửi được. Thử lại sau hoặc gửi mail trực tiếp cho mình nhé.
+  noscript: Bật JavaScript để gửi lời nhắn, hoặc gửi mail trực tiếp cho mình ở trên nhé.
 notFound:
   metaTitle: Lạc vào vũ trụ
   code: Lỗi 404 · Mất tín hiệu

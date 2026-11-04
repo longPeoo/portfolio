@@ -75,11 +75,11 @@ space:
   payload: Payload
   role: Role
   time: Date
+  systems: Systems
   skillsCode: Subsystems
   skillsTitle: Skills
   projectsCode: Payloads
   projectsTitle: Projects & events
-  systems: Systems
 journeys:
   code: MSN-03 · Missions
   title: Journeys
@@ -138,7 +138,7 @@ contact:
 inbox:
   code: Inbox · Ask me anything
   title: Or leave a note right here
-  intro: 'Too shy to say who you are? Ask anonymously. I read everything, and if you leave an email I will reply there.'
+  intro: Too shy to say who you are? Ask anonymously. I read everything, and if you leave an email I will reply there.
   modeLabel: Message type
   modeAnonymous: Ask anonymously
   modeNamed: Leave a message
@@ -146,25 +146,25 @@ inbox:
   email: Email
   phone: Phone
   optional: optional
-  emailHintAnonymous: 'Only I can see it, so I can reply by email. Leave it blank to stay fully anonymous.'
+  emailHintAnonymous: Only I can see it, so I can reply by email. Leave it blank to stay fully anonymous.
   contactHint: Leave at least an email or a phone number so I can get back to you.
   message: Message
-  messagePlaceholder: 'What would you like to ask or tell me?'
+  messagePlaceholder: What would you like to ask or tell me?
   submit: Send signal
   sending: Transmitting…
   privacy: Your IP and location are never stored. Anonymous questions never include a name or phone number.
-  successTitle: 'Signal received!'
-  successText: 'Thanks for reaching out. If you left an email or phone number, I will get back to you as soon as I can.'
+  successTitle: Signal received!
+  successText: Thanks for reaching out. If you left an email or phone number, I will get back to you as soon as I can.
   again: Send another
-  errorMessage: 'Your message needs {min} to {max} characters.'
+  errorMessage: Your message needs {min} to {max} characters.
   errorName: Please tell me your name.
-  errorEmail: 'That email does not look right, e.g. you@gmail.com.'
+  errorEmail: That email does not look right, e.g. you@gmail.com.
   errorPhone: That phone number does not look right (8–15 digits).
   errorContact: Please leave an email or a phone number.
-  errorRate: 'That was quick! Please wait a minute and try again.'
-  errorCaptcha: 'Could not verify you are human, please try again.'
+  errorRate: That was quick! Please wait a minute and try again.
+  errorCaptcha: Could not verify you are human, please try again.
   errorSend: The signal got lost. Try again later or email me directly.
-  noscript: 'Turn on JavaScript to send a message, or email me directly above.'
+  noscript: Turn on JavaScript to send a message, or email me directly above.
 notFound:
   metaTitle: Lost in space
   code: Error 404 · Signal lost
