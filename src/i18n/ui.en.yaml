@@ -3,63 +3,63 @@ common:
   seeAll: See all
   backHome: Back to the launch pad
   assembling: Assembling
-  updating: Coming soon
+  updating: Updating
   skipLink: Skip to main content
-  homeLabel: home
+  homeLabel: home page
   orbi: Orbi, the little satellite
   status:
     nominal: Nominal
     active: In progress
     queued: Queued
   projectStatus:
-    Nominal: Nominal
-    Complete: Complete
+    Nominal: Ongoing
+    Complete: Completed
     Research: Research
 chrome:
-  countdown: T-minus
-  skipIntro: Tap to skip
-  clock: Clock
+  countdown: Countdown
+  skipIntro: Click or tap to skip
+  language: Language
   mainMenu: Main menu
   openMenu: Open menu
   closeMenu: Close menu
   theme: Toggle light/dark mode
-  footerCode: MSN-99 · Send a signal
-  footerNav: Navigate
-  footerTagline: Built on Earth, served from orbit
-  toTop: Back to top
+  footerCode: End of page · Send a signal
+  footerNav: Navigation
+  footerTagline: Born an Earthling, with a soul out among the stars.
+  toTop: Fly back to the top
   musicPlay: Play background music
   musicPause: Pause background music
-  live: online
+  live: watching now
 home:
-  heroCode: MSN-00 · Launch pad
+  heroCode: Hi · Wishing everyone a wonderful day
   live: visiting now
-  heroNow: Now ▸
-  hello: Hello, I'm
-  rolesLabel: Roles
-  ctaJourneys: See the journeys
+  heroNow: 'LONGPEOO IS :'
+  hello: Hey there, everyone! I'm
+  rolesLabel: What I do
+  ctaJourneys: See my journeys
   ctaYoutube: YouTube channel
-  videoCode: MSN-04 · Latest transmission
-  videoTitle: Latest video
-  videoNew: New transmission
-  videoAll: All videos
-  projectsCode: MSN-02 · Payloads
+  videoCode: Roaming · Journey updates
+  videoTitle: Latest vlog
+  videoNew: New vlog
+  videoAll: All vlogs
+  projectsCode: MSN-02 · Projects
   projectsTitle: Engineering projects
-  journeysCode: MSN-03 · Missions
-  journeysTitle: Places I've been
-  photosCode: MSN-05 · Film roll
-  photosTitle: Recent film roll
+  journeysCode: 'Earth · Mission: fill in the whole map'
+  journeysTitle: Where I've been
+  photosCode: Keepsakes · Priceless memories
+  photosTitle: 12k messy photos
   photosLink: See all photos
 about:
-  code: MSN-01 · About
+  code: Key 01 · A little about me
   title: About me
-  intro: From a kid who kept looking up at the night sky to a space engineer, and why I still keep packing my backpack.
-  trajectoryCode: Trajectory
-  trajectoryTitle: Stage by stage
-  cosmosCode: Zoom · Cosmos
-  cosmosHint: Scroll to zoom out
+  intro: How a kid who was always gazing up at the night sky became a space technology engineer, and why I still keep grabbing my backpack and hitting the road.
+  trajectoryCode: A few small milestones I want to keep
+  trajectoryTitle: The flow of life
+  cosmosCode: Zoom · Universe
+  cosmosHint: Scroll to fly farther out
   cosmosEarth: Earth
-  cosmosMoon: Earth and Moon
-  cosmosInner: Inner planets
+  cosmosMoon: Earth and the Moon
+  cosmosInner: Terrestrial planets
   cosmosSolar: Solar System
   cosmosStars: Nearby stars
   cosmosGalaxy: Milky Way
@@ -67,32 +67,32 @@ about:
   cosmosMoonName: Moon
   cosmosHere: You are here
 space:
-  code: MSN-02 · Payloads
-  title: Engineering
-  intro: Projects, research and systems I've worked on in space technology.
+  code: Key 02 · Projects
+  title: “Fight only to win; if victory is not certain, do not fight – and science must be done the same way”
+  intro: The projects, research and systems I've been part of. This section isn't all that important yet, I'll update it later hehe
   back: All projects
   cv: Download CV
-  payload: Payload
+  payload: Project
   role: Role
-  time: Date
+  time: Period
   systems: Systems
-  skillsCode: Subsystems
-  skillsTitle: Skills
-  projectsCode: Payloads
+  skillsCode: Things I know, or will know
+  skillsTitle: The whole lot
+  projectsCode: Things I've done
   projectsTitle: Projects & events
 journeys:
-  code: MSN-03 · Missions
-  title: Journeys
-  intro: 'Every trip is a mission: the destination, the route, the people met along the way and the video that tells it.'
-  stats: '{n} missions · {c} countries'
+  code: Key 03 · Journeys
+  title: “A journey of a thousand miles begins with a single step”
+  intro: To me, every journey is a lesson worth remembering, because we came into this world with one main mission, to experience everything life has to offer. From the not-so-good to the good, from the not-so-joyful to the joyful, from the not-yet-happy to the happy. Live in a way that leaves nothing to regret or grieve over when you look back.
+  stats: '{n} trips · {c} countries'
   back: All journeys
-  log: Mission log
-  video: Trip video
+  log: Log
+  video: Trip vlog
   albumCode: Film roll · {n} photos
   albumTitle: Album
-  next: Next mission
-  stampMonth: M{n}
-  globeLabel: Globe marking {n} journeys. Click a pin to open the journey.
+  next: Next trip
+  stampMonth: '{m}'
+  globeLabel: A globe marking {n} trips. Select a pin to open the trip.
   globeHint: Drag to rotate · scroll or pinch to zoom
   flagsLabel: Countries I've set foot in
   flagsFrom: From
@@ -109,65 +109,65 @@ journeys:
   sortZa: Z → A
   sortCount: '{n} logs'
 videos:
-  code: MSN-04 · Transmissions
-  title: Vlogs
-  intro: The latest vlogs from my YouTube channel, updated automatically.
-  subscribe: Subscribe
+  code: Key 04 · Vlogs
+  title: '"All I carry is a backpack and a heart eager to learn"'
+  intro: This is where I keep the vlogs from my wanderings all over the place. There's no particular reason behind it. Lots of views would be nice, but that's not what I'm after. I just want something to sit down and watch with my family one day, so the generations after me can see how brilliantly their dad, their grandpa, their great-grandpa lived (at least in my eyes, hehe).
+  subscribe: Subscribe to longpeoo
   all: All
-  new: New transmission
+  new: New vlog
   views: views
   play: Play video
   openYoutube: Open on YouTube
   close: Close video
 gallery:
-  code: MSN-05 · Film roll
-  title: Photos
-  intro: My favourite frames, from the lab to faraway roads.
+  code: Key 05 · Photo museum
+  title: '"One small photo, a whole sky of memories"'
+  intro: Every photo has shaped who I am today. What I keep isn't just the pictures, but the experiences, the pieces of my soul and the fragments of memory that make me who I am.
   count: '{n} frames'
   open: View larger
   prev: Previous photo
   next: Next photo
-  seeJourney: See the journey
+  seeJourney: See the trip
 contact:
-  code: MSN-99 · Send a signal
-  title: Send a signal.
-  titleEm: I'm always listening.
-  intro: 'Engineering collaborations, video sponsorships, destination tips, or just a chat about space: drop me an email.'
+  code: Contact · Send Longpeoo a signal now
+  title: Send a signal now
+  titleEm: I'm always tuned in.
+  intro: Whether it's an engineering project, a research and development collaboration, a brand looking to book me, or you simply want to chat and talk more about space science and technology, just drop me an email.
   metaTitle: Contact
-  metaDescription: Get in touch for collaborations, sponsorships or just to say hi to {name}.
+  metaDescription: Get in touch about collaborations or sponsorships, or just to say hi to {name}.
 inbox:
   code: Inbox · Ask me anything
-  title: Or leave a note right here
-  intro: Too shy to say who you are? Ask anonymously. I read everything, and if you leave an email I will reply there.
+  title: Or message me right here
+  intro: Shy about giving your name? Just ask anonymously. I read every message, and if you leave an email, I'll reply there.
   modeLabel: Message type
   modeAnonymous: Ask anonymously
   modeNamed: Leave a message
   name: Your name
   email: Email
-  phone: Phone
+  phone: Phone number
   optional: optional
-  emailHintAnonymous: Only I can see it, so I can reply by email. Leave it blank to stay fully anonymous.
+  emailHintAnonymous: Only I can see it, so I can reply by email. Leave it blank to stay completely anonymous.
   contactHint: Leave at least an email or a phone number so I can get back to you.
   message: Message
   messagePlaceholder: What would you like to ask or tell me?
   submit: Send signal
-  sending: Transmitting…
-  privacy: Your IP and location are never stored. Anonymous questions never include a name or phone number.
+  sending: Transmitting signal…
+  privacy: Your IP address and location are never stored. When you ask anonymously, your name and phone number are never sent.
   successTitle: Signal received!
-  successText: Thanks for reaching out. If you left an email or phone number, I will get back to you as soon as I can.
-  again: Send another
-  errorMessage: Your message needs {min} to {max} characters.
+  successText: Thanks for messaging me. If you left an email or a phone number, I'll get back to you as soon as I can.
+  again: Send another message
+  errorMessage: Your message needs to be between {min} and {max} characters.
   errorName: Please tell me your name.
-  errorEmail: That email does not look right, e.g. you@gmail.com.
-  errorPhone: That phone number does not look right (8–15 digits).
-  errorContact: Please leave an email or a phone number.
-  errorRate: That was quick! Please wait a minute and try again.
-  errorCaptcha: Could not verify you are human, please try again.
-  errorSend: The signal got lost. Try again later or email me directly.
+  errorEmail: That email doesn't look right. Try something like you@gmail.com.
+  errorPhone: That phone number doesn't look right (8–15 digits).
+  errorContact: Please leave an email or a phone number so I can get back to you.
+  errorRate: You're sending a little fast. Wait a minute and try again.
+  errorCaptcha: Couldn't verify that you're not a bot. Please try sending again.
+  errorSend: The signal got scrambled and your message wasn't sent. Try again later or email me directly.
   noscript: Turn on JavaScript to send a message, or email me directly above.
 notFound:
   metaTitle: Lost in space
   code: Error 404 · Signal lost
-  title: Houston, we have a problem.
-  text: The page you're looking for drifted out of orbit, or was never launched.
-  back: Back to the launch pad
+  title: Oops, something went wrong. Hang tight while Longpeoo sorts it out
+  text: The page you're looking for has drifted out of orbit, or was never part of Longpeoo's mission plan.
+  back: Head back to Earth

@@ -1,0 +1,71 @@
+# English version of skills.yaml (same order). Levels are shared with the Vietnamese file. Edit in the CMS: Pages → Skills (Space page)
+skills:
+  - code: Remote sensing
+    name: Remote sensing image processing
+    level: 100
+    items:
+      - Processing every kind of imagery out there
+      - Image preprocessing
+      - Time-series analysis
+  - code: GIS
+    name: GIS & spatial analysis
+    level: 80
+    items:
+      - ArcGIS, QGIS, SNAP
+      - Developing processing tools
+      - Building and managing GIS databases
+  - code: Automation
+    name: Workflow automation
+    level: 90
+    items:
+      - Python, NodeJS, JavaScript, TypeScript
+      - Parallel, multi-task processing
+      - Researching, designing and developing automated workflows
+  - code: WebGIS
+    name: WebGIS development
+    level: 100
+    items:
+      - Building WebGIS platforms
+      - Interactive maps with Leaflet/MapLibre
+      - GeoServer
+      - WMS/WFS/WMTS
+  - code: Backend
+    name: Core product development
+    level: 80
+    items:
+      - REST API design
+      - Python; FastAPI; Flask; NodeJS
+      - Authentication & authorisation
+      - Image processing & GIS microservices
+  - code: Frontend
+    name: User interface development
+    level: 100
+    items:
+      - Designing and building WebGIS
+      - Interactive map interfaces for raster & vector data
+      - UI & UX display optimisation
+      - Responsive UI
+  - code: Architecture
+    name: Architecture design
+    level: 90
+    items:
+      - Software and platform architecture
+      - API architecture
+      - Big data processing systems
+      - Client-server
+      - Multi-source data integration
+  - code: Training
+    name: Remote sensing & GIS training
+    level: 100
+    items:
+      - Curriculum development
+      - Teaching remote sensing & GIS
+      - WebGIS/AI agent training
+  - code: Solutions
+    name: Consulting & solution design
+    level: 100
+    items:
+      - Requirements analysis
+      - Proposing technical solutions
+      - Choosing the tech stack
+      - Building PoCs and real-world deployment solutions

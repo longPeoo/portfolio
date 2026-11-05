@@ -13,18 +13,30 @@ import {
 import { cn } from "@/lib/utils"
 import type { NavItem, Social } from "@/lib/site"
 
+interface Language {
+  code: string
+  label: string
+  short: string
+  href: string
+  active: boolean
+}
+
 interface MobileNavProps {
+  /** Đường dẫn đã có tiền tố ngôn ngữ (MissionBar.astro) */
   items: NavItem[]
+  contactHref: string
+  /** Cùng trang ở từng ngôn ngữ (bấm: MissionBar.astro ghi nhớ lựa chọn) */
+  languages: Language[]
   socials: Social[]
   email: string
   currentPath: string
   /** Chữ lấy từ src/i18n (MissionBar.astro truyền vào) */
-  labels: { contact: string; openMenu: string; closeMenu: string; mainMenu: string }
+  labels: { contact: string; openMenu: string; closeMenu: string; mainMenu: string; language: string }
 }
 
 /** Menu toàn màn hình trên mobile: mở dạng vòng tròn từ nút menu (CSS `.menu-sheet`), các mục bay vào lần lượt. */
-export function MobileNav({ items, socials, email, currentPath, labels }: MobileNavProps) {
-  const links = [...items, { label: labels.contact, href: "/contact" }]
+export function MobileNav({ items, contactHref, languages, socials, email, currentPath, labels }: MobileNavProps) {
+  const links = [...items, { label: labels.contact, href: contactHref }]
   const isActive = (href: string) => currentPath === href || currentPath.startsWith(`${href}/`)
 
   return (
@@ -80,7 +92,28 @@ export function MobileNav({ items, socials, email, currentPath, labels }: Mobile
           </ol>
         </nav>
 
-        <div className="mono mt-auto flex flex-wrap items-center gap-4 text-muted-foreground">
+        {/* Chọn ngôn ngữ: tên viết bằng chính ngôn ngữ đó, đang dùng thì tô mực */}
+        <nav aria-label={labels.language} className="mono mt-auto mb-6 flex gap-2">
+          {languages.map((l) => (
+            <a
+              key={l.code}
+              href={l.href}
+              hrefLang={l.code}
+              lang={l.code}
+              data-lang={l.code}
+              aria-current={l.active ? "true" : undefined}
+              className={cn(
+                "inline-flex h-10 items-center gap-2 rounded-full border px-4 transition-colors",
+                l.active ? "border-foreground bg-foreground text-background" : "text-muted-foreground hover:border-primary hover:text-primary"
+              )}
+            >
+              <span aria-hidden="true">{l.short}</span>
+              <span className="normal-case tracking-normal">{l.label}</span>
+            </a>
+          ))}
+        </nav>
+
+        <div className="mono flex flex-wrap items-center gap-4 text-muted-foreground">
           {socials.map((s) => (
             <a key={s.id} href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.label} className="text-[1.4em]">
               <span dangerouslySetInnerHTML={{ __html: s.iconSvg }} />

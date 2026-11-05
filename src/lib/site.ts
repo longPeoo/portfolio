@@ -4,7 +4,7 @@ import { getIconData, iconToSVG, iconToHTML } from '@iconify/utils';
 import ri from '@iconify-json/ri/icons.json';
 import raw from '@/data/site.yaml?raw';
 import enRaw from '@/data/site.en.yaml?raw';
-import { withFallback, locale as currentLocale, type Locale } from '@/lib/i18n';
+import { withFallback, defaultLocale, type Locale } from '@/lib/i18n';
 
 // Icon thương hiệu lấy từ bộ Remix Icon (lucide không còn icon thương hiệu)
 const socialIcons = {
@@ -59,7 +59,7 @@ export function brandIconSvg(name: string): string {
 const base = schema.parse(parse(raw));
 const translations: Partial<Record<Locale, unknown>> = { en: parse(enRaw) ?? {} };
 
-export function getSite(locale: Locale = currentLocale) {
+function build(locale: Locale) {
   const data = schema.parse(withFallback(base, translations[locale]));
   return {
     ...data,
@@ -70,8 +70,15 @@ export function getSite(locale: Locale = currentLocale) {
   };
 }
 
-/** Thông tin chung theo ngôn ngữ đang phát */
-export const site = getSite();
+const cache = new Map<Locale, ReturnType<typeof build>>();
 
-export type Social = (typeof site.socials)[number];
-export type NavItem = (typeof site.nav)[number];
+/** Thông tin chung theo ngôn ngữ của trang: getSite(locale). Đường dẫn trong `nav` chưa có tiền tố ngôn ngữ (dùng path() của getI18n). */
+export function getSite(locale: Locale = defaultLocale) {
+  let site = cache.get(locale);
+  if (!site) cache.set(locale, (site = build(locale)));
+  return site;
+}
+
+export type Site = ReturnType<typeof getSite>;
+export type Social = Site['socials'][number];
+export type NavItem = Site['nav'][number];

@@ -4,8 +4,15 @@ import { ArrowUpRightIcon } from 'lucide-react';
 import Orbi from '@/components/brand/Orbi.astro';
 import { SocialList } from '@/components/sections/SocialList';
 import MessageForm from '@/components/sections/MessageForm.astro';
-import { site } from '@/lib/site';
-import { t, fmt } from '@/lib/i18n';
+import { getSite } from '@/lib/site';
+import { getI18n, localeParams, fmt } from '@/lib/i18n';
+
+export function getStaticPaths() {
+  return localeParams();
+}
+
+const { t, locale } = getI18n(Astro.url);
+const site = getSite(locale);
 ---
 
 <BaseLayout title={t.contact.metaTitle} description={fmt(t.contact.metaDescription, { name: site.name })}>

@@ -18,7 +18,7 @@ common:
 chrome:
   countdown: Đếm ngược
   skipIntro: Bấm để bỏ qua
-  clock: Đồng hồ
+  language: Ngôn ngữ
   mainMenu: Menu chính
   openMenu: Mở menu
   closeMenu: Đóng menu

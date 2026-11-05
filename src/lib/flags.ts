@@ -1,15 +1,19 @@
 import { getIconData, iconToSVG, iconToHTML } from '@iconify/utils';
 import circleFlags from '@iconify-json/circle-flags/icons.json';
-import { intl } from '@/lib/i18n';
+import { LOCALES, defaultLocale, type Locale } from '@/lib/i18n';
 
 /**
  * Cờ tròn (bộ circle-flags), render thành chuỗi SVG lúc build: mỗi lá 200–800 byte, không tải thêm file, không cần JS.
  * Mã quốc gia ISO 3166 hai chữ: VN, FR, JP…
  */
-const regionNames = new Intl.DisplayNames([intl], { type: 'region' });
+const regionNames = new Map<Locale, Intl.DisplayNames>();
 
-/** Tên nước theo ngôn ngữ đang phát: FR → "Pháp" (vi) / "France" (en) */
-export const countryName = (code: string) => regionNames.of(code.toUpperCase()) ?? code.toUpperCase();
+/** Tên nước theo ngôn ngữ: FR → "Pháp" (vi) / "France" (en) */
+export function countryName(code: string, locale: Locale = defaultLocale) {
+  let names = regionNames.get(locale);
+  if (!names) regionNames.set(locale, (names = new Intl.DisplayNames([LOCALES[locale].intl], { type: 'region' })));
+  return names.of(code.toUpperCase()) ?? code.toUpperCase();
+}
 
 /**
  * SVG cờ. Bỏ lớp mask hình tròn của bộ icon (mọi lá dùng chung một id → trùng id khi nhiều cờ trên một trang),

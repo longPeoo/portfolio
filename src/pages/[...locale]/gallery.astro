@@ -5,11 +5,16 @@ import PageHeader from '@/components/sections/PageHeader.astro';
 import { PhotoGallery } from '@/components/media/PhotoGallery';
 import { getPhotos } from '@/lib/content';
 import { toGalleryPhotos } from '@/lib/photos';
-import { t, fmt } from '@/lib/i18n';
+import { getI18n, localeParams, fmt } from '@/lib/i18n';
 
-const items = await getPhotos();
+export function getStaticPaths() {
+  return localeParams();
+}
+
+const { t, locale, path } = getI18n(Astro.url);
+const items = await getPhotos(locale);
 const photos = await toGalleryPhotos(
-  items.map((p) => ({ src: p.src, alt: p.alt, caption: p.caption, href: `/journeys/${p.journey.id}` })),
+  items.map((p) => ({ src: p.src, alt: p.alt, caption: p.caption, href: path(`/journeys/${p.journey.id}`) })),
 );
 const { title, intro, code } = t.gallery;
 ---

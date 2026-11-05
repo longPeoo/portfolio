@@ -3,7 +3,7 @@
 import { ArrowUpRightIcon } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { t } from '@/lib/i18n';
+import { getI18n } from '@/lib/i18n';
 
 interface Props {
   code: string;
@@ -11,6 +11,8 @@ interface Props {
   href?: string;
   linkLabel?: string;
 }
+const { t } = getI18n(Astro.url);
+/** href: đường dẫn đã theo ngôn ngữ (path() của getI18n) */
 const { code, title, href, linkLabel = t.common.seeAll } = Astro.props;
 ---
 

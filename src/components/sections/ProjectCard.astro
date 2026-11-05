@@ -3,23 +3,24 @@
  * Thẻ dự án ("payload"): shadcn Card + ảnh bìa.
  * Rê chuột: lưới bản vẽ kỹ thuật hiện lên trên ảnh, 4 góc ngắm vẽ ra, đèn trạng thái sáng.
  */
-import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { t } from '@/lib/i18n';
+import { getI18n } from '@/lib/i18n';
+import type { Project } from '@/lib/content';
 
 interface Props {
-  project: CollectionEntry<'projects'>;
+  project: Project;
   index: number;
 }
 
 const { project, index } = Astro.props;
+const { t, path } = getI18n(Astro.url);
 const { title, summary, role, date, tags, cover, coverAlt, status } = project.data;
 const code = `PL-${String(index + 1).padStart(2, '0')}`;
 ---
 
-<a href={`/space/${project.id}`} class="pcard" data-reveal>
+<a href={path(`/space/${project.id}`)} class="pcard" data-reveal>
   <Card className="h-full gap-5 pt-0">
     <div class="pcard__cover">
       {cover ? (

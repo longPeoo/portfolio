@@ -9,13 +9,20 @@ export default defineConfig({
   // URL gọn không có dấu "/" cuối: /journeys/ha-giang (Cloudflare phục vụ ha-giang.html)
   trailingSlash: 'never',
   build: { format: 'file' },
-  // Song ngữ: tiếng Việt ở gốc (/about), tiếng Anh sẽ nằm dưới /en (P6)
+  // Song ngữ: tiếng Việt ở gốc (/about), tiếng Anh dưới /en (/en/about). Trang nằm trong src/pages/[...locale]/
   i18n: {
     locales: ['vi', 'en'],
     defaultLocale: 'vi',
     routing: { prefixDefaultLocale: false },
   },
-  integrations: [sitemap(), react()],
+  integrations: [
+    // Sitemap ghi kèm hreflang cho từng cặp trang vi/en; bỏ trang 404
+    sitemap({
+      i18n: { defaultLocale: 'vi', locales: { vi: 'vi', en: 'en' } },
+      filter: (page) => !/\/404\/?$/.test(page),
+    }),
+    react(),
+  ],
   prefetch: { prefetchAll: true },
   image: {
     // Ảnh đầu ra mặc định WebP, chất lượng vừa đủ cho ảnh du lịch

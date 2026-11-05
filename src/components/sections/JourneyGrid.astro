@@ -8,12 +8,13 @@
 import { CalendarArrowDownIcon, CalendarArrowUpIcon, ArrowDownAZIcon, ArrowDownZAIcon } from 'lucide-react';
 import JourneyCard from '@/components/sections/JourneyCard.astro';
 import type { Story } from '@/lib/content';
-import { intl, t, fmt } from '@/lib/i18n';
+import { getI18n, fmt } from '@/lib/i18n';
 
 interface Props {
   stories: Story[];
 }
 
+const { t, intl } = getI18n(Astro.url);
 const collator = new Intl.Collator(intl);
 const time = (s: Story) => s.data.date?.valueOf();
 // Mặc định "Gần nhất": hành trình chưa kết thúc → có ngày (mới trước) → chưa có ngày (theo tên)

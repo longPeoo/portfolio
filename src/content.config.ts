@@ -13,7 +13,7 @@ const link = z.object({ label: z.string(), url: z.string() });
 const blank = (v: unknown) => (v === '' || v === null ? undefined : v);
 
 const projects = defineCollection({
-  // <tên>/index.md = tiếng Việt; index.en.md (bản dịch từ CMS, P6) không nạp vào đây
+  // <tên>/index.md = tiếng Việt; bản tiếng Anh index.en.md nạp ở projectsEn
   loader: glob({ pattern: '*/index.md', base: './src/content/projects', generateId: ({ entry }) => entry.split('/')[0] }),
   schema: ({ image }) =>
     z.object({
@@ -71,11 +71,11 @@ const journeys = defineCollection({
         tags: z.array(z.string()).default([]),
         draft: z.boolean().default(false),
       })
-      .transform((d) => ({ ...d, title: d.title.trim() || d.place, country: d.country.trim() || countryName(d.countryCode) })),
+      .transform((d) => ({ ...d, title: d.title.trim() || d.place, country: d.country.trim() || countryName(d.countryCode, 'vi') })),
 });
 
 const pages = defineCollection({
-  // about.md = tiếng Việt; about.en.md (bản dịch, P6) không nạp vào đây
+  // about.md = tiếng Việt; bản tiếng Anh about.en.md nạp ở pagesEn
   loader: glob({ pattern: ['*.md', '!*.*.md'], base: './src/content/pages' }),
   schema: z.object({
     title: z.string(),
@@ -87,4 +87,49 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { projects, journeys, pages };
+/* ---------------------------------------------------------------
+   BẢN TIẾNG ANH (index.en.md / about.en.md cạnh file tiếng Việt, CMS ghi ra theo i18n multiple_files)
+   Chỉ đọc các trường cần dịch; ngày, toạ độ, ảnh… luôn lấy từ bản tiếng Việt.
+   Trường nào trống / thiếu (hoặc cả file chưa có) thì dùng bản tiếng Việt: xem localize() trong src/lib/content.ts.
+   --------------------------------------------------------------- */
+const text = z.preprocess(blank, z.string().optional());
+const photoText = z.array(z.object({ alt: text, caption: text }).partial().nullable()).optional();
+const enOnly = (folder: string) =>
+  glob({ pattern: '*/index.en.md', base: `./src/content/${folder}`, generateId: ({ entry }) => entry.split('/')[0] });
+
+const projectsEn = defineCollection({
+  loader: enOnly('projects'),
+  schema: z.object({
+    title: text,
+    summary: text,
+    role: text,
+    tags: z.array(z.string()).optional(),
+    coverAlt: text,
+    gallery: photoText,
+    links: z.array(z.object({ label: text })).optional(),
+  }),
+});
+
+const journeysEn = defineCollection({
+  loader: enOnly('journeys'),
+  schema: z.object({
+    title: text,
+    summary: text,
+    place: text,
+    country: text,
+    coverAlt: text,
+    gallery: photoText,
+    tags: z.array(z.string()).optional(),
+  }),
+});
+
+const pagesEn = defineCollection({
+  loader: glob({ pattern: '*.en.md', base: './src/content/pages', generateId: ({ entry }) => entry.replace(/\.en\.md$/, '') }),
+  schema: z.object({
+    title: text,
+    intro: text,
+    timeline: z.array(z.object({ year: text, title: text, text: text }).partial().nullable()).optional(),
+  }),
+});
+
+export const collections = { projects, journeys, pages, projectsEn, journeysEn, pagesEn };

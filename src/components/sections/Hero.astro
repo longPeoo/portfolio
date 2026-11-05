@@ -1,12 +1,14 @@
 ---
 import { ArrowUpRightIcon } from 'lucide-react';
-import { site, brandIconSvg } from '@/lib/site';
-import { t } from '@/lib/i18n';
+import { getSite, brandIconSvg } from '@/lib/site';
+import { getI18n } from '@/lib/i18n';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import Orbi from '@/components/brand/Orbi.astro';
 
+const { t, locale, path } = getI18n(Astro.url);
+const site = getSite(locale);
 const youtube = site.socials.find((s) => s.id === 'youtube');
 // Quỹ đạo elip (toạ độ trong viewBox 600×600) — Orbi bay theo đường này
 const orbitPath = 'M60 300 a240 110 0 1 0 480 0 a240 110 0 1 0 -480 0';
@@ -38,11 +40,11 @@ const stars = [
       </ul>
       <p class="hero__tagline">{site.tagline}</p>
       <div class="hero__cta">
-        <a href="/journeys" class={cn(buttonVariants({ variant: 'launch', size: 'pill' }))}>
+        <a href={path('/journeys')} class={cn(buttonVariants({ variant: 'launch', size: 'pill' }))}>
           {t.home.ctaJourneys} <ArrowUpRightIcon data-icon="inline-end" />
         </a>
         <a
-          href={youtube?.url ?? '/vlogs'}
+          href={youtube?.url ?? path('/vlogs')}
           target={youtube ? '_blank' : undefined}
           rel={youtube ? 'noopener noreferrer' : undefined}
           class={cn(buttonVariants({ variant: 'launch-outline', size: 'pill' }))}

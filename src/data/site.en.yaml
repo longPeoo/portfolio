@@ -1,11 +1,11 @@
 name: LONGPEOO
 handle: longpeoo
 roles:
-  - Space Systems Engineer
-  - Travel Vlogger
-  - Storyteller
   - Remote Sensing Engineer
-tagline: On weekdays I work with satellites and orbits. On weekends I pack my backpack, travel, and tell the story on video.
+  - Software Developer
+  - Storyteller
+  - Little wanderer
+tagline: Every day I work with satellite data, with every kind of multi-source data out there, and with dry lines of code. Now and then I wander off to explore the world and gather a bit more geographic information, but that part is just for the soul, not for work, hehe.
 description: Long — space technology engineer & travel vlogger. Engineering projects, journey logs and travel videos.
 location:
   city: Hanoi
@@ -17,7 +17,7 @@ email: contact@longpeoo.io.vn
 homeCountry: VN
 cv: /uploads/LongNguyen.pdf
 nav:
-  - label: About
+  - label: About me
     href: /about
   - label: Space
     href: /space

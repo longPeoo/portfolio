@@ -7,12 +7,17 @@ import FlagStrip from '@/components/sections/FlagStrip.astro';
 import { MissionsGlobe } from '@/components/media/MissionsGlobe';
 import { getJourneys, hasStory, toGlobe } from '@/lib/content';
 import { uniqueCountries } from '@/lib/flags';
-import { t, fmt } from '@/lib/i18n';
+import { getI18n, localeParams, fmt } from '@/lib/i18n';
 
-const journeys = await getJourneys();
+export function getStaticPaths() {
+  return localeParams();
+}
+
+const { t, locale } = getI18n(Astro.url);
+const journeys = await getJourneys(locale);
 const stories = journeys.filter(hasStory);
 const { title, intro, code } = t.journeys;
-const { points, flags } = toGlobe(journeys);
+const { points, flags } = toGlobe(journeys, locale);
 const countries = uniqueCountries(journeys.map((j) => j.data));
 ---
 

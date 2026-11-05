@@ -2,8 +2,8 @@
 import { ClientRouter } from 'astro:transitions';
 import '@/styles/global.css';
 
-import { site } from '@/lib/site';
-import { t, LOCALES, defaultLocale, type Locale } from '@/lib/i18n';
+import { getSite } from '@/lib/site';
+import { getI18n, LOCALES, locales, localizePath, stripLocale } from '@/lib/i18n';
 import { cleanPath } from '@/lib/utils';
 import { services } from '@/lib/services';
 import MissionBar from '@/components/layout/MissionBar.astro';
@@ -21,10 +21,16 @@ interface Props {
   schema?: Record<string, unknown>;
 }
 
+const { t, locale } = getI18n(Astro.url);
+const site = getSite(locale);
 const { title, description = site.description, image, noindex = false, schema } = Astro.props;
-const lang = LOCALES[(Astro.currentLocale as Locale | undefined) ?? defaultLocale];
+const lang = LOCALES[locale];
 const fullTitle = title ? `${title} · ${site.name}` : `${site.name} — ${site.roles.slice(0, 2).join(' & ')}`;
 const canonical = new URL(cleanPath(Astro.url.pathname), Astro.site);
+// Cùng trang ở mọi ngôn ngữ (hreflang). x-default = tiếng Anh: người xem không dùng tiếng Việt lẫn tiếng Anh sẽ được chuyển sang bản này
+const basePath = stripLocale(cleanPath(Astro.url.pathname));
+const alternates = locales.map((l) => ({ hreflang: LOCALES[l].lang, href: new URL(localizePath(basePath, l), Astro.site).href }));
+const xDefault = new URL(localizePath(basePath, 'en'), Astro.site).href;
 const ogImage = new URL(image ?? '/brand/orbi-avatar.png', Astro.site).href;
 
 const personSchema = {
@@ -32,7 +38,7 @@ const personSchema = {
   '@type': 'Person',
   name: site.name,
   alternateName: site.handle,
-  url: Astro.site?.href,
+  url: new URL(localizePath('/', locale), Astro.site).href,
   jobTitle: site.roles[0],
   email: `mailto:${site.email}`,
   sameAs: site.socials.map((s) => s.url),
@@ -48,6 +54,8 @@ const personSchema = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex" />}
+    {!noindex && alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+    {!noindex && <link rel="alternate" hreflang="x-default" href={xDefault} />}
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
@@ -56,6 +64,7 @@ const personSchema = {
 
     <meta property="og:type" content="website" />
     <meta property="og:locale" content={lang.og} />
+    {locales.filter((l) => l !== locale).map((l) => <meta property="og:locale:alternate" content={LOCALES[l].og} />)}
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
@@ -68,6 +77,46 @@ const personSchema = {
 
     <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
     {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+
+    {/*
+      Chọn ngôn ngữ ở trang đầu tiên của phiên (chạy trước khi vẽ trang, nên không thấy nháy):
+      - Đã bấm VI/EN trước đây (localStorage 'lang') → dùng lựa chọn đó.
+      - Chưa từng chọn → theo danh sách ngôn ngữ của trình duyệt (navigator.languages): gặp tiếng Việt hay tiếng Anh trước thì dùng nó;
+        không có cả hai → tiếng Anh.
+      - Lệch với trang đang mở → chuyển sang bản kia (location.replace, không thêm lịch sử; giữ ?query và #hash).
+      - Chỉ một lần mỗi phiên (sessionStorage), nên bấm link sang ngôn ngữ khác trong lúc xem không bị kéo lại.
+      - Bỏ qua bot/công cụ đo (Googlebot, Lighthouse…): máy tìm kiếm thấy đủ cả hai bản qua hreflang.
+    */}
+    <script is:inline>
+      (() => {
+        try {
+          if (sessionStorage.getItem('lang-checked')) return;
+          sessionStorage.setItem('lang-checked', '1');
+          if (/bot|crawl|spider|slurp|lighthouse|pagespeed|headless|prerender|preview/i.test(navigator.userAgent)) return;
+          const here = document.documentElement.lang;
+          let want = null;
+          try {
+            want = localStorage.getItem('lang');
+          } catch {}
+          if (want !== 'vi' && want !== 'en') {
+            want = 'en';
+            for (const l of navigator.languages?.length ? navigator.languages : [navigator.language || '']) {
+              const code = l.toLowerCase().split('-')[0];
+              if (code === 'vi' || code === 'en') {
+                want = code;
+                break;
+              }
+            }
+          }
+          if (want === here) return;
+          const alt = document.querySelector(`link[rel="alternate"][hreflang="${want}"]`);
+          if (!alt) return;
+          window.__langRedirect = true;
+          document.documentElement.style.visibility = 'hidden';
+          location.replace(alt.href + location.search + location.hash);
+        } catch {}
+      })();
+    </script>
 
     <!-- Áp giao diện sáng/tối (class `dark` theo chuẩn shadcn) trước khi vẽ trang để không bị nháy -->
     <script is:inline>
@@ -91,7 +140,7 @@ const personSchema = {
     <!-- Màn đếm ngược chỉ chạy ở lần vào đầu tiên trong phiên (và không chạy khi bật giảm chuyển động) -->
     <script is:inline>
       try {
-        if (!sessionStorage.getItem('boot') && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (!window.__langRedirect && !sessionStorage.getItem('boot') && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
           document.documentElement.dataset.boot = 'pending';
         }
       } catch {}

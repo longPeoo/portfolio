@@ -9,7 +9,7 @@ import { parse } from 'yaml';
 import { XMLParser } from 'fast-xml-parser';
 import { z } from 'astro/zod';
 import raw from '@/data/videos.yaml?raw';
-import { t } from '@/lib/i18n';
+import { ui, defaultLocale, type Locale } from '@/lib/i18n';
 
 const config = z
   .object({
@@ -153,10 +153,10 @@ export async function getVideos(): Promise<Video[]> {
 }
 
 /** Video nổi bật ở trang chủ: video chỉ định trong videos.yaml, nếu không có thì video mới nhất */
-export async function getFeaturedVideo(): Promise<{ id: string; title: string; published?: Date } | undefined> {
+export async function getFeaturedVideo(locale: Locale = defaultLocale): Promise<{ id: string; title: string; published?: Date } | undefined> {
   const videos = await getVideos();
   const featuredId = youtubeId(config.featured);
-  if (featuredId) return videos.find((x) => x.id === featuredId) ?? { id: featuredId, title: t.home.videoTitle };
+  if (featuredId) return videos.find((x) => x.id === featuredId) ?? { id: featuredId, title: ui(locale).home.videoTitle };
   return videos[0];
 }
 

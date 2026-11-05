@@ -18,8 +18,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { MESSAGE_LIMITS } from '@/lib/message';
 import { services } from '@/lib/services';
-import { intl, t, fmt } from '@/lib/i18n';
+import { getI18n, fmt } from '@/lib/i18n';
 
+const { t, intl } = getI18n(Astro.url);
 const L = MESSAGE_LIMITS;
 const n = new Intl.NumberFormat(intl);
 const errors = {

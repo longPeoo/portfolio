@@ -20,7 +20,8 @@ let off = false;
 let pingTimer: number | undefined;
 let retryTimer: number | undefined;
 let hiddenTimer: number | undefined;
-const fmt = new Intl.NumberFormat(document.documentElement.lang || 'vi');
+// Định dạng số theo ngôn ngữ của trang đang mở (đổi VI/EN không tải lại script)
+const fmt = () => new Intl.NumberFormat(document.documentElement.lang || 'vi');
 
 /** Mã ngẫu nhiên cho trình duyệt này: nhiều tab chỉ tính là một người. Không chứa thông tin cá nhân. */
 function visitorId() {
@@ -39,7 +40,7 @@ function render(changed = false) {
     el.toggleAttribute('data-ready', count !== undefined);
     const n = el.querySelector<HTMLElement>('[data-live-count]');
     if (!n) return;
-    n.textContent = count === undefined ? '--' : fmt.format(count);
+    n.textContent = count === undefined ? '--' : fmt().format(count);
     if (changed) {
       // Số mới "nảy" nhẹ (CSS: [data-live-count].is-tick)
       n.classList.remove('is-tick');

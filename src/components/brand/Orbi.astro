@@ -1,5 +1,5 @@
 ---
-import { t } from '@/lib/i18n';
+import { getI18n } from '@/lib/i18n';
 /**
  * Orbi — linh vật vệ tinh nhỏ của website.
  * mood: happy (mặc định) · sleep (ngủ, dùng ở footer) · lost (bối rối, dùng ở 404)
@@ -12,6 +12,7 @@ interface Props {
 }
 
 const { size = 120, mood = 'happy', float = false, class: className } = Astro.props;
+const { t } = getI18n(Astro.url);
 ---
 
 <svg

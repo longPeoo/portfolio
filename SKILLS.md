@@ -22,7 +22,7 @@ Dễ thương, năng động nhưng vẫn nghiêm túc.
 - Nhãn telemetry chữ mono in hoa: mã + tên mục, ví dụ `MSN-00 · Bệ phóng`, `MSN-99 · Gửi tín hiệu`, toạ độ `21.03°N · 105.85°E`.
   Mã (`MSN-xx`, `P1`, `T+00`, `PL-01`, `ALT`, `UTC`) giữ nguyên ở mọi ngôn ngữ; phần chữ lấy từ `src/i18n/` (xem mục 5).
 - Logo góc trái: Orbi + chữ **Longpeoo** (`public/brand/longpeoo-wordmark.webp`, dùng làm CSS mask nên tự đổi màu theo sáng/tối; rê chuột chuyển cam).
-- Thanh menu "Mission Control": số thứ tự `01–05`, chấm "quỹ đạo" dưới mục đang mở, chấm trạng thái nhấp nháy kèm **số người đang xem** (`3 ĐANG XEM`), đồng hồ UTC và giờ Hà Nội, nút nhạc nền cạnh nút đổi giao diện.
+- Thanh menu "Mission Control": số thứ tự `01–05`, chấm "quỹ đạo" dưới mục đang mở, cụm **người đang xem** kiểu livestream (chấm trạng thái nhấp nháy + icon mắt + con số, chữ "đang xem" chỉ dành cho trình đọc màn hình; không hiện đồng hồ), nút **đổi ngôn ngữ VI / EN** cạnh nút nhạc nền, nút đổi giao diện.
 - Hero: "Xin chào, tôi là", tên cực lớn kèm dấu chấm cam nảy (cỡ chữ tự co theo độ dài tên, luôn một dòng), chip nghề nghiệp, chip xanh "● n người đang ghé thăm" ngay sau lời chào (hiện ở mọi cỡ màn hình),
   **Orbi bay theo quỹ đạo elip quanh Trái Đất**, vệt cam chạy theo, sao lấp lánh.
   - Trái Đất: WebGL (`src/scripts/earth.ts`), ảnh NASA, nghiêng 23,4°, tự quay, ghim cam ở Hà Nội, quầng khí quyển.
@@ -91,6 +91,7 @@ Thang cỡ chữ: `--fs-mono`, `--fs-sm`, `--fs-base`, `--fs-lg`, `--fs-h3`, `--
 | Nút mạng xã hội | nảy lên, nghiêng, đổi màu cam |
 | Liên hệ | sóng tín hiệu lan ra quanh Orbi khi rê chuột vào email. Hộp thư: nền cam trượt theo spring giữa "Hỏi ẩn danh" / "Để lại lời nhắn"; gửi xong Orbi bật lên giữa hai vòng sóng |
 | Bộ đếm người xem | số mới "nảy" và loé cam; chip ở hero hiện dần khi có số (chỗ chừa sẵn, không xô nội dung) |
+| Nút đổi ngôn ngữ | `LanguageSwitch.astro`: viên thuốc VI / EN, nền mực trượt theo spring sang lựa chọn mới (cùng `transition:name` ở hai trang → View Transitions nội suy). Mobile (≤ 860px): một nút tròn bằng nút nhạc, chỉ ghi ngôn ngữ sẽ chuyển sang; < 360px chỉ còn trong menu toàn màn hình |
 | Footer | tên lửa phụt lửa khi rê chuột, phóng vút lên khi bấm. **Tối:** Mặt Trăng tự quay, Orbi ngủ đung đưa trên đỉnh, sao lấp lánh, sao băng; rê chuột → Orbi thức dậy nhảy lên. **Sáng:** Mặt Trời có vết đen trôi, nhật hoa xoay, hạt năng lượng bay vào tấm pin Orbi (pin sáng nhịp); rê chuột → Orbi nhào lộn. Đổi giao diện: Mặt Trời lặn, Mặt Trăng mọc, Orbi bay sang |
 | Trang chờ | Orbi trong vòng tròn đứt nét quay chậm ở trên, chữ căn giữa bên dưới, chip "Đang lắp ráp" nhấp nháy; nút phụ (vd. Tải CV) truyền qua slot |
 | **Màn đếm ngược** (P3) | T-3 → 1, Orbi cưỡi tên lửa cất cánh; chỉ lần đầu mỗi phiên, bấm/gõ phím để bỏ qua, tự ẩn sau 3 giây nếu script lỗi |
@@ -183,6 +184,7 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
   | `MissionsGlobe`, `PhotoGallery`, `VideoGrid`, `VideoPlayer` | `client:visible` | chỉ tải khi cuộn tới |
   | `ThemeToggle` | **không hydrate** | render tĩnh, click gắn bằng script thuần trong `MissionBar.astro` |
 | Bộ đếm người xem (`src/scripts/live.ts`) | không phải island | một WebSocket cho cả phiên (script module), mở sau `load` + lúc rảnh, ~1 KB gzip |
+| `LanguageSwitch.astro` | không phải island | link thật tới cùng trang ở ngôn ngữ kia (`hreflang`, `lang`); script trong `MissionBar.astro` ghi nhớ lựa chọn + giữ `?query`/`#hash` |
 | `MusicToggle.astro` | không phải island | script thuần; `Audio` sống trong script module nên chuyển trang nhạc vẫn phát. `preload="none"`: không tải byte nhạc nào trước khi bấm. Mặc định tắt (trình duyệt chặn tự phát có tiếng). Danh sách trống = không render nút |
 
   **Không dùng `client:load`** cho component chỉ cần một sự kiện click: render tĩnh rồi gắn sự kiện bằng `<script>`.
@@ -196,16 +198,22 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 ## 5. Nội dung và câu chữ
 
 - Ngôi thứ nhất "tôi", giọng thân thiện, câu ngắn.
-- **Không viết chữ hiển thị trực tiếp trong component.** Mọi nhãn, tiêu đề mục, chữ trên nút nằm ở `src/i18n/ui.yaml` (tiếng Việt, đang dùng) và `src/i18n/ui.en.yaml` (tiếng Anh), đọc qua `t` trong `src/lib/i18n.ts`.
+- **Không viết chữ hiển thị trực tiếp trong component.** Mọi nhãn, tiêu đề mục, chữ trên nút nằm ở `src/i18n/ui.yaml` (tiếng Việt) và `src/i18n/ui.en.yaml` (tiếng Anh), đọc qua `const { t } = getI18n(Astro.url)` (`src/lib/i18n.ts`).
   Thêm chữ mới: thêm khoá vào **cả hai** file yaml + schema zod trong `i18n.ts` + trường (có `i18n: true`) trong `public/admin/config.yml` (collection `ui`). Island React nhận chữ qua prop `labels`.
 
-### Song ngữ (vi mặc định, en chuẩn bị cho P6)
+### Song ngữ (tiếng Việt ở gốc, tiếng Anh dưới `/en`)
+
+- **Định tuyến**: mọi trang nằm trong `src/pages/[...locale]/`, `getStaticPaths` trả `localeParams()` (trang chi tiết: ghép thêm `slug`) → mỗi file sinh cả `/about` lẫn `/en/about`. Trang 404 có hai file tĩnh `src/pages/404.astro` và `src/pages/en/404.astro` (cùng dùng `sections/NotFound.astro`; Cloudflare phát `404.html` gần nhất).
+- **Trong component**: `const { t, locale, intl, path } = getI18n(Astro.url)`; thông tin chung `getSite(locale)`, kỹ năng `getSkills(locale)`; nội dung `getProjects(locale)`, `getJourneys(locale)`, `getPage(id, locale)`, định dạng `formatRange(…, locale)`. **Link nội bộ luôn bọc `path('/journeys')`** (đường dẫn trong `site.yaml > nav` để không tiền tố). Không dùng `Astro.currentLocale`.
+- **Nhận diện ngôn ngữ** (script đầu `<head>` trong `BaseLayout.astro`, chạy trước khi vẽ trang): trang đầu tiên của phiên, nếu người xem đã bấm VI/EN thì theo lựa chọn đó (`localStorage.lang`), không thì theo `navigator.languages` (gặp `vi` hay `en` trước thì dùng, không có cả hai → tiếng Anh); lệch thì `location.replace` sang bản kia. Bỏ qua bot/Lighthouse. Không chuyển hướng phía máy chủ (Worker chỉ chạy cho `/api/*`).
+- **SEO**: mỗi trang có `canonical` của chính nó + `<link rel="alternate" hreflang="vi|en|x-default">` (x-default = bản tiếng Anh) + `og:locale:alternate`; sitemap ghi hreflang (`@astrojs/sitemap` `i18n`).
+- **Nội dung tiếng Anh**: `index.en.md` / `about.en.md` cạnh bản tiếng Việt, nạp ở collection `projectsEn`, `journeysEn`, `pagesEn` (`content.config.ts`) và **chỉ đè các trường chữ** (tiêu đề, tóm tắt, vai trò, địa điểm, thẻ, alt/chú thích ảnh theo đúng thứ tự album, nhãn link, nội dung). Ngày, toạ độ, ảnh, trạng thái luôn lấy từ bản tiếng Việt. Thiếu file / ô trống → dùng tiếng Việt. Link trong bài tiếng Anh viết `/en/...`. `skills.en.yaml` ghép theo thứ tự, mức độ dùng chung.
+- **Dịch**: sát nghĩa, giữ giọng văn (kể cả "hehe", "kkk" → "lol"), thuật ngữ chuẩn ngành (SAR, land subsidence, atmospheric correction, Earth observation…), tên tổ chức theo tên tiếng Anh chính thức (Vietnam National Space Center, Vietnam International Defense Expo), chính tả kiểu Anh (colour, programme) cho khớp định dạng ngày `en-GB`. Tên người giữ dấu tiếng Việt; địa danh Việt Nam bỏ dấu (Nui Coc Lake, Can Tho).
 
 - **Quy ước file** (theo `i18n` của Sveltia CMS: `multiple_files`, bỏ mã ngôn ngữ mặc định khỏi tên file):
   tiếng Việt là file gốc (`index.md`, `about.md`, `site.yaml`, `ui.yaml`), tiếng Anh nằm cạnh với hậu tố `.en` (`index.en.md`, `about.en.md`, `site.en.yaml`, `ui.en.yaml`).
 - **Trường cần dịch** (tiêu đề, mô tả, nội dung, alt ảnh, nghề nghiệp, tên menu…) đánh `i18n: true` trong CMS; **trường dùng chung** (ngày, toạ độ, ảnh, link, trạng thái) đánh `i18n: duplicate`.
 - Bản dịch thiếu khoá nào thì **tự dùng bản tiếng Việt** (`withFallback` trong `i18n.ts`), nên dịch dở không làm vỡ build.
-- Định tuyến đã cấu hình trong `astro.config.mjs` (`i18n`: vi ở gốc, en dưới `/en`). Content collection hiện chỉ nạp file tiếng Việt (bỏ `*.en.md`).
 - Ngày/số định dạng bằng `intl` từ `i18n.ts` (đừng viết cứng `'vi-VN'`); `<html lang>` và `og:locale` lấy từ `LOCALES`.
 - Tên riêng, mã kỹ thuật, tên thương hiệu (YouTube, Travel vlogger…) có thể giữ nguyên trong bản tiếng Việt nếu đó là cách gọi quen thuộc.
 - Ẩn dụ vũ trụ được phép, miễn không làm khó hiểu: "Về trạm phóng", "Gửi một tín hiệu".
@@ -249,10 +257,10 @@ src/
 ├── components/
 │   ├── ui/          ← shadcn (CLI quản lý; chỉ sửa bằng cách thêm variant)
 │   ├── brand/       ← Orbi (linh vật, SVG thuần)
-│   ├── layout/      ← MissionBar, Footer, ThemeToggle, MusicToggle, MobileNav (island)
+│   ├── layout/      ← MissionBar, Footer, ThemeToggle, MusicToggle, LanguageSwitch, MobileNav (island)
 │   ├── media/       ← island React: MissionsGlobe, PhotoGallery, VideoGrid, VideoPlayer
 │   └── sections/    ← Hero, HomeSections, PageHeader, SectionHead, ProjectCard, JourneyCard, CosmosBackdrop,
-│                       FlagStrip, JourneyGrid, SkillGrid, ComingSoon, SocialList
+│                       FlagStrip, JourneyGrid, SkillGrid, ComingSoon, SocialList, NotFound
 ├── content/         ← projects/, journeys/, pages/ (Markdown + ảnh)
 ├── assets/earth/    ← ảnh NASA cho Trái Đất (day, night, moon .webp; day-8k/day-4k chỉ tải khi phóng to địa cầu Hành trình)
 ├── content.config.ts← schema nội dung
@@ -261,7 +269,7 @@ src/
 ├── layouts/BaseLayout.astro  ← SEO, JSON-LD, theme, preloader, altimeter, header/footer
 ├── lib/             ← site.ts, skills.ts, i18n.ts, content.ts, photos.ts, youtube.ts, utils.ts (cn, cleanPath),
 │                       message.ts (luật hộp thư, dùng chung với Worker), services.ts (khoá công khai Cloudflare)
-├── pages/           ← mỗi file = một URL ([slug].astro = trang chi tiết)
+├── pages/           ← [...locale]/ (mỗi file = một URL ở cả vi và /en; [slug].astro = trang chi tiết), 404.astro + en/404.astro
 ├── scripts/         ← motion.ts (chuyển động toàn trang), earth.ts (Trái Đất WebGL ở hero), globe.ts (địa cầu chuyến đi), cosmos.ts (nền vũ trụ ở Về tôi), live.ts (số người đang xem)
 └── styles/global.css
 worker/              ← Cloudflare Worker cho /api/*: index.ts (định tuyến), presence.ts (đếm người xem), message.ts + inbox.ts (hộp thư)
@@ -277,6 +285,7 @@ public/admin/        ← Sveltia CMS
   - `DialogContent` chứa ảnh/video phải có `grid-cols-[minmax(0,1fr)]`, nếu không tiêu đề `truncate` sẽ đẩy khung rộng quá màn hình.
   - Animation phóng to (`scale` > 1) gần mép màn hình: dùng `animation-fill-mode: backwards` (không `both`/`forwards`) và đặt `overflow-x: clip` ở khối cha (xem con dấu ở `journeys/[slug].astro`).
 - **Hai chế độ sáng/tối** đều đọc được.
+- **Hai ngôn ngữ**: chữ tiếng Anh thường dài hơn, kiểm tra cả `/en` (tiêu đề, nút, menu không tràn); thêm chữ mới phải có bản dịch.
 - **Bàn phím**: mọi thứ bấm được đều focus được (viền đứt nét màu cam).
 - **Ảnh**: dùng `<Image>`/`<Picture>` của Astro, luôn có `alt` (ảnh trang trí: `alt=""`, SVG trang trí: `aria-hidden`).
 - **Tương phản**: chữ nhỏ màu cam dùng token `--signal-ink` / `text-signal-ink` (đậm hơn `--primary`) để đạt 4.5:1 trên nền giấy.
@@ -296,7 +305,7 @@ Rồi chụp màn hình (sáng/tối, desktop/mobile), so với thiết kế ở
 
 ## 8. Thêm một trang mới
 
-1. Tạo `src/pages/<ten>.astro` dùng `BaseLayout` với `title` và `description`.
+1. Tạo `src/pages/[...locale]/<ten>.astro` (có `export function getStaticPaths() { return localeParams(); }`) dùng `BaseLayout` với `title` và `description` lấy từ `t`.
 2. Mở đầu trang bằng nhãn telemetry `MSN-xx · Tên` (đánh số tiếp theo menu) và tiêu đề `h1`.
 3. Ghép từ `sections/`. Khối mới thì tạo trong `sections/`, dựng từ component shadcn và variant ở mục 4.
 4. Thêm vào `nav` trong `site.yaml` nếu cần hiện trên menu.

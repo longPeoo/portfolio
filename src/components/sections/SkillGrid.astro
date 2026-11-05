@@ -4,13 +4,14 @@
  * Subgrid: các thẻ cùng hàng dùng chung 4 dòng → tên dài xuống dòng thì cả hàng cùng giãn, thanh đo và danh sách luôn thẳng hàng.
  */
 import type { Skill } from '@/lib/skills';
-import { t } from '@/lib/i18n';
+import { getI18n } from '@/lib/i18n';
 
 interface Props {
   skills: Skill[];
 }
 
 const { skills } = Astro.props;
+const { t } = getI18n(Astro.url);
 ---
 
 <div class="subsystems">

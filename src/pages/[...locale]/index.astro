@@ -2,6 +2,11 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/sections/Hero.astro';
 import HomeSections from '@/components/sections/HomeSections.astro';
+import { localeParams } from '@/lib/i18n';
+
+export function getStaticPaths() {
+  return localeParams();
+}
 ---
 
 <BaseLayout>

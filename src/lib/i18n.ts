@@ -1,9 +1,9 @@
 /**
  * NGÔN NGỮ & CHỮ TRÊN GIAO DIỆN
+ * - Song ngữ: tiếng Việt ở gốc (/about), tiếng Anh dưới /en (/en/about). Mỗi trang trong src/pages/[...locale]/
+ *   tạo cả hai bản (getStaticPaths = localeParams()); ngôn ngữ của trang suy ra từ URL (getI18n(Astro.url)).
  * - Chữ giao diện: src/i18n/ui.yaml (vi, mặc định) + ui.<locale>.yaml (các ngôn ngữ khác), kiểm tra bằng zod lúc build.
  * - Bản dịch thiếu khoá nào thì tự dùng bản tiếng Việt (không vỡ build khi chưa dịch xong).
- * - Hiện web chỉ phát tiếng Việt. Khi làm song ngữ (P6): thêm trang dưới /en, lấy chữ bằng `ui('en')`,
- *   định dạng bằng `LOCALES.en.intl` (cấu hình định tuyến đã có trong astro.config.mjs).
  */
 import { parse } from 'yaml';
 import { z } from 'astro/zod';
@@ -12,11 +12,14 @@ import enRaw from '@/i18n/ui.en.yaml?raw';
 
 /** Thông tin từng ngôn ngữ: mã HTML, định dạng ngày/số (Intl), og:locale */
 export const LOCALES = {
-  vi: { lang: 'vi', intl: 'vi-VN', og: 'vi_VN', label: 'Tiếng Việt' },
-  en: { lang: 'en', intl: 'en-GB', og: 'en_GB', label: 'English' },
+  vi: { lang: 'vi', intl: 'vi-VN', og: 'vi_VN', label: 'Tiếng Việt', short: 'VI' },
+  en: { lang: 'en', intl: 'en-GB', og: 'en_GB', label: 'English', short: 'EN' },
 } as const;
 export type Locale = keyof typeof LOCALES;
 export const defaultLocale: Locale = 'vi';
+export const locales = Object.keys(LOCALES) as Locale[];
+
+export const isLocale = (value: unknown): value is Locale => typeof value === 'string' && value in LOCALES;
 
 const s = z.string();
 const group = <K extends string>(keys: readonly K[]) => z.object(Object.fromEntries(keys.map((k) => [k, s])) as Record<K, typeof s>);
@@ -26,7 +29,7 @@ const schema = z.object({
     status: group(['nominal', 'active', 'queued'] as const),
     projectStatus: group(['Nominal', 'Complete', 'Research'] as const),
   }),
-  chrome: group(['countdown', 'skipIntro', 'clock', 'mainMenu', 'openMenu', 'closeMenu', 'theme', 'footerCode', 'footerNav', 'footerTagline', 'toTop', 'musicPlay', 'musicPause', 'live'] as const),
+  chrome: group(['countdown', 'skipIntro', 'language', 'mainMenu', 'openMenu', 'closeMenu', 'theme', 'footerCode', 'footerNav', 'footerTagline', 'toTop', 'musicPlay', 'musicPause', 'live'] as const),
   home: group([
     'heroCode', 'live', 'heroNow', 'hello', 'rolesLabel', 'ctaJourneys', 'ctaYoutube',
     'videoCode', 'videoTitle', 'videoNew', 'videoAll',
@@ -75,12 +78,52 @@ const dictionaries: Record<Locale, UI> = {
 
 export const ui = (locale: Locale = defaultLocale) => dictionaries[locale];
 
-/** Ngôn ngữ đang phát trên web (P6 sẽ lấy theo trang hiện tại) */
-export const locale: Locale = defaultLocale;
-/** Chữ giao diện của ngôn ngữ đang phát */
-export const t = ui(locale);
-/** Mã Intl để định dạng ngày/số, ví dụ 'vi-VN' */
-export const intl = LOCALES[locale].intl;
+/* ---------------------------------------------------------------
+   Đường dẫn theo ngôn ngữ (vi ở gốc, ngôn ngữ khác có tiền tố /<mã>)
+   --------------------------------------------------------------- */
+
+/** Ngôn ngữ của một đường dẫn: /en/about → 'en', /about → 'vi' */
+export function localeFromPath(pathname: string): Locale {
+  const first = pathname.split('/')[1]?.replace(/\.html$/, '');
+  return isLocale(first) && first !== defaultLocale ? first : defaultLocale;
+}
+
+/** Bỏ tiền tố ngôn ngữ: /en/journeys/paris → /journeys/paris, /en → / */
+export function stripLocale(pathname: string): string {
+  const locale = localeFromPath(pathname);
+  if (locale === defaultLocale) return pathname || '/';
+  return pathname.slice(locale.length + 1) || '/';
+}
+
+/**
+ * Đường dẫn nội bộ theo ngôn ngữ: localizePath('/journeys', 'en') → '/en/journeys'.
+ * Link ngoài (http…, mailto:), link neo (#) và file (/uploads/cv.pdf, /music/…) giữ nguyên.
+ */
+export function localizePath(path: string, locale: Locale): string {
+  if (!path.startsWith('/') || path.startsWith('//') || /^\/(uploads|music|brand|_astro|api)\//.test(path)) return path;
+  const clean = stripLocale(path);
+  if (locale === defaultLocale) return clean;
+  return clean === '/' ? `/${locale}` : `/${locale}${clean}`;
+}
+
+/** getStaticPaths cho trang song ngữ: { locale: undefined } = tiếng Việt ở gốc, { locale: 'en' } = /en */
+export const localeParams = () => locales.map((l) => ({ params: { locale: l === defaultLocale ? undefined : l } }));
+
+/**
+ * Mọi thứ một component cần để hiện đúng ngôn ngữ của trang đang dựng:
+ *   const { t, locale, intl, path } = getI18n(Astro.url);
+ */
+export function getI18n(url: URL) {
+  const locale = localeFromPath(url.pathname);
+  return {
+    locale,
+    t: ui(locale),
+    /** Mã Intl để định dạng ngày/số, ví dụ 'vi-VN' */
+    intl: LOCALES[locale].intl,
+    /** Đường dẫn nội bộ đúng ngôn ngữ: path('/journeys') */
+    path: (p: string) => localizePath(p, locale),
+  };
+}
 
 /** Điền giá trị vào chỗ trống: fmt('{n} ảnh', { n: 3 }) → '3 ảnh' */
 export const fmt = (text: string, values: Record<string, string | number>) =>

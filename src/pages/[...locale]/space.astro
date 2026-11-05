@@ -8,12 +8,19 @@ import SectionHead from '@/components/sections/SectionHead.astro';
 import SkillGrid from '@/components/sections/SkillGrid.astro';
 import { buttonVariants } from '@/components/ui/button';
 import { getProjects } from '@/lib/content';
-import { site } from '@/lib/site';
-import { skills } from '@/lib/skills';
+import { getSite } from '@/lib/site';
+import { getSkills } from '@/lib/skills';
 import { cn } from '@/lib/utils';
-import { t } from '@/lib/i18n';
+import { getI18n, localeParams } from '@/lib/i18n';
 
-const projects = await getProjects();
+export function getStaticPaths() {
+  return localeParams();
+}
+
+const { t, locale } = getI18n(Astro.url);
+const site = getSite(locale);
+const skills = getSkills(locale);
+const projects = await getProjects(locale);
 const { title, intro, code } = t.space;
 ---
 

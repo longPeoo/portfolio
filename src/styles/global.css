@@ -694,3 +694,14 @@ html[data-boot="pending"] body { overflow: hidden; }
   from { translate: 0 0; opacity: 1; }
   to { translate: -60vw 40vh; opacity: 0; }
 }
+
+/* Nút đổi ngôn ngữ (LanguageSwitch.astro): nền mực trượt theo spring sang lựa chọn mới khi chuyển trang */
+::view-transition-group(lang-thumb) {
+  animation-duration: 520ms;
+  animation-timing-function: var(--ease-spring);
+}
+::view-transition-old(lang-thumb),
+::view-transition-new(lang-thumb) {
+  animation: none;
+  mix-blend-mode: normal;
+}

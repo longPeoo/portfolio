@@ -1,0 +1,85 @@
+---
+/**
+ * Nút đổi ngôn ngữ (VI / EN) cạnh nút nhạc nền. Mỗi lựa chọn là một link thật tới cùng trang ở ngôn ngữ kia
+ * (có hreflang/lang → trình đọc màn hình và Google hiểu đúng), không cần JS để hoạt động.
+ * - Bấm chọn: script trong MissionBar.astro lưu lựa chọn vào localStorage('lang') → lần sau không tự đổi theo trình duyệt nữa,
+ *   đồng thời giữ ?query và #hash của trang hiện tại.
+ * - Nền mực trượt sang lựa chọn mới: cùng transition:name ở hai trang → View Transitions tự nội suy vị trí.
+ */
+import { getI18n, LOCALES, locales, localizePath, stripLocale } from '@/lib/i18n';
+import { cleanPath } from '@/lib/utils';
+
+const { t, locale } = getI18n(Astro.url);
+const here = stripLocale(cleanPath(Astro.url.pathname));
+// Trang 404 không có bản dịch theo đường dẫn → về trang chủ của ngôn ngữ kia
+const base = here === '/404' ? '/' : here;
+const active = locales.indexOf(locale);
+---
+
+<nav class="lang mono" aria-label={t.chrome.language} style={`--i:${active}; --n:${locales.length}`}>
+  <span class="lang__thumb" aria-hidden="true" transition:name="lang-thumb" transition:animate="initial"></span>
+  {locales.map((l) => (
+    <a
+      href={localizePath(base, l)}
+      hreflang={LOCALES[l].lang}
+      lang={LOCALES[l].lang}
+      title={LOCALES[l].label}
+      aria-current={l === locale ? 'true' : undefined}
+      data-lang={l}
+    >
+      <span aria-hidden="true">{LOCALES[l].short}</span>
+      <span class="sr-only">{LOCALES[l].label}</span>
+    </a>
+  ))}
+</nav>
+
+<style>
+  .lang {
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    height: 2.25rem; /* bằng nút icon-lg bên cạnh */
+    padding: 3px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    isolation: isolate;
+  }
+  .lang a {
+    display: grid;
+    place-items: center;
+    min-width: 2.125rem;
+    border-radius: 999px;
+    color: var(--fg-muted);
+    text-decoration: none;
+    transition: color var(--dur), scale var(--dur) var(--ease-spring);
+  }
+  .lang a:hover { color: var(--primary); }
+  .lang a:active { scale: 0.92; }
+  .lang a[aria-current] { color: var(--bg); pointer-events: none; }
+  .lang a:focus-visible { outline-offset: 1px; }
+  /* Nền mực dưới lựa chọn đang dùng */
+  .lang__thumb {
+    position: absolute;
+    z-index: -1;
+    inset: 3px auto 3px 3px;
+    width: calc((100% - 6px) / var(--n));
+    border-radius: 999px;
+    background: var(--fg);
+    translate: calc(var(--i) * 100%) 0;
+  }
+
+  /* Mobile (có nút menu): gọn lại thành một nút tròn bằng nút nhạc, chỉ hiện ngôn ngữ sẽ chuyển sang */
+  @media (max-width: 860px) {
+    .lang { padding: 0; border: 0; }
+    .lang__thumb, .lang a[aria-current] { display: none; }
+    .lang a { width: 2.25rem; min-width: 0; border: 1px solid var(--line); color: var(--fg); }
+    .lang a:hover { border-color: var(--primary); }
+  }
+  /* Màn hình rất hẹp: header không đủ chỗ → chỉ còn trong menu toàn màn hình (MobileNav) */
+  @media (max-width: 359px) {
+    .lang { display: none; }
+  }
+</style>

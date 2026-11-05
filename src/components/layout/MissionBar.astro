@@ -1,25 +1,32 @@
 ---
 /**
- * Thanh điều hướng "Mission Control Bar": logo, menu, đồng hồ UTC/giờ địa phương,
- * nút nhạc nền, nút đổi giao diện sáng/tối và nút Liên hệ. Trên mobile chuyển thành menu toàn màn hình (shadcn Sheet).
+ * Thanh điều hướng "Mission Control Bar": logo, menu, số người đang xem (chấm trạng thái + icon mắt),
+ * nút đổi ngôn ngữ, nút nhạc nền, nút đổi giao diện sáng/tối và nút Liên hệ. Trên mobile chuyển thành menu toàn màn hình (shadcn Sheet).
  */
-import { ArrowUpRightIcon } from 'lucide-react';
-import { site } from '@/lib/site';
-import { t } from '@/lib/i18n';
+import { ArrowUpRightIcon, EyeIcon } from 'lucide-react';
+import { getSite } from '@/lib/site';
+import { getI18n, LOCALES, locales, localizePath, stripLocale } from '@/lib/i18n';
 import { buttonVariants } from '@/components/ui/button';
 import { cn, cleanPath } from '@/lib/utils';
 import Orbi from '@/components/brand/Orbi.astro';
 import { ThemeToggle } from './ThemeToggle';
 import MusicToggle from './MusicToggle.astro';
+import LanguageSwitch from './LanguageSwitch.astro';
 import { MobileNav } from './MobileNav';
 
-const path = cleanPath(Astro.url.pathname);
-const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
+const { t, locale, path } = getI18n(Astro.url);
+const site = getSite(locale);
+const current = cleanPath(Astro.url.pathname);
+const nav = site.nav.map((item) => ({ ...item, href: path(item.href) }));
+const isActive = (href: string) => current === href || current.startsWith(`${href}/`);
 const pad = (n: number) => String(n + 1).padStart(2, '0');
+// Cho menu mobile (màn hình hẹp không còn chỗ trên header)
+const base = stripLocale(current) === '/404' ? '/' : stripLocale(current);
+const languages = locales.map((l) => ({ code: l, label: LOCALES[l].label, short: LOCALES[l].short, href: localizePath(base, l), active: l === locale }));
 ---
 
 <header class="mbar" data-mbar>
-  <a href="/" class="mbar__brand" aria-label={`${site.name} — ${t.common.homeLabel}`}>
+  <a href={path('/')} class="mbar__brand" aria-label={`${site.name} — ${t.common.homeLabel}`}>
     <Orbi size={34} />
     <!-- Logo chữ Longpeoo: ảnh PNG dùng làm mask nên tự đổi màu theo giao diện sáng/tối -->
     <span class="mbar__wordmark" aria-hidden="true"></span>
@@ -27,7 +34,7 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
 
   <nav class="mbar__nav" aria-label={t.chrome.mainMenu}>
     <ul>
-      {site.nav.map((item, i) => (
+      {nav.map((item, i) => (
         <li>
           <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
             <span class="mono mbar__idx">{pad(i)}</span>{item.label}
@@ -37,32 +44,36 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
     </ul>
   </nav>
 
-  <div class="mbar__tele mono" aria-label={t.chrome.clock}>
-    <!-- Số người đang xem (src/scripts/live.ts); không kết nối được thì ẩn cả cụm, chỉ còn chấm trạng thái -->
+  <!--
+    Số người đang xem (src/scripts/live.ts): chấm trạng thái + icon mắt + con số, kiểu bộ đếm phát trực tiếp.
+    Chữ "đang xem" chỉ dành cho trình đọc màn hình. Không kết nối được thì ẩn icon và số, chỉ còn chấm trạng thái.
+  -->
+  <div class="mbar__tele mono">
     <span class="mbar__status" aria-hidden="true"></span>
-    <span class="mbar__live" data-live>
-      <span><span class="mbar__count" data-live-count>--</span> {t.chrome.live}</span>
-      <span class="mbar__sep" aria-hidden="true">/</span>
+    <span class="mbar__live" data-live title={t.chrome.live}>
+      <EyeIcon className="mbar__eye" aria-hidden="true" />
+      <span class="mbar__count" data-live-count>--</span>
+      <span class="sr-only">{t.chrome.live}</span>
     </span>
-    <span>UTC <time data-clock="UTC" data-seconds>--:--:--</time></span>
-    <span class="mbar__sep" aria-hidden="true">/</span>
-    <span>{site.location.code} <time data-clock={site.location.timezone}>--:--</time></span>
   </div>
 
   <div class="mbar__actions">
+    <LanguageSwitch />
     <MusicToggle />
     <ThemeToggle label={t.chrome.theme} />
-    <a href="/contact" class={cn(buttonVariants({ variant: 'ink', size: 'lg' }), 'mbar__cta')}>
+    <a href={path('/contact')} class={cn(buttonVariants({ variant: 'ink', size: 'lg' }), 'mbar__cta')}>
       {t.common.contact} <ArrowUpRightIcon data-icon="inline-end" />
     </a>
     <div class="mbar__burger">
       <MobileNav
         client:media="(max-width: 860px)"
-        items={site.nav}
+        items={nav}
+        contactHref={path('/contact')}
+        languages={languages}
         socials={site.socials}
         email={site.email}
-        currentPath={path}
-        labels={{ contact: t.common.contact, openMenu: t.chrome.openMenu, closeMenu: t.chrome.closeMenu, mainMenu: t.chrome.mainMenu }}
+        currentPath={current}
+        labels={{ contact: t.common.contact, openMenu: t.chrome.openMenu, closeMenu: t.chrome.closeMenu, mainMenu: t.chrome.mainMenu, language: t.chrome.language }}
       />
     </div>
   </div>
@@ -152,10 +163,10 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
     box-shadow: 0 0 0 0 var(--ok);
     animation: ping 2.4s var(--ease-out) infinite;
   }
-  .mbar__sep { opacity: 0.4; }
-  .mbar__live { display: contents; }
+  .mbar__live { display: inline-flex; align-items: center; gap: 5px; }
   .mbar__live[data-off] { display: none; }
-  .mbar__count { display: inline-block; min-width: 2ch; text-align: right; color: var(--fg); }
+  .mbar__tele :global(.mbar__eye) { width: 14px; height: 14px; }
+  .mbar__count { display: inline-block; min-width: 2ch; color: var(--fg); font-weight: 600; }
   .mbar__count.is-tick { animation: live-tick 480ms var(--ease-spring); }
   @keyframes live-tick {
     40% { transform: translateY(-3px) scale(1.15); color: var(--primary); }
@@ -182,33 +193,29 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
 <script>
   import { initLive } from '@/scripts/live';
 
-  let clockTimer: number | undefined;
-  // Listener gắn vào window được gỡ mỗi khi chuyển trang để không bị chồng
+  // Listener gắn vào window/document được gỡ mỗi khi chuyển trang để không bị chồng
   let pageListeners: AbortController | undefined;
 
-  function initClock() {
-    window.clearInterval(clockTimer);
-    const els = document.querySelectorAll<HTMLTimeElement>('[data-clock]');
-    if (!els.length) return;
-    const formatters = new Map<HTMLTimeElement, Intl.DateTimeFormat>();
-    els.forEach((el) => {
-      formatters.set(
-        el,
-        new Intl.DateTimeFormat('en-GB', {
-          hour: '2-digit',
-          minute: '2-digit',
-          second: el.hasAttribute('data-seconds') ? '2-digit' : undefined,
-          hour12: false,
-          timeZone: el.dataset.clock,
-        }),
-      );
-    });
-    const tick = () => {
-      const now = new Date();
-      formatters.forEach((f, el) => (el.textContent = f.format(now)));
-    };
-    tick();
-    clockTimer = window.setInterval(tick, 1000);
+  /**
+   * Bấm VI / EN (header hoặc menu mobile): ghi nhớ lựa chọn (BaseLayout không tự đổi theo trình duyệt nữa)
+   * và giữ nguyên ?query, #hash của trang hiện tại. Bắt ở pha capture để chạy trước bộ định tuyến của Astro.
+   */
+  function initLanguage() {
+    document.addEventListener(
+      'click',
+      (e) => {
+        const link = (e.target as Element | null)?.closest<HTMLAnchorElement>('a[data-lang]');
+        if (!link || link.getAttribute('aria-current')) return;
+        try {
+          localStorage.setItem('lang', link.dataset.lang!);
+        } catch {}
+        const url = new URL(link.href);
+        url.search = location.search;
+        url.hash = location.hash;
+        link.href = url.href;
+      },
+      { capture: true, signal: pageListeners?.signal },
+    );
   }
 
   function initScrollState() {
@@ -231,7 +238,7 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
   document.addEventListener('astro:page-load', () => {
     pageListeners?.abort();
     pageListeners = new AbortController();
-    initClock();
+    initLanguage();
     initScrollState();
     initThemeToggle();
     initLive();

@@ -1,6 +1,6 @@
 ---
-import { site } from '@/lib/site';
-import { t } from '@/lib/i18n';
+import { getSite } from '@/lib/site';
+import { getI18n } from '@/lib/i18n';
 import { buttonVariants } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
@@ -8,6 +8,8 @@ import Orbi from '@/components/brand/Orbi.astro';
 // Ảnh Mặt Trăng NASA dùng chung với hero (~11 KB), chỉ tải ở giao diện tối
 import moonUrl from '@/assets/earth/moon.webp?url';
 
+const { t, locale, path } = getI18n(Astro.url);
+const site = getSite(locale);
 const year = new Date().getFullYear();
 ---
 
@@ -39,8 +41,8 @@ const year = new Date().getFullYear();
     <nav class="foot__nav" aria-label={t.chrome.footerNav}>
       <p class="mono muted">{t.chrome.footerNav}</p>
       <ul>
-        {site.nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
-        <li><a href="/contact">{t.common.contact}</a></li>
+        {site.nav.map((item) => <li><a href={path(item.href)}>{item.label}</a></li>)}
+        <li><a href={path('/contact')}>{t.common.contact}</a></li>
       </ul>
     </nav>
 

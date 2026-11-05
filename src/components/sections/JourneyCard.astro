@@ -6,7 +6,7 @@
 import { Image } from 'astro:assets';
 import { formatRange, type Story } from '@/lib/content';
 import { flagSvg } from '@/lib/flags';
-import { t, fmt } from '@/lib/i18n';
+import { getI18n, fmt } from '@/lib/i18n';
 
 interface Props {
   journey: Story;
@@ -14,11 +14,12 @@ interface Props {
 }
 
 const { journey, size = 'default' } = Astro.props;
+const { t, locale, intl, path } = getI18n(Astro.url);
 const { title, summary, place, country, countryCode, date, endDate, ongoing, cover, coverAlt } = journey.data;
 const stampId = `stamp-${journey.id}`;
 ---
 
-<a href={`/journeys/${journey.id}`} class:list={['jcard', `jcard--${size}`]} data-reveal>
+<a href={path(`/journeys/${journey.id}`)} class:list={['jcard', `jcard--${size}`]} data-reveal>
   <div class="jcard__cover">
     <Image src={cover} alt={coverAlt} widths={[480, 800, 1200]} sizes="(min-width: 900px) 33vw, 100vw" transition:name={`journey-${journey.id}`} />
     <svg class="jcard__stamp" viewBox="0 0 120 120" aria-hidden="true">
@@ -29,7 +30,7 @@ const stampId = `stamp-${journey.id}`;
       {date ? (
         <>
           <text x="60" y="58" class="s-year" text-anchor="middle">{date.getFullYear()}</text>
-          <text x="60" y="74" class="s-month" text-anchor="middle">{fmt(t.journeys.stampMonth, { n: date.getMonth() + 1 })}</text>
+          <text x="60" y="74" class="s-month" text-anchor="middle">{fmt(t.journeys.stampMonth, { n: date.getMonth() + 1, m: new Intl.DateTimeFormat(intl, { month: 'short' }).format(date).replace('.', '').toUpperCase() })}</text>
         </>
       ) : (
         <text x="60" y="68" class="s-year" text-anchor="middle">★</text>
@@ -37,7 +38,7 @@ const stampId = `stamp-${journey.id}`;
     </svg>
   </div>
   <div class="jcard__body">
-    <p class="mono muted jcard__meta"><Fragment set:html={flagSvg(countryCode)} />{place}, {country}{date && ` · ${formatRange(date, endDate, ongoing)}`}</p>
+    <p class="mono muted jcard__meta"><Fragment set:html={flagSvg(countryCode)} />{place}, {country}{date && ` · ${formatRange(date, endDate, ongoing, locale)}`}</p>
     <h3>{title}</h3>
     {size === 'default' && <p class="jcard__sum">{summary}</p>}
   </div>

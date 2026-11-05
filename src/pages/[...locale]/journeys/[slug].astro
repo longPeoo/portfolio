@@ -10,7 +10,7 @@ import { VideoPlayer } from '@/components/media/VideoPlayer';
 import { PhotoGallery } from '@/components/media/PhotoGallery';
 import JourneyCard from '@/components/sections/JourneyCard.astro';
 import { cn } from '@/lib/utils';
-import { t, fmt } from '@/lib/i18n';
+import { getI18n, localeParams, fmt, LOCALES, defaultLocale, type Locale } from '@/lib/i18n';
 import { getJourneys, hasStory, missionNumber, formatMonth, formatRange, formatElapsed } from '@/lib/content';
 import { flagSvg } from '@/lib/flags';
 import { toGalleryPhotos } from '@/lib/photos';
@@ -18,17 +18,23 @@ import { youtubeId } from '@/lib/youtube';
 
 // Chỉ chuyến đã có ảnh bìa mới có trang riêng; chuyến chỉ có toạ độ thì chỉ là ghim trên địa cầu
 export async function getStaticPaths() {
-  const all = await getJourneys();
-  const stories = all.filter(hasStory);
-  return stories.map((journey, i) => ({
-    params: { slug: journey.id },
-    props: { journey, number: missionNumber(all, journey.id), next: stories[i + 1] ?? stories[0] },
-  }));
+  const paths = await Promise.all(
+    localeParams().map(async ({ params }) => {
+      const all = await getJourneys((params.locale ?? defaultLocale) as Locale);
+      const stories = all.filter(hasStory);
+      return stories.map((journey, i) => ({
+        params: { ...params, slug: journey.id },
+        props: { journey, number: missionNumber(all, journey.id), next: stories[i + 1] ?? stories[0] },
+      }));
+    }),
+  );
+  return paths.flat();
 }
 
 const { journey, number, next } = Astro.props;
+const { t, locale, path } = getI18n(Astro.url);
 const { title, summary, place, country, countryCode, lat, lng, date, endDate, ongoing, cover, coverAlt, gallery, youtube, tags } = journey.data;
-const { Content } = await render(journey);
+const { Content } = await render(journey.source);
 const videoId = youtubeId(youtube);
 const photos = await toGalleryPhotos(gallery);
 const og = (await getImage({ src: cover, width: 1200, format: 'jpg' })).src;
@@ -39,21 +45,22 @@ const article = {
   headline: title,
   description: summary,
   datePublished: date?.toISOString(),
+  inLanguage: LOCALES[locale].lang,
   image: new URL(og, Astro.site).href,
   contentLocation: { '@type': 'Place', name: `${place}, ${country}`, geo: { '@type': 'GeoCoordinates', latitude: lat, longitude: lng } },
-  url: new URL(`/journeys/${journey.id}`, Astro.site).href,
+  url: new URL(path(`/journeys/${journey.id}`), Astro.site).href,
 };
 ---
 
 <BaseLayout title={title} description={summary} image={og} schema={article}>
   <article class="trip">
     <header class="container trip__head">
-      <a href="/journeys" class={cn(buttonVariants({ variant: 'launch-outline', size: 'pill' }), 'trip__back')}>
+      <a href={path('/journeys')} class={cn(buttonVariants({ variant: 'launch-outline', size: 'pill' }), 'trip__back')}>
         <ArrowLeftIcon data-icon="inline-start" /> {t.journeys.back}
       </a>
       <div class="trip__title">
         <div>
-          <p class="mono muted">M-{String(number).padStart(2, '0')} · {t.journeys.log} · {coord}{date && ` · ${formatRange(date, endDate, ongoing)}`}{date && ongoing && ` · ${formatElapsed(date)}`}</p>
+          <p class="mono muted">M-{String(number).padStart(2, '0')} · {t.journeys.log} · {coord}{date && ` · ${formatRange(date, endDate, ongoing, locale)}`}{date && ongoing && ` · ${formatElapsed(date, locale)}`}</p>
           <h1>{title}</h1>
           <p class="trip__lead">{summary}</p>
         </div>
@@ -62,10 +69,10 @@ const article = {
           <Fragment set:html={flagSvg(countryCode)} />
           <span class="mono">{country}</span>
           <strong>{place}</strong>
-          {date && <span class="mono">{formatMonth(date)}</span>}
+          {date && <span class="mono">{formatMonth(date, locale)}</span>}
         </div>
       </div>
-      {tags.length > 0 && <div class="trip__tags">{tags.map((t) => <Badge variant="telemetry">{t}</Badge>)}</div>}
+      {tags.length > 0 && <div class="trip__tags">{tags.map((tag) => <Badge variant="telemetry">{tag}</Badge>)}</div>}
     </header>
 
     <div class="container">

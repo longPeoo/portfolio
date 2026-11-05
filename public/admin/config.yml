@@ -127,7 +127,7 @@ collections:
           - { label: "Complete — đã xong", value: Complete }
           - { label: "Research — nghiên cứu", value: Research }
         i18n: duplicate
-      - { name: tags, label: Hệ thống / công nghệ, widget: list, required: false, i18n: duplicate }
+      - { name: tags, label: Hệ thống / công nghệ, widget: list, required: false, hint: "Bản tiếng Anh: dịch các thẻ tiếng Việt (Sụt lún → Land subsidence), tên công nghệ giữ nguyên", i18n: true }
       - { name: cover, label: Ảnh bìa, widget: image, required: false, i18n: duplicate }
       - { name: coverAlt, label: Mô tả ảnh bìa, widget: string, required: false, i18n: true }
       - name: gallery
@@ -365,8 +365,8 @@ collections:
                 label: Gợi ý bỏ qua đếm ngược
                 widget: string
                 i18n: true
-              - name: clock
-                label: Đồng hồ (trình đọc màn hình)
+              - name: language
+                label: Nút đổi ngôn ngữ (trình đọc màn hình)
                 widget: string
                 i18n: true
               - name: mainMenu
@@ -410,7 +410,7 @@ collections:
                 widget: string
                 i18n: true
               - name: live
-                label: Bộ đếm người xem trên menu (chữ sau con số)
+                label: Bộ đếm người xem trên menu (chữ cho trình đọc màn hình, hiện là icon mắt)
                 widget: string
                 i18n: true
             i18n: true
@@ -666,7 +666,7 @@ collections:
                 widget: string
                 i18n: true
               - name: stampMonth
-                label: Tháng trên con dấu ({n} = số tháng)
+                label: "Tháng trên con dấu ({n} = số tháng, {m} = tên tháng viết tắt theo ngôn ngữ, vd. MAR)"
                 widget: string
                 i18n: true
               - name: globeLabel

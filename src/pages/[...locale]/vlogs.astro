@@ -7,8 +7,13 @@ import { getVideos, videoCategories, channelUrl } from '@/lib/youtube';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { brandIconSvg } from '@/lib/site';
-import { t, intl } from '@/lib/i18n';
+import { getI18n, localeParams } from '@/lib/i18n';
 
+export function getStaticPaths() {
+  return localeParams();
+}
+
+const { t, intl } = getI18n(Astro.url);
 const videos = await getVideos();
 const grid = videos.map((v) => ({
   id: v.id,

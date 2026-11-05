@@ -4,7 +4,7 @@ import { ArrowUpRightIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { t } from '@/lib/i18n';
+import { getI18n } from '@/lib/i18n';
 import Orbi from '@/components/brand/Orbi.astro';
 
 interface Props {
@@ -14,6 +14,7 @@ interface Props {
   phase?: string;
 }
 
+const { t, path } = getI18n(Astro.url);
 const { code, title, intro, phase = t.common.updating } = Astro.props;
 ---
 
@@ -30,7 +31,7 @@ const { code, title, intro, phase = t.common.updating } = Astro.props;
   </p>
   <div class="soon__actions">
     <slot />
-    <a href="/" class={cn(buttonVariants({ variant: 'launch-outline', size: 'pill' }))}>
+    <a href={path('/')} class={cn(buttonVariants({ variant: 'launch-outline', size: 'pill' }))}>
       {t.common.backHome} <ArrowUpRightIcon data-icon="inline-end" />
     </a>
   </div>

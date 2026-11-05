@@ -10,16 +10,22 @@ import { PhotoGallery } from '@/components/media/PhotoGallery';
 import { cn } from '@/lib/utils';
 import { getProjects, formatRange } from '@/lib/content';
 import { toGalleryPhotos } from '@/lib/photos';
-import { t, fmt } from '@/lib/i18n';
+import { getI18n, localeParams, fmt, LOCALES, defaultLocale, type Locale } from '@/lib/i18n';
 
 export async function getStaticPaths() {
-  const projects = await getProjects();
-  return projects.map((project, index) => ({ params: { slug: project.id }, props: { project, index } }));
+  const paths = await Promise.all(
+    localeParams().map(async ({ params }) => {
+      const projects = await getProjects((params.locale ?? defaultLocale) as Locale);
+      return projects.map((project, index) => ({ params: { ...params, slug: project.id }, props: { project, index } }));
+    }),
+  );
+  return paths.flat();
 }
 
 const { project, index } = Astro.props;
+const { t, locale, path } = getI18n(Astro.url);
 const { title, summary, role, date, endDate, tags, cover, coverAlt, gallery, links, status } = project.data;
-const { Content } = await render(project);
+const { Content } = await render(project.source);
 const photos = await toGalleryPhotos(gallery);
 const og = cover ? (await getImage({ src: cover, width: 1200, format: 'jpg' })).src : undefined;
 const article = {
@@ -28,13 +34,14 @@ const article = {
   name: title,
   description: summary,
   dateCreated: date.toISOString(),
-  url: new URL(`/space/${project.id}`, Astro.site).href,
+  inLanguage: LOCALES[locale].lang,
+  url: new URL(path(`/space/${project.id}`), Astro.site).href,
 };
 ---
 
 <BaseLayout title={title} description={summary} image={og} schema={article}>
   <article class="case container">
-    <a href="/space" class={cn(buttonVariants({ variant: 'launch-outline', size: 'pill' }), 'case__back')}>
+    <a href={path('/space')} class={cn(buttonVariants({ variant: 'launch-outline', size: 'pill' }), 'case__back')}>
       <ArrowLeftIcon data-icon="inline-start" /> {t.space.back}
     </a>
 
@@ -44,9 +51,9 @@ const article = {
 
     <dl class="case__meta">
       <div><dt class="mono muted">{t.space.role}</dt><dd>{role}</dd></div>
-      <div><dt class="mono muted">{t.space.time}</dt><dd>{formatRange(date, endDate, status === 'Nominal' && !endDate)}</dd></div>
+      <div><dt class="mono muted">{t.space.time}</dt><dd>{formatRange(date, endDate, status === 'Nominal' && !endDate, locale)}</dd></div>
       {tags.length > 0 && (
-        <div><dt class="mono muted">{t.space.systems}</dt><dd class="case__tags">{tags.map((t) => <Badge variant="telemetry">{t}</Badge>)}</dd></div>
+        <div><dt class="mono muted">{t.space.systems}</dt><dd class="case__tags">{tags.map((tag) => <Badge variant="telemetry">{tag}</Badge>)}</dd></div>
       )}
     </dl>
 
