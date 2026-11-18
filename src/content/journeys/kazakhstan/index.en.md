@@ -1,46 +1,77 @@
 ---
 title: Three lakes and a canyon
 summary: My first trip to Central Asia, with Kazakhstan kicking things off. In November Almaty is deep in autumn, with yellow leaves all over the pavements, and once you leave the city it's all turquoise lakes and red canyons. I couldn't stop taking photos.
+date: 2026-11-07
+endDate: 2026-11-10
+ongoing: false
+place: Kazakhstan
+countryCode: KZ
+country: ''
+lat: 43.222
+lng: 76.8512
+cover: kazakhstan_00.webp
 coverAlt: The turquoise Big Almaty Lake surrounded by snow-capped mountains
 gallery:
-  - caption: Just landed in Almaty and straight out on the street to pose
+  - src: kazakhstan_01.webp
+    caption: Just landed in Almaty and straight out on the street to pose
     alt: Me standing by the road in Almaty, lined with yellow trees
-  - caption: A heart made of oak leaves on the pavement, autumn here is so cheesy
+  - src: kazakhstan_02.webp
+    caption: A heart made of oak leaves on the pavement, autumn here is so cheesy
     alt: Yellow oak leaves arranged in a heart shape on the pavement
-  - caption: Soaking up the afternoon sun on a bench, pretending to be a local
+  - src: kazakhstan_03.webp
+    caption: Soaking up the afternoon sun on a bench, pretending to be a local
     alt: Me sitting on a wooden bench by the road in the afternoon sun
-  - caption: Sunset in Almaty, is it this orange every evening?
+  - src: kazakhstan_04.webp
+    caption: Sunset in Almaty, is it this orange every evening?
     alt: A bright orange sunset behind the trees in a park
-  - caption: A green bus passing yellow trees, just like a postcard
+  - src: kazakhstan_05.webp
+    caption: A green bus passing yellow trees, just like a postcard
     alt: A green bus driving past a row of yellow trees
-  - caption: This street would be perfect for a bike ride
+  - src: kazakhstan_06.webp
+    caption: This street would be perfect for a bike ride
     alt: A street lined on both sides with orange-leaved trees
-  - caption: There's a tiny hut in the middle of the lake, sitting out there must feel so cool
+  - src: kazakhstan_07.webp
+    caption: There's a tiny hut in the middle of the lake, sitting out there must feel so cool
     alt: Big Almaty Lake with a small hut on the water and snowy mountains behind
-  - caption: The view was so pretty I suddenly got shy, so I just smiled
+  - src: kazakhstan_08.webp
+    caption: The view was so pretty I suddenly got shy, so I just smiled
     alt: Me in a beanie and sunglasses smiling by Big Almaty Lake
-  - caption: Shyness over, time for a walk around the lake
+  - src: kazakhstan_09.webp
+    caption: Shyness over, time for a walk around the lake
     alt: Me with a backpack walking by the lake, snowy mountains behind
-  - caption: Popped into the supermarket in the evening, and a mirror this big deserves a photo
+  - src: kazakhstan_10.webp
+    caption: Popped into the supermarket in the evening, and a mirror this big deserves a photo
     alt: Me taking a mirror selfie in a supermarket
-  - caption: Only 10 km to go, so a quick photo against the sign first
+  - src: kazakhstan_11.webp
+    caption: Only 10 km to go, so a quick photo against the sign first
     alt: Me standing next to a road sign reading Charyn Canyon 10 km
-  - caption: Red rock stacked in layers like a layer cake
+  - src: kazakhstan_12.webp
+    caption: Red rock stacked in layers like a layer cake
     alt: Layered red cliffs in Charyn Canyon
-  - caption: Sitting right on the edge, the photo is chill but my heart is not
+  - src: kazakhstan_13.webp
+    caption: Sitting right on the edge, the photo is chill but my heart is not
     alt: Me sitting on a rock ledge looking down into Charyn Canyon
-  - caption: Standing up for the full explorer pose
+  - src: kazakhstan_14.webp
+    caption: Standing up for the full explorer pose
     alt: Me standing on a rock ledge with the canyon and distant mountains behind
-  - caption: Thought I'd ended up on Mars
+  - src: kazakhstan_15.webp
+    caption: Thought I'd ended up on Mars
     alt: Me sitting and looking down at a dirt road through a valley of red rock
-  - caption: Kolsay Lake from above, as still as a mirror
+  - src: kazakhstan_16.webp
+    caption: Kolsay Lake from above, as still as a mirror
     alt: Kolsay Lake between two forested slopes, with a footpath along the shore
-  - caption: The wind was freezing, but I still had to keep my arms crossed and hold the pose
+  - src: kazakhstan_17.webp
+    caption: The wind was freezing, but I still had to keep my arms crossed and hold the pose
     alt: Me standing with arms crossed by a railing, Kolsay Lake behind
-  - caption: Perched on the railing at Kaindy Lake, sit here if you dare
+  - src: kazakhstan_18.webp
+    caption: Perched on the railing at Kaindy Lake, sit here if you dare
     alt: A person sitting on a wooden railing by Kaindy Lake, with pine forest behind
-  - caption: The sunken forest of Kaindy, these trunks have been standing in the water for over a hundred years
+  - src: kazakhstan_19.webp
+    caption: The sunken forest of Kaindy, these trunks have been standing in the water for over a hundred years
     alt: Bare tree trunks standing upright in the turquoise water of Kaindy Lake
+youtube: ''
+tags: []
+draft: false
 ---
 
 On 7 November I landed in Almaty, and the first thing I did was head out to look at the yellow leaves. Almaty is so beautiful this time of year, everyone, with yellow and orange trees on both sides of the road, and when a green bus drives past it looks just like a postcard. In the late afternoon the sky turns bright orange, and I just kept wandering around on foot.
