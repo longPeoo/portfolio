@@ -4,7 +4,7 @@ summary: My first trip to Central Asia, with Kazakhstan kicking things off. In N
 date: 2026-11-07
 endDate: 2026-11-10
 ongoing: false
-place: Kazakhstan
+place: Almaty; Charyn; Kolsay; Kaindy
 countryCode: KZ
 country: ''
 lat: 43.222

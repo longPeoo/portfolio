@@ -4,7 +4,7 @@ summary: Chuyến Trung Á đầu tiên của mình, và Kazakhstan là nước 
 date: 2026-11-07
 endDate: 2026-11-10
 ongoing: false
-place: Karzakhstan
+place: Almaty; Charyn; Kolsay; Kaindy
 countryCode: KZ
 country: ''
 lat: 43.222
