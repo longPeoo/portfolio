@@ -1,0 +1,64 @@
+---
+/**
+ * /play: Sân chơi. Mỗi thẻ là một trò (danh mục ở src/lib/play/games.ts), thẻ cuối là "trò tiếp theo".
+ * Trang tĩnh, không có JS riêng. Không nằm trong menu 01–05 (thiết kế đã chốt), vào bằng link trực tiếp / footer.
+ */
+import { ArrowUpRightIcon } from 'lucide-react';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Orbi from '@/components/brand/Orbi.astro';
+import GameCard from '@/components/play/GameCard.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { GAMES } from '@/lib/play/games';
+import { cn } from '@/lib/utils';
+import { getI18n, localeParams } from '@/lib/i18n';
+
+export function getStaticPaths() {
+  return localeParams();
+}
+
+const { t, path } = getI18n(Astro.url);
+const nextCode = `G-${String(GAMES.length + 1).padStart(2, '0')}`;
+---
+
+<BaseLayout title={t.play.title} description={t.play.intro}>
+  <PageHeader code={t.play.code} title={t.play.title} intro={t.play.intro} />
+
+  <section class="container games" aria-label={t.play.title}>
+    {GAMES.map((game) => <GameCard game={game} />)}
+
+    <Card className="soon h-full gap-5 border-dashed bg-transparent">
+      <div class="soon__art" aria-hidden="true">
+        <span class="soon__ring"></span>
+        <Orbi size={84} float />
+      </div>
+      <CardHeader className="justify-items-center text-center">
+        <p class="mono muted">{nextCode} · ???</p>
+        <CardTitle className="font-heading text-2xl leading-tight font-bold">{t.play.soonTitle}</CardTitle>
+        <CardDescription className="text-base text-balance">{t.play.soonText}</CardDescription>
+      </CardHeader>
+      <CardFooter className="mt-auto flex-col gap-4">
+        <Badge variant="signal"><i class="soon__dot" aria-hidden="true"></i>{t.common.assembling}</Badge>
+        <a href={path('/contact')} class={cn(buttonVariants({ variant: 'launch-outline', size: 'pill' }))}>
+          {t.play.soonCta} <ArrowUpRightIcon data-icon="inline-end" />
+        </a>
+      </CardFooter>
+    </Card>
+  </section>
+</BaseLayout>
+
+<style>
+  .games {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
+    gap: var(--space-8);
+    padding-bottom: var(--section-y);
+  }
+  .soon__art { position: relative; display: grid; place-items: center; width: 150px; aspect-ratio: 1; margin: var(--space-6) auto 0; }
+  .soon__ring { position: absolute; inset: 0; border: 1.5px dashed var(--line); border-radius: 50%; animation: soon-spin 40s linear infinite; }
+  .soon__dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: soon-blink 1.2s steps(2) infinite; }
+  @keyframes soon-spin { to { transform: rotate(360deg); } }
+  @keyframes soon-blink { 50% { opacity: 0.2; } }
+</style>

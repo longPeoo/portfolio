@@ -970,6 +970,742 @@ collections:
                 widget: string
                 i18n: true
             i18n: true
+          - name: play
+            label: Sân chơi (/play)
+            widget: object
+            collapsed: true
+            fields:
+              - name: code
+                label: "Nhãn"
+                widget: string
+                i18n: true
+              - name: title
+                label: "Tiêu đề"
+                widget: string
+                i18n: true
+              - name: intro
+                label: "Mô tả"
+                widget: text
+                i18n: true
+              - name: play
+                label: "Nút vào trò chơi"
+                widget: string
+                i18n: true
+              - name: players
+                label: "Nhãn số người chơi"
+                widget: string
+                i18n: true
+              - name: live
+                label: "Đèn trạng thái: đang mở"
+                widget: string
+                i18n: true
+              - name: soonTitle
+                label: "Thẻ trò sắp ra: tiêu đề"
+                widget: string
+                i18n: true
+              - name: soonText
+                label: "Thẻ trò sắp ra: mô tả"
+                widget: string
+                i18n: true
+              - name: soonCta
+                label: "Thẻ trò sắp ra: nút"
+                widget: string
+                i18n: true
+              - name: back
+                label: "Nút về Sân chơi"
+                widget: string
+                i18n: true
+            i18n: true
+          - name: santa
+            label: Trò Secret Santa
+            widget: object
+            collapsed: true
+            fields:
+              - name: code
+                label: "Nhãn"
+                widget: string
+                i18n: true
+              - name: title
+                label: "Tiêu đề"
+                widget: string
+                i18n: true
+              - name: intro
+                label: "Mô tả"
+                widget: text
+                i18n: true
+              - name: metaDescription
+                label: "Mô tả khi chia sẻ link"
+                widget: text
+                i18n: true
+              - name: cardText
+                label: "Thẻ ở Sân chơi: mô tả"
+                widget: text
+                i18n: true
+              - name: cardPlayers
+                label: "Thẻ ở Sân chơi: số người"
+                widget: string
+                i18n: true
+              - name: season
+                label: "Thẻ ở Sân chơi: mùa"
+                widget: string
+                i18n: true
+              - name: tabJoin
+                label: "Tab vào phòng"
+                widget: string
+                i18n: true
+              - name: tabCreate
+                label: "Tab tạo phòng"
+                widget: string
+                i18n: true
+              - name: joinText
+                label: "Vào phòng: hướng dẫn"
+                widget: string
+                i18n: true
+              - name: joinLabel
+                label: "Vào phòng: nhãn ô mã"
+                widget: string
+                i18n: true
+              - name: joinSubmit
+                label: "Vào phòng: nút"
+                widget: string
+                i18n: true
+              - name: recentTitle
+                label: "Phòng gần đây: tiêu đề"
+                widget: string
+                i18n: true
+              - name: recentAdmin
+                label: "Phòng gần đây: bạn quản lý"
+                widget: string
+                i18n: true
+              - name: recentMember
+                label: "Phòng gần đây: bạn tham gia"
+                widget: string
+                i18n: true
+              - name: recentOpen
+                label: "Phòng gần đây: nút mở ({title})"
+                widget: string
+                i18n: true
+              - name: howCode
+                label: "Cách chơi: nhãn"
+                widget: string
+                i18n: true
+              - name: howTitle
+                label: "Cách chơi: tiêu đề"
+                widget: string
+                i18n: true
+              - name: how1Title
+                label: "Cách chơi: bước 1"
+                widget: string
+                i18n: true
+              - name: how1Text
+                label: "Cách chơi: bước 1, mô tả"
+                widget: text
+                i18n: true
+              - name: how2Title
+                label: "Cách chơi: bước 2"
+                widget: string
+                i18n: true
+              - name: how2Text
+                label: "Cách chơi: bước 2, mô tả"
+                widget: string
+                i18n: true
+              - name: how3Title
+                label: "Cách chơi: bước 3"
+                widget: string
+                i18n: true
+              - name: how3Text
+                label: "Cách chơi: bước 3, mô tả"
+                widget: string
+                i18n: true
+              - name: formCode
+                label: "Form tạo phòng: nhãn"
+                widget: string
+                i18n: true
+              - name: fTitle
+                label: "Ô tên phòng"
+                widget: string
+                i18n: true
+              - name: fTitlePlaceholder
+                label: "Ô tên phòng: ví dụ"
+                widget: string
+                i18n: true
+              - name: fBudget
+                label: "Ô ngân sách"
+                widget: string
+                i18n: true
+              - name: fBudgetPlaceholder
+                label: "Ô ngân sách: ví dụ"
+                widget: string
+                i18n: true
+              - name: fDate
+                label: "Ô ngày trao quà"
+                widget: string
+                i18n: true
+              - name: fNotes
+                label: "Ô luật của nhóm"
+                widget: string
+                i18n: true
+              - name: fNotesPlaceholder
+                label: "Ô luật: ví dụ"
+                widget: string
+                i18n: true
+              - name: optional
+                label: "Chữ không bắt buộc"
+                widget: string
+                i18n: true
+              - name: fPeople
+                label: "Ô người tham gia"
+                widget: string
+                i18n: true
+              - name: fPeopleHint
+                label: "Ô người tham gia: hướng dẫn ({min}, {max})"
+                widget: text
+                i18n: true
+              - name: fPeoplePlaceholder
+                label: "Ô người tham gia: ví dụ"
+                widget: text
+                i18n: true
+              - name: fPeopleCount
+                label: "Đếm số người ({n})"
+                widget: string
+                i18n: true
+              - name: fMode
+                label: "Nhóm cách vào phòng"
+                widget: string
+                i18n: true
+              - name: fModeOpen
+                label: "Chế độ mã chung"
+                widget: string
+                i18n: true
+              - name: fModeOpenHint
+                label: "Chế độ mã chung: mô tả"
+                widget: string
+                i18n: true
+              - name: fModeInvite
+                label: "Chế độ link riêng"
+                widget: string
+                i18n: true
+              - name: fModeInviteHint
+                label: "Chế độ link riêng: mô tả"
+                widget: text
+                i18n: true
+              - name: fRules
+                label: "Nhóm luật bốc thăm"
+                widget: string
+                i18n: true
+              - name: fSelf
+                label: "Luật: không bốc trúng mình"
+                widget: string
+                i18n: true
+              - name: fSelfHint
+                label: "Luật: không bốc trúng mình, ghi chú"
+                widget: string
+                i18n: true
+              - name: fNoMutual
+                label: "Luật: không tặng chéo"
+                widget: string
+                i18n: true
+              - name: fNoMutualHint
+                label: "Luật: không tặng chéo, ghi chú"
+                widget: string
+                i18n: true
+              - name: fExclude
+                label: "Luật: cặp loại trừ"
+                widget: string
+                i18n: true
+              - name: fExcludeHint
+                label: "Luật: cặp loại trừ, ghi chú"
+                widget: string
+                i18n: true
+              - name: fExcludeFirst
+                label: "Chọn người thứ nhất"
+                widget: string
+                i18n: true
+              - name: fExcludeSecond
+                label: "Chọn người thứ hai"
+                widget: string
+                i18n: true
+              - name: fExcludeAdd
+                label: "Nút thêm cặp"
+                widget: string
+                i18n: true
+              - name: fExcludeRemove
+                label: "Nút bỏ cặp ({a}, {b})"
+                widget: string
+                i18n: true
+              - name: fExcludeEmpty
+                label: "Chưa có người để chọn cặp"
+                widget: string
+                i18n: true
+              - name: fFeasible
+                label: "Báo luật chia được"
+                widget: string
+                i18n: true
+              - name: createSubmit
+                label: "Nút tạo phòng"
+                widget: string
+                i18n: true
+              - name: creating
+                label: "Nút tạo phòng: đang tạo"
+                widget: string
+                i18n: true
+              - name: privacy
+                label: "Ghi chú riêng tư"
+                widget: text
+                i18n: true
+              - name: errTitle
+                label: "Lỗi: tên phòng ({max})"
+                widget: string
+                i18n: true
+              - name: errBudget
+                label: "Lỗi: ngân sách ({max})"
+                widget: string
+                i18n: true
+              - name: errDate
+                label: "Lỗi: ngày"
+                widget: string
+                i18n: true
+              - name: errNotes
+                label: "Lỗi: luật ({max})"
+                widget: string
+                i18n: true
+              - name: errPeopleMin
+                label: "Lỗi: ít người ({min})"
+                widget: string
+                i18n: true
+              - name: errPeopleMax
+                label: "Lỗi: nhiều người ({max})"
+                widget: string
+                i18n: true
+              - name: errPeopleLong
+                label: "Lỗi: tên dài ({max}, {name})"
+                widget: string
+                i18n: true
+              - name: errPeopleDup
+                label: "Lỗi: trùng tên ({name})"
+                widget: string
+                i18n: true
+              - name: errExclusions
+                label: "Lỗi: cặp loại trừ"
+                widget: string
+                i18n: true
+              - name: errImpossible
+                label: "Lỗi: luật không chia được"
+                widget: text
+                i18n: true
+              - name: errRate
+                label: "Lỗi: thao tác quá nhanh"
+                widget: string
+                i18n: true
+              - name: errNetwork
+                label: "Lỗi: mất mạng"
+                widget: string
+                i18n: true
+              - name: errServer
+                label: "Lỗi: máy chủ"
+                widget: string
+                i18n: true
+              - name: errNotFound
+                label: "Lỗi: không thấy phòng ({code})"
+                widget: string
+                i18n: true
+              - name: errCode
+                label: "Lỗi: mã phòng"
+                widget: string
+                i18n: true
+              - name: errClaimed
+                label: "Lỗi: tên đã có người nhận"
+                widget: string
+                i18n: true
+              - name: errRecovery
+                label: "Lỗi: mã xem lại sai"
+                widget: string
+                i18n: true
+              - name: errSession
+                label: "Lỗi: phiên hết hạn"
+                widget: text
+                i18n: true
+              - name: errWish
+                label: "Lỗi: gợi ý quá dài ({max})"
+                widget: string
+                i18n: true
+              - name: errAdmin
+                label: "Lỗi: link quản lý hết hiệu lực"
+                widget: string
+                i18n: true
+              - name: createdCode
+                label: "Phòng đã tạo: nhãn"
+                widget: string
+                i18n: true
+              - name: createdTitle
+                label: "Phòng đã tạo: tiêu đề"
+                widget: string
+                i18n: true
+              - name: createdText
+                label: "Phòng đã tạo: mô tả"
+                widget: string
+                i18n: true
+              - name: roomCode
+                label: "Nhãn mã phòng"
+                widget: string
+                i18n: true
+              - name: inviteLink
+                label: "Nhãn link mời"
+                widget: string
+                i18n: true
+              - name: adminLink
+                label: "Nhãn link quản lý"
+                widget: string
+                i18n: true
+              - name: adminWarn
+                label: "Cảnh báo link quản lý"
+                widget: text
+                i18n: true
+              - name: copy
+                label: "Nút sao chép"
+                widget: string
+                i18n: true
+              - name: copied
+                label: "Đã sao chép"
+                widget: string
+                i18n: true
+              - name: share
+                label: "Nút chia sẻ"
+                widget: string
+                i18n: true
+              - name: shareText
+                label: "Nội dung chia sẻ ({title}, {code})"
+                widget: string
+                i18n: true
+              - name: inviteTitle
+                label: "Link riêng: tiêu đề"
+                widget: string
+                i18n: true
+              - name: inviteText
+                label: "Link riêng: hướng dẫn"
+                widget: text
+                i18n: true
+              - name: copyAll
+                label: "Nút sao chép tất cả link"
+                widget: string
+                i18n: true
+              - name: copyFor
+                label: "Nút sao chép link một người ({name})"
+                widget: string
+                i18n: true
+              - name: enterRoom
+                label: "Nút vào phòng vừa tạo"
+                widget: string
+                i18n: true
+              - name: loading
+                label: "Đang tải phòng"
+                widget: string
+                i18n: true
+              - name: budget
+                label: "Nhãn ngân sách"
+                widget: string
+                i18n: true
+              - name: date
+                label: "Nhãn ngày trao quà"
+                widget: string
+                i18n: true
+              - name: rules
+                label: "Nhãn luật của nhóm"
+                widget: string
+                i18n: true
+              - name: ruleNoMutual
+                label: "Chip luật không tặng chéo"
+                widget: string
+                i18n: true
+              - name: ruleExclusions
+                label: "Chip số cặp loại trừ ({n})"
+                widget: string
+                i18n: true
+              - name: progress
+                label: "Tiến độ ({n}, {total})"
+                widget: string
+                i18n: true
+              - name: expires
+                label: "Ngày tự xoá ({date})"
+                widget: string
+                i18n: true
+              - name: ruleInvite
+                label: "Chip chế độ link riêng"
+                widget: string
+                i18n: true
+              - name: keyTitle
+                label: "Vào bằng mã: tiêu đề"
+                widget: string
+                i18n: true
+              - name: keyText
+                label: "Vào bằng mã: mô tả (phòng link riêng)"
+                widget: text
+                i18n: true
+              - name: keyLabel
+                label: "Ô mã của bạn"
+                widget: string
+                i18n: true
+              - name: keyHint
+                label: "Ô mã của bạn: ghi chú"
+                widget: string
+                i18n: true
+              - name: keySubmit
+                label: "Nút mở bằng mã"
+                widget: string
+                i18n: true
+              - name: haveCode
+                label: "Link mở lại trên máy khác"
+                widget: string
+                i18n: true
+              - name: errUsed
+                label: "Lỗi: link riêng đã được dùng"
+                widget: text
+                i18n: true
+              - name: errMode
+                label: "Lỗi: phòng dùng link riêng"
+                widget: string
+                i18n: true
+              - name: otherRoom
+                label: "Nút đổi phòng"
+                widget: string
+                i18n: true
+              - name: whoCode
+                label: "Chọn tên: nhãn"
+                widget: string
+                i18n: true
+              - name: whoTitle
+                label: "Chọn tên: tiêu đề"
+                widget: string
+                i18n: true
+              - name: whoText
+                label: "Chọn tên: mô tả"
+                widget: string
+                i18n: true
+              - name: taken
+                label: "Tên đã có người nhận"
+                widget: string
+                i18n: true
+              - name: drawnBadge
+                label: "Huy hiệu đã quay"
+                widget: string
+                i18n: true
+              - name: confirmTitle
+                label: "Xác nhận tên ({name})"
+                widget: string
+                i18n: true
+              - name: confirmText
+                label: "Xác nhận tên: mô tả"
+                widget: text
+                i18n: true
+              - name: confirmOk
+                label: "Xác nhận tên: nút đồng ý"
+                widget: string
+                i18n: true
+              - name: cancel
+                label: "Nút huỷ"
+                widget: string
+                i18n: true
+              - name: recoverTitle
+                label: "Mở lại tên ({name})"
+                widget: string
+                i18n: true
+              - name: recoverText
+                label: "Mở lại tên: mô tả"
+                widget: string
+                i18n: true
+              - name: recoveryLabel
+                label: "Nhãn mã xem lại"
+                widget: string
+                i18n: true
+              - name: recoverSubmit
+                label: "Nút mở lại"
+                widget: string
+                i18n: true
+              - name: spinCode
+                label: "Bệ quay: nhãn"
+                widget: string
+                i18n: true
+              - name: hello
+                label: "Lời chào ({name})"
+                widget: string
+                i18n: true
+              - name: spinText
+                label: "Bệ quay: mô tả"
+                widget: string
+                i18n: true
+              - name: spin
+                label: "Nút quay"
+                widget: string
+                i18n: true
+              - name: spinning
+                label: "Nút quay: đang quay"
+                widget: string
+                i18n: true
+              - name: signOut
+                label: "Nút thoát thiết bị"
+                widget: string
+                i18n: true
+              - name: signOutTitle
+                label: "Thoát: tiêu đề"
+                widget: string
+                i18n: true
+              - name: signOutText
+                label: "Thoát: mô tả"
+                widget: string
+                i18n: true
+              - name: signOutOk
+                label: "Thoát: nút đồng ý"
+                widget: string
+                i18n: true
+              - name: revealCode
+                label: "Kết quả: nhãn"
+                widget: string
+                i18n: true
+              - name: revealLead
+                label: "Kết quả: câu dẫn"
+                widget: string
+                i18n: true
+              - name: hide
+                label: "Nút ẩn tên"
+                widget: string
+                i18n: true
+              - name: show
+                label: "Nút hiện tên"
+                widget: string
+                i18n: true
+              - name: hiddenName
+                label: "Tên đang ẩn (trình đọc màn hình)"
+                widget: string
+                i18n: true
+              - name: theirWish
+                label: "Gợi ý của người được tặng ({name})"
+                widget: string
+                i18n: true
+              - name: noWish
+                label: "Chưa có gợi ý ({name})"
+                widget: string
+                i18n: true
+              - name: keepSecret
+                label: "Nhắc giữ bí mật"
+                widget: string
+                i18n: true
+              - name: recoveryTitle
+                label: "Mã xem lại: tiêu đề"
+                widget: string
+                i18n: true
+              - name: recoveryText
+                label: "Mã xem lại: mô tả"
+                widget: text
+                i18n: true
+              - name: wishLabel
+                label: "Ô gợi ý quà"
+                widget: string
+                i18n: true
+              - name: wishHint
+                label: "Ô gợi ý quà: ghi chú"
+                widget: string
+                i18n: true
+              - name: wishPlaceholder
+                label: "Ô gợi ý quà: ví dụ"
+                widget: string
+                i18n: true
+              - name: wishSave
+                label: "Nút lưu gợi ý"
+                widget: string
+                i18n: true
+              - name: wishSaved
+                label: "Đã lưu gợi ý"
+                widget: string
+                i18n: true
+              - name: adminCode
+                label: "Bảng điều khiển: nhãn"
+                widget: string
+                i18n: true
+              - name: adminTitle
+                label: "Bảng điều khiển: tiêu đề"
+                widget: string
+                i18n: true
+              - name: adminText
+                label: "Bảng điều khiển: mô tả"
+                widget: string
+                i18n: true
+              - name: refresh
+                label: "Nút làm mới"
+                widget: string
+                i18n: true
+              - name: colName
+                label: "Cột tên"
+                widget: string
+                i18n: true
+              - name: colStatus
+                label: "Cột trạng thái"
+                widget: string
+                i18n: true
+              - name: colAction
+                label: "Cột thao tác"
+                widget: string
+                i18n: true
+              - name: stIdle
+                label: "Trạng thái: chưa vào"
+                widget: string
+                i18n: true
+              - name: stClaimed
+                label: "Trạng thái: đã nhận tên"
+                widget: string
+                i18n: true
+              - name: stDrawn
+                label: "Trạng thái: đã quay"
+                widget: string
+                i18n: true
+              - name: release
+                label: "Nút gỡ tên"
+                widget: string
+                i18n: true
+              - name: releaseTitle
+                label: "Gỡ tên: tiêu đề ({name})"
+                widget: string
+                i18n: true
+              - name: releaseText
+                label: "Gỡ tên: mô tả ({name})"
+                widget: text
+                i18n: true
+              - name: redraw
+                label: "Nút chia lại"
+                widget: string
+                i18n: true
+              - name: redrawTitle
+                label: "Chia lại: tiêu đề"
+                widget: string
+                i18n: true
+              - name: redrawText
+                label: "Chia lại: mô tả"
+                widget: string
+                i18n: true
+              - name: redrawDone
+                label: "Chia lại: xong"
+                widget: string
+                i18n: true
+              - name: remove
+                label: "Nút xoá phòng"
+                widget: string
+                i18n: true
+              - name: removeTitle
+                label: "Xoá phòng: tiêu đề"
+                widget: string
+                i18n: true
+              - name: removeText
+                label: "Xoá phòng: mô tả"
+                widget: string
+                i18n: true
+              - name: removed
+                label: "Xoá phòng: xong"
+                widget: string
+                i18n: true
+              - name: noscript
+                label: "Khi tắt JavaScript"
+                widget: string
+                i18n: true
+            i18n: true
           - name: notFound
             label: Trang lỗi 404
             widget: object

@@ -51,6 +51,32 @@ const schema = z.object({
     'errorContact', 'errorRate', 'errorCaptcha', 'errorSend', 'noscript',
   ] as const),
   notFound: group(['metaTitle', 'code', 'title', 'text', 'back'] as const),
+  /** Trang /play: danh sách trò chơi */
+  play: group([
+    'code', 'title', 'intro', 'play', 'players', 'live', 'soonTitle', 'soonText', 'soonCta', 'back',
+  ] as const),
+  /** Trò Secret Santa (/play/secret-santa); island React nhận cả nhóm này qua prop `labels` */
+  santa: group([
+    'code', 'title', 'intro', 'metaDescription', 'cardText', 'cardPlayers', 'season', 'tabJoin', 'tabCreate', 'joinText',
+    'joinLabel', 'joinSubmit', 'recentTitle', 'recentAdmin', 'recentMember', 'recentOpen', 'howCode', 'howTitle', 'how1Title',
+    'how1Text', 'how2Title', 'how2Text', 'how3Title', 'how3Text', 'formCode', 'fTitle', 'fTitlePlaceholder', 'fBudget',
+    'fBudgetPlaceholder', 'fDate', 'fNotes', 'fNotesPlaceholder', 'optional', 'fPeople', 'fPeopleHint', 'fPeoplePlaceholder',
+    'fPeopleCount', 'fMode', 'fModeOpen', 'fModeOpenHint', 'fModeInvite', 'fModeInviteHint', 'fRules', 'fSelf', 'fSelfHint',
+    'fNoMutual', 'fNoMutualHint', 'fExclude', 'fExcludeHint', 'fExcludeFirst', 'fExcludeSecond', 'fExcludeAdd', 'fExcludeRemove',
+    'fExcludeEmpty', 'fFeasible', 'createSubmit', 'creating', 'privacy', 'errTitle', 'errBudget', 'errDate', 'errNotes',
+    'errPeopleMin', 'errPeopleMax', 'errPeopleLong', 'errPeopleDup', 'errExclusions', 'errImpossible', 'errRate', 'errNetwork',
+    'errServer', 'errNotFound', 'errCode', 'errClaimed', 'errRecovery', 'errSession', 'errWish', 'errAdmin', 'createdCode',
+    'createdTitle', 'createdText', 'roomCode', 'inviteLink', 'adminLink', 'adminWarn', 'copy', 'copied', 'share', 'shareText',
+    'inviteTitle', 'inviteText', 'copyAll', 'copyFor', 'enterRoom', 'loading', 'budget', 'date', 'rules', 'ruleNoMutual',
+    'ruleExclusions', 'progress', 'expires', 'ruleInvite', 'keyTitle', 'keyText', 'keyLabel', 'keyHint', 'keySubmit', 'haveCode',
+    'errUsed', 'errMode', 'otherRoom', 'whoCode', 'whoTitle', 'whoText', 'taken', 'drawnBadge', 'confirmTitle', 'confirmText',
+    'confirmOk', 'cancel', 'recoverTitle', 'recoverText', 'recoveryLabel', 'recoverSubmit', 'spinCode', 'hello', 'spinText',
+    'spin', 'spinning', 'signOut', 'signOutTitle', 'signOutText', 'signOutOk', 'revealCode', 'revealLead', 'hide', 'show',
+    'hiddenName', 'theirWish', 'noWish', 'keepSecret', 'recoveryTitle', 'recoveryText', 'wishLabel', 'wishHint',
+    'wishPlaceholder', 'wishSave', 'wishSaved', 'adminCode', 'adminTitle', 'adminText', 'refresh', 'colName', 'colStatus',
+    'colAction', 'stIdle', 'stClaimed', 'stDrawn', 'release', 'releaseTitle', 'releaseText', 'redraw', 'redrawTitle',
+    'redrawText', 'redrawDone', 'remove', 'removeTitle', 'removeText', 'removed', 'noscript',
+  ] as const),
 });
 
 export type UI = z.infer<typeof schema>;
@@ -125,6 +151,5 @@ export function getI18n(url: URL) {
   };
 }
 
-/** Điền giá trị vào chỗ trống: fmt('{n} ảnh', { n: 3 }) → '3 ảnh' */
-export const fmt = (text: string, values: Record<string, string | number>) =>
-  text.replace(/\{(\w+)\}/g, (m, k) => (k in values ? String(values[k]) : m));
+/** Điền giá trị vào chỗ trống (định nghĩa ở utils.ts để island React dùng được mà không kéo cả file này) */
+export { fmt } from '@/lib/utils';

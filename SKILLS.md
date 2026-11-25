@@ -108,6 +108,8 @@ Thang cỡ chữ: `--fs-mono`, `--fs-sm`, `--fs-base`, `--fs-lg`, `--fs-h3`, `--
 | Vlog (`/vlogs`, đường dẫn cũ `/videos` chuyển hướng 301) | khung CRT có vạch quét, nhấp nháy khi rê chuột; nút play nảy |
 | Dải cờ | "Từ [cờ nhà] đến [các nước đã đến]" (bản tiếng Anh: "From … to …", chữ lấy từ `flagsFrom`/`flagsTo`) (trang Hành trình, khối "Mình đã đến" ở trang chủ). Cờ nhà (`site.yaml > homeCountry`) to hơn, viền cam, quầng vàng phập phồng; rê chuột: cờ nảy lên, nghiêng, viền cam |
 | Địa cầu Missions | Trái Đất thật (WebGL, ảnh NASA dùng chung với hero: `src/scripts/globe.ts`), sáng: chiếu chính diện; tối: phía khuất có đèn thành phố. Tự xoay chậm (dừng khi giảm chuyển động), kéo để xoay (chuột: ngang + dọc, cảm ứng: chỉ ngang), rê vào tên chuyến đi → xoay tới đó; đường bay nối các chuyến có ngày theo thời gian; **ghim là cờ tròn** của nước đó, tên nơi chỉ hiện khi rê chuột/đang chọn (điểm gần nhau không chồng chữ); chuyến có trang riêng thì bấm ghim để mở (ẩn khi quay ra sau); rê chuột lên địa cầu thì ngừng quay. **Phóng to** tới ×8 (`MAX_ZOOM` trong `globe.ts`); phóng quá ×1.5 thì tải ảnh nét `day-8k.webp` (1,2 MB, máy tính) hoặc `day-4k.webp` (0,4 MB, điện thoại), hiện dần lên — không tải nếu người xem không phóng to: cuộn chuột trên địa cầu (phóng vào đúng chỗ con trỏ; trang vừa cuộn < 300 ms hoặc đã chạm giới hạn ×1/×6 thì cú cuộn thuộc về trang, không "kẹt"), nút +/−/cả địa cầu, chụm 2 ngón, bấm đúp; khi phóng to bề mặt cắt theo "ống kính" tròn, ngừng tự quay, chạm một ngón xoay mọi hướng. Rê vào một nơi trong danh sách → phóng tới ×3. Ghim gần nhau < 22px gom thành cụm có số "+n", rê hiện tên các nơi, bấm → phóng ×2,5 vào giữa cụm. Danh sách bên cạnh (trang Hành trình) cao tối đa bằng địa cầu, tự cuộn bên trong (`data-lenis-prevent`) |
+| Thẻ trò chơi (`/play`) | `GameCard.astro`: bìa "hộp quà giữa vũ trụ"; rê chuột: ruy băng tuột ra, nơ bật lên, Orbi bay khỏi hộp, đèn LIVE nhấp nháy |
+| Secret Santa | Bệ quay nền đêm (cả hai giao diện): tên lật kiểu bảng giờ bay, chậm dần ~2,6 giây rồi khoá vào người được tặng (viền cam phát sáng, hai vòng sóng, sao bắn). Vòng quay chỉ dùng tên **mọi người trừ mình**, không phải "tên còn lại" (tránh lộ ai đã bị chọn). Mở lại trang: tên ẩn sẵn (mờ), bấm "Hiện tên". Giảm chuyển động: hiện kết quả ngay |
 | Trứng phục sinh | gõ `launch` ở bất kỳ đâu → mưa sao băng |
 
 Quy tắc kỹ thuật:
@@ -164,6 +166,13 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 | Lọc video theo nhóm | `Tabs` (`VideoGrid.tsx`) |
 | Sắp xếp danh sách tĩnh (chuyến đi) | nút `aria-pressed` + script thuần (`JourneyGrid.astro`), không hydrate React |
 | Form (hộp thư Liên hệ) | `FieldGroup` + `Field` + `Input`/`Textarea` + `Alert`, render tĩnh, script thuần (`MessageForm.astro`); chọn chế độ bằng radio gốc kiểu viên thuốc, không hydrate React |
+| Nhập mã ngắn (mã phòng, mã cá nhân) | `InputOTP` qua `CodeInput` (`play/santa/parts.tsx`): tự viết hoa, dán cả link vẫn lấy được mã |
+| Xác nhận thao tác khó hoàn tác | `AlertDialog` (nhận tên, gỡ tên, chia lại, xoá phòng) |
+| Chọn 1 trong vài phương án có mô tả | `RadioGroup` + "choice card" (`FieldLabel` bọc `Field`), xem chế độ vào phòng ở `CreateForm.tsx` |
+| Bật/tắt một luật | `Field orientation="horizontal"` + `Switch` |
+| Ô chỉ đọc có nút sao chép | `InputGroup` + `InputGroupButton` (`CopyField`) |
+| Bảng tiến độ | `Table` + `Badge` `nominal/active/queued`; tiến độ chung: `Progress` |
+| Đang tải | `Skeleton` (khung), `Spinner` trong nút (kèm `disabled`) |
 
 ### Luật bắt buộc (từ skill shadcn)
 
@@ -183,6 +192,7 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
   | `MobileNav` | `client:media="(max-width: 860px)"` | desktop không tải React |
   | `MissionsGlobe`, `PhotoGallery`, `VideoGrid`, `VideoPlayer` | `client:visible` | chỉ tải khi cuộn tới |
   | `ThemeToggle` | **không hydrate** | render tĩnh, click gắn bằng script thuần trong `MissionBar.astro` |
+  | `SantaApp` (trò chơi ở `/play/*`) | `client:load` | cả trang là ứng dụng; ngân sách 30 KB chỉ áp cho trang chủ. Linh vật Orbi truyền vào qua slot `orbi` (HTML tĩnh), không viết lại bằng React |
 | Bộ đếm người xem (`src/scripts/live.ts`) | không phải island | một WebSocket cho cả phiên (script module), mở sau `load` + lúc rảnh, ~1 KB gzip |
 | `LanguageSwitch.astro` | không phải island | link thật tới cùng trang ở ngôn ngữ kia (`hreflang`, `lang`); script trong `MissionBar.astro` ghi nhớ lựa chọn + giữ `?query`/`#hash` |
 | `MusicToggle.astro` | không phải island | script thuần; `Audio` sống trong script module nên chuyển trang nhạc vẫn phát. `preload="none"`: không tải byte nhạc nào trước khi bấm. Mặc định tắt (trình duyệt chặn tự phát có tiếng). Danh sách trống = không render nút |
@@ -192,6 +202,9 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 - `asChild` của Radix **không nhận** phần tử viết trong file `.astro`. Muốn `asChild` với `<a>`, viết component bằng `.tsx`.
 - Icon React (lucide) đặt trong file `.astro`: muốn style bằng `<style>` scoped thì phải dùng `:global(.ten-class)`.
 - Icon thương hiệu (YouTube, Instagram…) render thành chuỗi SVG lúc build bằng `brandIconSvg()` trong `src/lib/site.ts`, để không đẩy cả bộ icon xuống trình duyệt.
+- Island React **không import `@/lib/i18n`** (kéo cả yaml + zod xuống trình duyệt): nhận chữ qua `labels`, điền chỗ trống bằng `fmt` từ `@/lib/utils`.
+- Khối luôn nền tối ở cả hai giao diện (vd. bệ quay Secret Santa): **đặt lại token trong phạm vi khối** (`--foreground`, `--card`, `--muted-foreground`, `--border`… trong `.santa-pad`), không đè màu component bằng class.
+- `npx shadcn add` hỏi ghi đè `button.tsx` (có variant riêng) thì **luôn trả lời không**: `yes n | npx shadcn@latest add <component>`.
 
 ---
 
@@ -235,6 +248,7 @@ Cần kiểu mới thì thêm variant vào `cva` trong `button.tsx` / `badge.tsx
 | Màu, font, khoảng cách | `src/styles/global.css` |
 | Khoá công khai: token Web Analytics, site key Turnstile | `src/lib/services.ts` (khoá bí mật để ở Cloudflare, xem mục 9) |
 | Chữ của hộp thư (form Liên hệ) | nhóm `inbox` trong `src/i18n/ui.yaml`; luật kiểm tra (độ dài, email, số điện thoại) ở `src/lib/message.ts`, dùng chung cho form và Worker |
+| Sân chơi `/play` và trò Secret Santa | chữ: nhóm `play`, `santa` trong `ui.yaml`; danh mục trò: `src/lib/play/games.ts`; luật + thuật toán chia cặp: `src/lib/play/santa.ts` (dùng chung form và Worker). Xem mục 10 |
 
 - Schema của nội dung nằm ở `src/content.config.ts`. Thêm trường thì cập nhật cả schema lẫn `public/admin/config.yml`.
 - `draft: true` = chỉ hiện khi `npm run dev`.
@@ -259,6 +273,7 @@ src/
 │   ├── brand/       ← Orbi (linh vật, SVG thuần)
 │   ├── layout/      ← MissionBar, Footer, ThemeToggle, MusicToggle, LanguageSwitch, MobileNav (island)
 │   ├── media/       ← island React: MissionsGlobe, PhotoGallery, VideoGrid, VideoPlayer
+│   ├── play/        ← GameCard.astro (thẻ ở /play), santa/ (island SantaApp + các màn, api.ts, santa.css)
 │   └── sections/    ← Hero, HomeSections, PageHeader, SectionHead, ProjectCard, JourneyCard, CosmosBackdrop,
 │                       FlagStrip, JourneyGrid, SkillGrid, ComingSoon, SocialList, NotFound
 ├── content/         ← projects/, journeys/, pages/ (Markdown + ảnh)
@@ -268,11 +283,13 @@ src/
 ├── i18n/            ← ui.yaml (vi), ui.en.yaml (en): chữ trên giao diện
 ├── layouts/BaseLayout.astro  ← SEO, JSON-LD, theme, preloader, altimeter, header/footer
 ├── lib/             ← site.ts, skills.ts, i18n.ts, content.ts, photos.ts, youtube.ts, utils.ts (cn, cleanPath),
-│                       message.ts (luật hộp thư, dùng chung với Worker), services.ts (khoá công khai Cloudflare)
+│                       message.ts (luật hộp thư, dùng chung với Worker), services.ts (khoá công khai Cloudflare),
+│                       play/ (games.ts danh mục trò, santa.ts luật + chia cặp dùng chung với Worker)
 ├── pages/           ← [...locale]/ (mỗi file = một URL ở cả vi và /en; [slug].astro = trang chi tiết), 404.astro + en/404.astro
 ├── scripts/         ← motion.ts (chuyển động toàn trang), earth.ts (Trái Đất WebGL ở hero), globe.ts (địa cầu chuyến đi), cosmos.ts (nền vũ trụ ở Về tôi), live.ts (số người đang xem)
 └── styles/global.css
-worker/              ← Cloudflare Worker cho /api/*: index.ts (định tuyến), presence.ts (đếm người xem), message.ts + inbox.ts (hộp thư)
+worker/              ← Cloudflare Worker cho /api/*: index.ts (định tuyến), presence.ts (đếm người xem), message.ts + inbox.ts (hộp thư),
+                        play/ (index.ts định tuyến trò chơi, http.ts đồ dùng chung, santa.ts Durable Object SantaRoom)
 public/admin/        ← Sveltia CMS
 .github/workflows/refresh.yml ← build lại mỗi 6 giờ (video mới)
 ```
@@ -329,10 +346,12 @@ Web vẫn là trang tĩnh. Worker (`worker/`, `main` trong `wrangler.jsonc`) **c
 | Đường dẫn | Việc | Ghi chú |
 |---|---|---|
 | `/api/live` | WebSocket → Durable Object `Presence` (một bản duy nhất, tên `site`) | Hibernation API: không có ai vào/ra thì object ngủ. Ping 30 giây do Cloudflare tự trả lời. Nhiều tab cùng trình duyệt = 1 người (mã ngẫu nhiên trong `localStorage`, không lưu phía máy chủ). Tab ẩn > 60 giây thì ngắt |
+| `/api/play/<trò>/…` | Trò chơi ở `/play` (`worker/play/`). Secret Santa: mỗi phòng một Durable Object `SantaRoom` (SQLite, tên = mã phòng) | Lệnh ghi kiểm tra Origin; mọi lệnh qua `PLAY_LIMIT` (120/60 giây/IP, đủ cho ~30 người chung mạng văn phòng); tạo phòng thêm `PLAY_CREATE` (5/60 giây/IP). Chi tiết ở mục 10 |
 | `/api/message` | POST lời nhắn → lưu vào Durable Object `Inbox` (SQLite) + email báo tin | Kiểm tra theo thứ tự: Origin, ≤ 16 KB, ô bẫy `website`, giới hạn 3 tin/60 giây/IP (`MESSAGE_LIMIT`), Turnstile, luật `src/lib/message.ts`. Email có `Reply-To` = email người gửi → bấm Trả lời là trả lời thẳng. **Không lưu IP, user agent, vị trí**; chế độ ẩn danh không bao giờ gửi tên/số điện thoại (ô bị `disabled`, Worker cũng bỏ) |
 
 - Durable Object khai báo bằng `exports` (SQLite) trong `wrangler.jsonc`, không cần tạo tài nguyên trước.
 - Xem/xoá lời nhắn đã lưu: Cloudflare → Workers & Pages → Durable Objects → `Inbox` → **Data Studio**, nhập tên `inbox`. Cột `mailed = 0` = email báo tin bị lỗi, cần xem ở đây.
+- Xem một phòng Secret Santa: Durable Objects → `SantaRoom` → Data Studio, nhập mã phòng (vd. `K7QM2X`).
 - Chạy trên máy: `cp .dev.vars.example .dev.vars`, `npm run build`, rồi `npm run dev:api` (cổng 8787, mô phỏng Durable Object và email: thư lưu thành file trong `.wrangler/tmp/email/`). `npm run dev` tự chuyển `/api` sang cổng này nếu đang bật; không bật thì bộ đếm tự ẩn.
 - Sửa `wrangler.jsonc` thì chạy `npm run cf-typegen` để cập nhật kiểu `Env` (`worker/worker-configuration.d.ts`). `npm run check` kiểm tra cả Worker (`tsc -p worker`).
 
@@ -341,3 +360,39 @@ Web vẫn là trang tĩnh. Worker (`worker/`, `main` trong `wrangler.jsonc`) **c
 2. **Turnstile** → Add widget: hostname `longpeoo.io.vn`, chế độ Managed. Site key dán vào `src/lib/services.ts`; secret key đặt làm secret `TURNSTILE_SECRET`. Chưa đặt secret thì Worker bỏ qua Turnstile (vẫn có giới hạn tần suất + ô bẫy).
 3. Worker `portfolio` → Settings → **Variables and Secrets** (biến lúc chạy, *không phải* mục Build), loại **Secret**: `CONTACT_INBOX` (email nhận thư, đã xác minh ở bước 1), `TURNSTILE_SECRET`. Dùng loại Secret để `wrangler deploy` không ghi đè (`keep_vars: true` giữ cả biến thường).
 4. **Web Analytics** (thống kê lượt truy cập, không cookie): đã bật cho `longpeoo.io.vn` ở chế độ **Automatic setup** (Cloudflare tự chèn script), nên `ANALYTICS_TOKEN` trong `src/lib/services.ts` để trống. Chỉ điền token khi tắt Automatic setup, kẻo đếm trùng. Xem số liệu tại Cloudflare → Web Analytics → longpeoo.io.vn.
+
+---
+
+## 10. Sân chơi (`/play`) và trò chơi
+
+`/play` (`src/pages/[...locale]/play.astro`) là lưới thẻ trò chơi, **không nằm trong menu 01–05** (thiết kế đã chốt); vào bằng link trực tiếp. Mỗi trò có trang riêng `/play/<slug>`, nhãn `G-xx` (mã giữ nguyên mọi ngôn ngữ).
+
+### Kiến trúc chung (áp cho mọi trò)
+
+| Tầng | Nơi | Ghi chú |
+|---|---|---|
+| Danh mục trò | `src/lib/play/games.ts` | một dòng = một thẻ ở `/play` (slug, mã, icon, chữ lấy từ nhóm i18n của trò) |
+| Luật + kiểu dữ liệu | `src/lib/play/<trò>.ts` | TypeScript thuần, **dùng chung trình duyệt và Worker** (thêm vào `include` của `worker/tsconfig.json`) |
+| Giao diện | `src/components/play/<trò>/` | island React, chữ qua `labels`, gọi API qua `api.ts` |
+| Máy chủ | `worker/play/<trò>.ts` + một dòng trong `GAMES` ở `worker/play/index.ts` | đồ dùng chung (`reply`, `readJson`, `bearer`, `sha256`, `sealer`…) ở `worker/play/http.ts` |
+| Lưu trữ | **mỗi phòng một Durable Object** (SQLite riêng, tên = mã phòng) | không có bảng chung phình to, phòng đông không làm chậm phòng khác, xử lý tuần tự nên không tranh chấp. Trò thời gian thực (bingo, đố vui) dùng WebSocket ngủ đông như `presence.ts` |
+| Trình duyệt | `localStorage`: `play:<trò>:<MÃ>`, `play:recent` (phòng gần đây, dùng chung mọi trò) | luôn bọc try/catch; bí mật trong URL đặt sau `#` (không gửi lên máy chủ, đọc xong xoá khỏi thanh địa chỉ) |
+
+Quy tắc máy chủ cho mọi trò:
+- Bảng chỉ tạo trong lệnh "tạo phòng"; lệnh khác gặp phòng chưa có thì chỉ đọc (`sqlite_master`) → tra mã sai không tạo dữ liệu rác.
+- Kiểm tra-rồi-ghi phải chạy liền một mạch: làm mọi `await` (băm, mã hoá) **trước**, rồi mới đọc + ghi SQL.
+- Token / mã bí mật chỉ lưu dạng SHA-256 có muối (mã phòng + mục đích). Thứ cần đọc lại thì mã hoá AES-GCM bằng token của người được phép (`sealer`).
+- Tự xoá bằng `alarm` + `deleteAll()`; người tạo xoá được bất cứ lúc nào. Không lưu IP, user agent, email.
+- Phản hồi luôn `Cache-Control: no-store`. Mã lỗi chung trong `ApiErrorCode`.
+- Cần thống kê chung hoặc "phòng của tôi" trên nhiều máy → thêm **D1** làm chỉ mục (mã, trò, ngày tạo), hỏi chủ dự án trước. Gói miễn phí: 100.000 lượt gọi/ngày, một phòng Secret Santa 30 người ≈ 300 lượt.
+
+**Thêm một trò mới:** (1) chữ: nhóm mới trong cả hai `ui*.yaml` + zod `i18n.ts` + CMS; (2) `src/lib/play/<trò>.ts`; (3) Durable Object + handler trong `worker/play/`, khai báo binding + `exports` trong `wrangler.jsonc`, export class ở `worker/index.ts`, `npm run cf-typegen`; (4) trang `src/pages/[...locale]/play/<slug>.astro` + island; (5) một dòng trong `games.ts`; (6) checklist mục 7 + chạy thử với `npm run dev:api`.
+
+### Secret Santa (`/play/secret-santa`, G-01)
+
+- **Chia cặp một lần lúc tạo phòng** (như DrawNames/Elfster), không bốc tuần tự từ "rổ còn lại" (người cuối có thể kẹt với chính mình). Nút Quay chỉ mở kết quả đã chia; quay lại vẫn ra người cũ. Thuật toán `drawPairs`: kiểm tra ghép cặp hoàn hảo (Hall) → xáo trộn ngẫu nhiên đều → luật quá chặt thì quay lui. Worker dùng ngẫu nhiên mật mã; form chạy cùng hàm để báo "luật chia được" ngay khi gõ.
+- Luật: không tự tặng mình (luôn bật), cặp không bốc trúng nhau (hai chiều), tuỳ chọn không tặng chéo. 3–100 người, tên không trùng (so không phân biệt hoa thường).
+- **Nhận diện người chơi** (người tạo chọn): *Mã chung*: ai có mã tự chọn tên, mỗi tên một lần. *Link riêng*: mỗi người một mã cá nhân 8 ký tự trong link `?code=…#join=…`, dùng **một lần** (ai mở trộm trước thì chủ link thấy "đã được dùng"); người tạo xem lại link bằng token quản lý (mã hoá AES-GCM). Nhận tên xong: token thiết bị + **mã xem lại** để mở trên máy khác.
+- **Không bao giờ lộ ai đã bị chọn**: trang phòng chỉ có "đã nhận tên / đã quay" của người tặng; vòng quay dùng tên mọi người trừ mình. Người tạo phòng cũng không xem được cặp.
+- Người tạo: link quản lý `#admin=…` (lưu vào máy rồi xoá khỏi thanh địa chỉ), xem tiến độ, gỡ tên (người mất máy + mất mã), chia lại cặp (chỉ khi chưa ai quay), xoá phòng. Phòng tự xoá 60 ngày sau ngày trao quà (không ghi ngày: 90 ngày sau khi tạo).
+- Gợi ý quà: mỗi người ghi một dòng, Santa của họ đọc được khi mở kết quả.

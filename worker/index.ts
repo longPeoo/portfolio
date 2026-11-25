@@ -4,11 +4,14 @@
  *
  *   /api/live     WebSocket đếm người đang xem (Durable Object Presence)
  *   /api/message  POST lời nhắn từ trang Liên hệ (lưu vào Inbox + email báo tin)
+ *   /api/play/*   các trò chơi ở trang /play (worker/play/index.ts; Secret Santa: Durable Object SantaRoom)
  */
 import { handleMessage, sameOrigin } from './message';
+import { handlePlay } from './play';
 
 export { Presence } from './presence';
 export { Inbox } from './inbox';
+export { SantaRoom } from './play/santa';
 
 export default {
   async fetch(request, env, ctx) {
@@ -21,6 +24,8 @@ export default {
     }
 
     if (pathname === '/api/message') return handleMessage(request, env, ctx);
+
+    if (pathname.startsWith('/api/play/')) return handlePlay(request, env);
 
     if (pathname.startsWith('/api/')) return Response.json({ ok: false, error: 'not_found' }, { status: 404 });
     return env.ASSETS.fetch(request);

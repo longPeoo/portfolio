@@ -13,5 +13,5 @@
     "isolatedModules": true,
     "verbatimModuleSyntax": true
   },
-  "include": ["./**/*.ts", "../src/lib/message.ts"]
+  "include": ["./**/*.ts", "../src/lib/message.ts", "../src/lib/play/santa.ts"]
 }

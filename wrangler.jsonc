@@ -1,6 +1,6 @@
 // Cấu hình deploy lên Cloudflare Workers.
 // Cloudflare tự build bằng `npm run build` rồi phát nội dung thư mục ./dist qua CDN.
-// Worker (worker/index.ts) chỉ chạy cho /api/*: đếm người đang xem + hộp thư trang Liên hệ. Xem mục 9 trong SKILLS.md.
+// Worker (worker/index.ts) chỉ chạy cho /api/*: đếm người đang xem + hộp thư trang Liên hệ + trò chơi ở /play. Xem mục 9 trong SKILLS.md.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "portfolio",
@@ -16,21 +16,28 @@
     // Trang tĩnh phát thẳng, không tốn lượt chạy Worker
     "run_worker_first": ["/api/*"]
   },
-  // Durable Object: Presence = người đang xem (WebSocket ngủ đông), Inbox = kho lời nhắn (SQLite)
+  // Durable Object: Presence = người đang xem (WebSocket ngủ đông), Inbox = kho lời nhắn (SQLite),
+  // SantaRoom = một phòng Secret Santa (mỗi phòng một object, tên = mã phòng, tự xoá khi hết hạn)
   "durable_objects": {
     "bindings": [
       { "name": "PRESENCE", "class_name": "Presence" },
-      { "name": "INBOX", "class_name": "Inbox" }
+      { "name": "INBOX", "class_name": "Inbox" },
+      { "name": "SANTA", "class_name": "SantaRoom" }
     ]
   },
   "exports": {
     "Presence": { "type": "durable-object", "storage": "sqlite" },
-    "Inbox": { "type": "durable-object", "storage": "sqlite" }
+    "Inbox": { "type": "durable-object", "storage": "sqlite" },
+    "SantaRoom": { "type": "durable-object", "storage": "sqlite" }
   },
   // Gửi email báo tin tới địa chỉ đã xác minh trong Email Routing (secret CONTACT_INBOX)
   "send_email": [{ "name": "MAILER" }],
-  // Mỗi IP tối đa 3 lời nhắn / 60 giây
-  "ratelimits": [{ "name": "MESSAGE_LIMIT", "namespace_id": "1001", "simple": { "limit": 3, "period": 60 } }],
+  // Mỗi IP: tối đa 3 lời nhắn / 60 giây; 120 lệnh trò chơi / 60 giây (đủ cho ~30 người chung mạng văn phòng); tạo tối đa 5 phòng / 60 giây
+  "ratelimits": [
+    { "name": "MESSAGE_LIMIT", "namespace_id": "1001", "simple": { "limit": 3, "period": 60 } },
+    { "name": "PLAY_LIMIT", "namespace_id": "1002", "simple": { "limit": 120, "period": 60 } },
+    { "name": "PLAY_CREATE", "namespace_id": "1003", "simple": { "limit": 5, "period": 60 } }
+  ],
   "vars": {
     "MAIL_FROM": "orbi@longpeoo.io.vn"
   }
